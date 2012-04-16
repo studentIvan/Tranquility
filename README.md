@@ -1,7 +1,7 @@
 # TurboBatman
 
 ## Content Management Framework
-## Version 0.1.0
+## Version 0.0.2
 
 ### Requirements
 * php 5.2.4
