@@ -1,0 +1,26 @@
+{% spaceless %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{% block title %}Turbo Batman CMF :: Mobile{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="{{ resource.jquery_mobile_css }}">
+    <script type="text/javascript" src="{{ resource.jquery_js }}"></script>
+    <script type="text/javascript" src="{{ resource.jquery_mobile_js }}"></script>
+    {% block head %}{% endblock %}
+</head>
+<body>
+<div data-role="page">
+
+    <div data-role="header">
+        <h1>Turbo Batman CMF :: Mobile</h1>
+    </div><!-- /header -->
+
+    <div data-role="content">
+        <p>{% block body %}{% endblock %}</p>
+    </div><!-- /content -->
+
+</div><!-- /page -->
+</body>
+</html>
+{% endspaceless %}
