@@ -3,30 +3,132 @@
  * Turbo Batman CMF
  *
  */
+$config = require __DIR__ . '/config/config.php';
 define('STARTED_AT', microtime(true));
-
-$config = require 'config.php';
-
 define('DEVELOPER_MODE', isset($config['developer_mode']) ? $config['developer_mode'] : false);
 
-require_once __DIR__ . '/vendor/Twig/Autoloader.php';
+class Process
+{
+    /**
+     * @var array
+     */
+    public static $context = array();
 
-Twig_Autoloader::register();
+    /**
+     * @var Twig_Environment
+     */
+    private static $twig = null;
 
-$loader = new Twig_Loader_Filesystem(__DIR__ . '/views');
-$twig = new Twig_Environment($loader, array(
-    'cache' => DEVELOPER_MODE ? false : __DIR__ . '/system/cache',
-));
+    /**
+     * @var int
+     */
+    public static $state = 0;
 
-$output = array();
+    /**
+     * @static
+     * @return Twig_Environment
+     */
+    public static function getTwigInstance()
+    {
+        if (is_null(self::$twig))
+        {
+            include_once __DIR__ . '/vendor/Twig/Autoloader.php';
 
-$output['mobile'] =
+            Twig_Autoloader::register();
+
+            $loader = new Twig_Loader_Filesystem(__DIR__ . '/views');
+            self::$twig = new Twig_Environment($loader, array(
+                'cache' => DEVELOPER_MODE ? false : __DIR__ . '/system/cache',
+            ));
+        }
+
+        return self::$twig;
+    }
+
+    public static function callRoute($route, $matches)
+    {
+        if (substr($route, -4) == '.php')
+        {
+            include __DIR__ . "/controllers/$route";
+            call_user_func(array(ucfirst(substr($route, 0, strrpos($route, '.'))), 'call'), $matches);
+        }
+        else
+        {
+            $twig = self::getTwigInstance();
+            echo $twig->render("$route.html.twig", self::$context);
+        }
+
+        self::$state++;
+    }
+}
+
+Process::$context['mobile'] =
     (isset($config['always_mobile']) and $config['always_mobile']) ?
     true : require __DIR__ . '/system/ismobile.php';
 
-$output['resource'] = isset($config['resources']) ? $config['resources'] : array();
+Process::$context['resource'] = isset($config['resources']) ? $config['resources'] : array();
+Process::$context['uri'] = htmlspecialchars($_SERVER['REQUEST_URI']);
 
-echo $twig->render('homepage.html.twig', $output);
+if (($pos = strpos(Process::$context['uri'], '?')) !== false) {
+    $output['uri'] = substr(Process::$context['uri'], 0, $pos);
+}
+
+function exception_error_handler($errno, $errstr, $errfile, $errline ) {
+    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+}
+
+set_error_handler("exception_error_handler");
+
+try
+{
+    foreach (require __DIR__ . '/config/routes.php' as $rule => $route)
+    {
+        if (preg_match('/^' . str_replace('/', '\/', $rule) . '$/', Process::$context['uri'], $matches))
+        {
+            if (is_array($route)) {
+                foreach ($route as $subroute) Process::callRoute($subroute, $matches);
+            } else {
+                Process::callRoute($route, $matches);
+            }
+        }
+    }
+
+    if (Process::$state == 0)
+        throw new Exception('Not Found', 404);
+}
+catch (Exception $e)
+{
+    $twig = Process::getTwigInstance();
+    if ($e->getCode() == 404) {
+        $twig->display('404.html.twig', Process::$context);
+    }
+    else
+    {
+        if (DEVELOPER_MODE)
+        {
+            $exceptMessage = (strlen($e->getMessage()) > 30) ?
+                substr($e->getMessage(), 0, 30) . '...' : $e->getMessage();
+
+            Process::$context['exception'] = array(
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'message' => $exceptMessage,
+                'trace' => $e->getTraceAsString(),
+            );
+        }
+        else
+        {
+            Process::$context['exception'] = array(
+                'file' => false,
+                'line' => false,
+                'message' => 'Упс! Ошибочка',
+                'trace' => 'На сайте произошла ошибка, администрация сайта уже уведомлена об этом',
+            );
+        }
+
+        $twig->display('exception.html.twig', Process::$context);
+    }
+}
 
 if (DEVELOPER_MODE)
     echo "\n<!-- PAGE EXECUTION TIME: ", number_format((microtime(true) - STARTED_AT), 4), " -->";

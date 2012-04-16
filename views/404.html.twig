@@ -1,0 +1,3 @@
+{% extends mobile ? 'skeleton.mobile.html.twig' : 'skeleton.html.twig' %}
+{% block header %}<h1>404 Not Found</h1>{% endblock %}
+{% block body %}Requested path <b>{{ uri }}</b> has not found on this server.{% endblock %}
