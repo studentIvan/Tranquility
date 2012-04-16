@@ -16,7 +16,7 @@ return array(
      * Set always_mobile as true for using permament mobile templates
      * Default false
      */
-    'always_mobile' => true,
+    'always_mobile' => false,
 
     /**
      * CDN configuration
