@@ -35,5 +35,9 @@ return array(
     /**
      * PDO configuration
      */
-    'pdo' => array('mysql:host=localhost;dbname=turbo', 'root', ''),
+    'pdo' => array(
+        'dsn' => 'mysql:host=localhost;dbname=turbo',
+        'username' => 'root',
+        'password' => '',
+    ),
 );

@@ -47,10 +47,12 @@ class Process
 
     public static function callRoute($route, $matches)
     {
-        if (substr($route, -4) == '.php')
+        if (substr($route, 0, 1) == '!')
         {
-            include __DIR__ . "/controllers/$route";
-            call_user_func(array(ucfirst(substr($route, 0, strrpos($route, '.'))), 'call'), $matches);
+            $route = ucfirst(substr($route, 1));
+            list($class, $method) = explode(':', $route);
+            include __DIR__ . "/controllers/$class.php";
+            call_user_func(array($class, $method), $matches);
         }
         else
         {
@@ -78,6 +80,12 @@ function exception_error_handler($errno, $errstr, $errfile, $errline ) {
 }
 
 set_error_handler("exception_error_handler");
+
+/**
+ * Configure Database
+ */
+require_once __DIR__ . '/system/classes/Database.php';
+Database::setConfiguration($config['pdo']['dsn'], $config['pdo']['username'], $config['pdo']['password']);
 
 try
 {
