@@ -34,7 +34,13 @@ class Session
             $now = Database::getDateTimeNow();
             $result = $pdo->exec("UPDATE sessions SET uptime='$now' WHERE token='$token'");
             if ($result == 0) {
-                self::restore($token, $uid, $pass);
+                $bugFuck = Database::count("sessions WHERE token='$token'");
+                if ($bugFuck == 0) {
+                    self::restore($token, $uid, $pass);
+                } else {
+                    self::$token = $token;
+                    self::$uid = $uid;
+                }
             } else {
                 self::$token = $token;
                 self::$uid = $uid;
