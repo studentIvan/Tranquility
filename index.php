@@ -85,7 +85,12 @@ set_error_handler("exception_error_handler");
  * Configure Database
  */
 require_once __DIR__ . '/system/classes/Database.php';
-Database::setConfiguration($config['pdo']['dsn'], $config['pdo']['username'], $config['pdo']['password']);
+
+try {
+    Database::setConfiguration($config['pdo']['dsn'], $config['pdo']['username'], $config['pdo']['password']);
+} catch (Exception $e) {
+    // Database not used
+}
 
 try
 {

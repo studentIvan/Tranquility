@@ -1,4 +1,9 @@
 <?php
+/**
+ * Singleton Database
+ *
+ * Usage: $pdo = Database::getInstance();
+ */
 class Database
 {
     /**
