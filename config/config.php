@@ -40,4 +40,14 @@ return array(
         'username' => 'root',
         'password' => '',
     ),
+
+    /**
+     * Security token for authorisation, authentication and some other operations
+     */
+    'security_token' => 'ololo',
+
+    /**
+     * Default user role id
+     */
+    'default_role' => 4,
 );

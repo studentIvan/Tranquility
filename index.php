@@ -45,6 +45,11 @@ class Process
         return self::$twig;
     }
 
+    /**
+     * @static
+     * @param $route
+     * @param $matches
+     */
     public static function callRoute($route, $matches)
     {
         if (substr($route, 0, 1) == '!')
@@ -82,18 +87,39 @@ function exception_error_handler($errno, $errstr, $errfile, $errline ) {
 set_error_handler("exception_error_handler");
 
 /**
- * Configure Database
+ * Up singletones
  */
 require_once __DIR__ . '/system/classes/Database.php';
+require_once __DIR__ . '/system/classes/Security.php';
+require_once __DIR__ . '/system/classes/Cookies.php';
+require_once __DIR__ . '/system/classes/Session.php';
 
-try {
+try
+{
     Database::setConfiguration($config['pdo']['dsn'], $config['pdo']['username'], $config['pdo']['password']);
-} catch (Exception $e) {
-    // Database not used
+    Security::setSecret($config['security_token']);
+    Session::setDefaultRole($config['default_role']);
+    $config['security_token'] = null;
+    $config['pdo'] = null;
+}
+catch (Exception $e)
+{
+    $twig = Process::getTwigInstance();
+
+    Process::$context['exception'] = array(
+        'file' => false,
+        'line' => false,
+        'message' => 'Не удалось инициализировать приложение',
+        'trace' => 'Проверьте настройки конфигурации',
+    );
+
+    $twig->display('exception.html.twig', Process::$context);
+    exit;
 }
 
 try
 {
+    if (isset($_GET['e']) and $_GET['e'] == 403) throw new Exception('Forbidden', 403);
     foreach (require __DIR__ . '/config/routes.php' as $rule => $route)
     {
         if (preg_match('/^' . str_replace('/', '\/', $rule) . '$/', Process::$context['uri'], $matches))
@@ -113,14 +139,19 @@ catch (Exception $e)
 {
     $twig = Process::getTwigInstance();
     if ($e->getCode() == 404) {
+        header("HTTP/1.0 404 Not Found");
         $twig->display('404.html.twig', Process::$context);
+    }
+    elseif ($e->getCode() == 403) {
+        header("HTTP/1.0 403 Forbidden");
+        $twig->display('403.html.twig', Process::$context);
     }
     else
     {
         if (DEVELOPER_MODE)
         {
-            $exceptMessage = (strlen($e->getMessage()) > 30) ?
-                substr($e->getMessage(), 0, 30) . '...' : $e->getMessage();
+            $exceptMessage = (strlen($e->getMessage()) > 50) ?
+                '...' . substr($e->getMessage(), -50, 50) : $e->getMessage();
 
             Process::$context['exception'] = array(
                 'file' => $e->getFile(),

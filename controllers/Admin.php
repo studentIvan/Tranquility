@@ -3,8 +3,9 @@ class Admin
 {
     public static function test()
     {
-        echo Database::getInstance()
-            ->query('SELECT MD5(123) as hello')
-            ->fetch(PDO::FETCH_OBJ)->hello;
+        Session::start();
+        echo Session::getToken();
+        echo '<pre>';
+        print_r($_COOKIE);
     }
 }

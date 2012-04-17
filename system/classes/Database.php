@@ -44,4 +44,34 @@ class Database
         self::$username = $username;
         self::$password = $password;
     }
+
+    /**
+     * @static
+     * @param string $sql
+     * @return string First result
+     */
+    public static function getSingleResult($sql)
+    {
+        $result = self::getInstance()->query($sql)->fetch(PDO::FETCH_NUM);
+        return $result[0];
+    }
+
+    /**
+     * @static
+     * @param string $from
+     * @return int
+     */
+    public static function count($from)
+    {
+        return intval(self::getSingleResult("SELECT COUNT(*) FROM $from"));
+    }
+
+    /**
+     * @static
+     * @return string
+     */
+    public static function getDateTimeNow()
+    {
+        return date('Y-m-d H:i:sP');
+    }
 }
