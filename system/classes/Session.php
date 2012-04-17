@@ -33,7 +33,12 @@ class Session
             $pdo = Database::getInstance();
             $now = Database::getDateTimeNow();
             $result = $pdo->exec("UPDATE sessions SET uptime='$now' WHERE token='$token'");
-            if ($result == 0) self::restore($token, $uid, $pass);
+            if ($result == 0) {
+                self::restore($token, $uid, $pass);
+            } else {
+                self::$token = $token;
+                self::$uid = $uid;
+            }
         }
         else
         {
