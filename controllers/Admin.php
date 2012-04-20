@@ -1,13 +1,58 @@
 <?php
 class Admin
 {
+    public static function control($matches)
+    {
+        $page = isset($matches[1]) ?
+            preg_replace('/[^a-z]/', '', $matches[1]) : false;
+        $express = isset($matches[2]) ?
+            preg_replace('/[^a-z]/', '', $matches[2]) : false;
+        Process::$context['admin_page'] = $page;
+        if (method_exists('Admin', $page)) {
+            call_user_func(array('Admin', $page), ($express ? $express : null));
+        } else {
+            self::secure();
+        }
+    }
+
     public static function secure()
     {
-        echo Session::getRole();
-        /*if (Session::getRole() !== 1) {
+        if (Session::getRole() !== 1) {
             Process::getTwigInstance()->display('admin/login.html.twig', Process::$context);
         } else {
             Process::getTwigInstance()->display('admin/admin.html.twig', Process::$context);
-        }*/
+        }
+    }
+
+    public static function logout()
+    {
+        if (Session::getRole() == 1) {
+            Session::stop();
+            header('Location: /admin/');
+        }
+    }
+
+    public static function login()
+    {
+        if (Session::getRole() !== 1)
+        {
+            list($login, $password, $remember) =
+                Data::inputsList('xcya94n8cdjscam', 'asdj91n43fbdsvas0o4', 'remember');
+
+            $temporary = $remember ? false : true;
+
+            try {
+                Session::authorize($login, $password, $temporary);
+                header('Location: /admin/');
+            } catch (Exception $e) {
+                echo $e->getMessage();
+                Process::$context['flash_error'] = true;
+                Process::getTwigInstance()->display('admin/login.html.twig', Process::$context);
+            }
+        }
+        else
+        {
+            Process::getTwigInstance()->display('admin/admin.html.twig', Process::$context);
+        }
     }
 }

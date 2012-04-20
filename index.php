@@ -1,15 +1,10 @@
 <?php
-ini_set('display_errors', 'On');
-error_reporting(E_ALL);
 /**
  * Turbo Batman CMF
- *
  */
-$config = require __DIR__ . '/config/config.php';
-define('STARTED_AT', microtime(true));
-define('DEVELOPER_MODE', isset($config['developer_mode']) ? $config['developer_mode'] : false);
-class AuthException extends Exception {}
-class SessionException extends Exception {}
+ini_set('display_errors', 'On');
+error_reporting(E_ALL);
+require_once __DIR__ . '/system/__init__.php';
 
 class Process
 {
@@ -84,43 +79,6 @@ if (($pos = strpos(Process::$context['uri'], '?')) !== false) {
     $output['uri'] = substr(Process::$context['uri'], 0, $pos);
 }
 
-function exception_error_handler($errno, $errstr, $errfile, $errline ) {
-    throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
-}
-
-set_error_handler("exception_error_handler");
-
-/**
- * Up system
- */
-require_once __DIR__ . '/system/classes/Database.php';
-require_once __DIR__ . '/system/classes/Security.php';
-require_once __DIR__ . '/system/classes/Cookies.php';
-require_once __DIR__ . '/system/classes/Session.php';
-require_once __DIR__ . '/system/classes/Services.php';
-
-try
-{
-    Database::setConfiguration($config['pdo']['dsn'], $config['pdo']['username'], $config['pdo']['password']);
-    Security::setSecret($config['security_token']);
-    Session::setConfiguration($config['session']);
-    $config['pdo'] = $config['security_token'] = null;
-}
-catch (Exception $e)
-{
-    $twig = Process::getTwigInstance();
-
-    Process::$context['exception'] = array(
-        'file' => false,
-        'line' => false,
-        'message' => 'Не удалось инициализировать приложение',
-        'trace' => 'Проверьте настройки конфигурации',
-    );
-
-    $twig->display('exception.html.twig', Process::$context);
-    exit;
-}
-
 try
 {
     if (isset($_GET['e']) and $_GET['e'] == 403) throw new Exception('Forbidden', 403);
@@ -154,8 +112,8 @@ catch (Exception $e)
     {
         if (DEVELOPER_MODE)
         {
-            $exceptMessage = (strlen($e->getMessage()) > 50) ?
-                '...' . substr($e->getMessage(), -50, 50) : $e->getMessage();
+            $exceptMessage = (strlen($e->getMessage()) > 70) ?
+                '...' . substr($e->getMessage(), -70, 70) : $e->getMessage();
 
             Process::$context['exception'] = array(
                 'file' => $e->getFile(),
@@ -178,5 +136,5 @@ catch (Exception $e)
     }
 }
 
-if (DEVELOPER_MODE)
-    echo "\n<!-- PAGE EXECUTION TIME: ", number_format((microtime(true) - STARTED_AT), 4), " -->";
+/*if (DEVELOPER_MODE)
+    echo "\n<!-- PAGE EXECUTION TIME: ", number_format((microtime(true) - STARTED_AT), 4), " -->";*/

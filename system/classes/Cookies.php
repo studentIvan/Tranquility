@@ -50,8 +50,8 @@ class Cookies
         }
         else
         {
-            $time = ($time) ? $time : time() + 28080000;
-            $host = ($host) ? $host : ".{$_SERVER['HTTP_HOST']}";
+            $time = ($time !== false) ? $time : time() + 28080000;
+            $host = ($host !== false) ? $host : ".{$_SERVER['HTTP_HOST']}";
             setcookie($key, $value, $time, $path, $host);
         }
     }

@@ -7,7 +7,7 @@
  */
 return array(
     '/' => 'homepage',
-    '/admin/?' => array('!common:session', '!admin:secure'),
+    '/admin/?([^/]+)?/?([^/]+)?/?' => array('!common:session', '!admin:control'),
     '/test' => '!example:call',
     '/test/([^/]+)/(\d+)' => array('!example:call', 'homepage'), // /test/lol/123
 );

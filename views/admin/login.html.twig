@@ -1,0 +1,47 @@
+{% extends 'admin/skeleton.admin.html.twig' %}
+{% block title %}Админ-Панель Авторизация{% endblock %}
+{% block page %}
+<div data-role="page" data-theme="a">
+
+    <div data-theme="b" data-role="header">
+        <h1>Авторизация</h1>
+    </div><!-- /header -->
+
+    {% if flash_error %}<div data-theme="e" data-role="header">
+        <h1>Ошибка авторизации. Попробуйте ещё раз</h1>
+    </div>{% endif %}
+
+    <div data-role="content">
+        <form action="/admin/login" method="POST" data-ajax="false">
+            <div data-role="fieldcontain">
+                <fieldset data-role="controlgroup">
+                    <label for="logininput">
+                        Логин
+                    </label>
+                    <input id="logininput" name="xcya94n8cdjscam" value="" type="text" />
+                </fieldset>
+            </div>
+            <div data-role="fieldcontain">
+                <fieldset data-role="controlgroup">
+                    <label for="passinput">
+                        Пароль
+                    </label>
+                    <input id="passinput" name="asdj91n43fbdsvas0o4" value="" type="password" />
+                </fieldset>
+            </div>
+            <div data-role="fieldcontain">
+                <fieldset data-role="controlgroup">
+                    <label><input type="checkbox" name="remember" value="on" checked="checked" /> Запомнить меня </label>
+                </fieldset>
+            </div>
+            <input type="submit" value="Войти" />
+        </form>
+    </div><!-- /content -->
+
+    <div data-theme="a" data-role="footer">
+        <h3>
+            Powered by TurboBatman CMF
+        </h3>
+    </div>
+
+</div><!-- /page -->{% endblock %}

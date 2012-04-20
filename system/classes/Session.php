@@ -24,18 +24,24 @@ class Session
         if (self::$started)
             throw new SessionException('Session already started');
 
+        if (isset(self::$options['garbage_auto_dump']) and
+            self::$options['garbage_auto_dump'] and (intval(date('i'))%2 == 0)) {
+            self::dumpGarbage();
+        }
+
         list($token, $uid, $pass, $signature) = Cookies::get(array('t', 'u', 'p', 's'));
 
         if ($token and $signature == Security::getDigest(array($token, $uid, $pass)))
         {
             $pdo = Database::getInstance();
-            $now = Database::getDateTimeNow();
-            $result = $pdo->exec("UPDATE sessions SET uptime='$now' WHERE token='$token'");
-            if ($result == 0 and Database::count("sessions WHERE token='$token'") == 0) {
+            $pdo->query("UPDATE sessions SET uptime=NOW() WHERE token='$token'");
+            $result = $pdo->query("SELECT role FROM sessions WHERE token='$token'");
+            if ($result->rowCount() == 0) {
                 self::restore($token, $uid, $pass);
             } else {
                 self::$token = $token;
-                self::$uid = $uid;
+                self::$uid = intval($uid);
+                self::$role = intval($result->fetchColumn());
             }
         }
         else
@@ -48,8 +54,8 @@ class Session
 
     public static function dumpGarbage()
     {
-        $pdo = Database::getInstance();
-
+        $lifetime = isset(self::$options['lifetime_hours']) ? self::$options['lifetime_hours'] : 1;
+        Database::getInstance()->query("DELETE FROM sessions WHERE uptime < ( NOW() - INTERVAL $lifetime HOUR )");
     }
 
     public static function isAuth()
@@ -77,8 +83,7 @@ class Session
 
             if (Database::count("sessions WHERE token='$token'") !== 0)
             {
-                $now = Database::getDateTimeNow();
-                $pdo->query("UPDATE sessions SET uptime='$now' WHERE token='$token'");
+                $pdo->query("UPDATE sessions SET uptime=NOW() WHERE token='$token'");
             }
 
             self::$role = self::$options['default_role'];
@@ -161,7 +166,7 @@ class Session
             $pdo = Database::getInstance();
             $user = $pdo->query("SELECT id, role FROM users WHERE login='$login'")->fetch(PDO::FETCH_OBJ);
             $pdo->query("UPDATE sessions SET uid='{$user->id}', role='{$user->role}' WHERE token='$token'");
-            self::$uid = $user->id;
+            self::$uid = intval($user->id);
             self::$role = $user->role;
 
             Cookies::set(
@@ -173,7 +178,7 @@ class Session
                     's' => Security::getDigest(array($token, $user->id, $password)),
                 ),
 
-                null, (($temporary) ? 1 : false)
+                null, (($temporary) ? 0 : false)
             );
         }
         else

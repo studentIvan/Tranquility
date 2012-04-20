@@ -52,8 +52,7 @@ class Database
      */
     public static function getSingleResult($sql)
     {
-        $result = self::getInstance()->query($sql)->fetch(PDO::FETCH_NUM);
-        return $result[0];
+        return self::getInstance()->query($sql)->fetchColumn();
     }
 
     /**
