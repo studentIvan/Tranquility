@@ -94,7 +94,7 @@ CREATE TABLE `sessions` (
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
-INSERT INTO `sessions` VALUES ('574d84cc964793d592c1544205983559',0,4,2130706433,'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko','2012-04-20 18:18:11',NULL);
+INSERT INTO `sessions` VALUES ('f7380c80a2d2c4f841f923481406ecc7',1,1,2130706433,'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0','2012-04-21 00:30:31',NULL),('7f0ca6286ee53cbd27714459db28c4aa',1,1,2130706433,'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0','2012-04-21 00:18:08',NULL);
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -126,6 +126,43 @@ LOCK TABLES `users` WRITE;
 INSERT INTO `users` VALUES (1,'Admin','48fa05e2e7c221665db8c9d8f6980919',1,'2012-04-17 00:00:00');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Temporary table structure for view `users monitor v1`
+--
+
+DROP TABLE IF EXISTS `users monitor v1`;
+/*!50001 DROP VIEW IF EXISTS `users monitor v1`*/;
+SET @saved_cs_client     = @@character_set_client;
+SET character_set_client = utf8;
+/*!50001 CREATE TABLE `users monitor v1` (
+  `token` char(32),
+  `uid` int(10) unsigned,
+  `role` tinyint(3) unsigned,
+  `ip` varchar(31),
+  `browser` varchar(100),
+  `last update time` datetime
+) ENGINE=MyISAM */;
+SET character_set_client = @saved_cs_client;
+
+--
+-- Final view structure for view `users monitor v1`
+--
+
+/*!50001 DROP TABLE IF EXISTS `users monitor v1`*/;
+/*!50001 DROP VIEW IF EXISTS `users monitor v1`*/;
+/*!50001 SET @saved_cs_client          = @@character_set_client */;
+/*!50001 SET @saved_cs_results         = @@character_set_results */;
+/*!50001 SET @saved_col_connection     = @@collation_connection */;
+/*!50001 SET character_set_client      = utf8 */;
+/*!50001 SET character_set_results     = utf8 */;
+/*!50001 SET collation_connection      = utf8_general_ci */;
+/*!50001 CREATE ALGORITHM=UNDEFINED */
+/*!50013 DEFINER=`root`@`localhost` SQL SECURITY DEFINER */
+/*!50001 VIEW `users monitor v1` AS select `sessions`.`token` AS `token`,`sessions`.`uid` AS `uid`,`sessions`.`role` AS `role`,inet_ntoa(`sessions`.`ip`) AS `ip`,`sessions`.`useragent` AS `browser`,`sessions`.`uptime` AS `last update time` from `sessions` order by `sessions`.`uptime` desc */;
+/*!50001 SET character_set_client      = @saved_cs_client */;
+/*!50001 SET character_set_results     = @saved_cs_results */;
+/*!50001 SET collation_connection      = @saved_col_connection */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -136,4 +173,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-04-20 20:39:12
+-- Dump completed on 2012-04-21  0:32:45
