@@ -8,6 +8,8 @@ error_reporting(E_ALL);
 $config = require __DIR__ . '/config/config.php';
 define('STARTED_AT', microtime(true));
 define('DEVELOPER_MODE', isset($config['developer_mode']) ? $config['developer_mode'] : false);
+class AuthException extends Exception {}
+class SessionException extends Exception {}
 
 class Process
 {
@@ -89,20 +91,20 @@ function exception_error_handler($errno, $errstr, $errfile, $errline ) {
 set_error_handler("exception_error_handler");
 
 /**
- * Up singletones
+ * Up system
  */
 require_once __DIR__ . '/system/classes/Database.php';
 require_once __DIR__ . '/system/classes/Security.php';
 require_once __DIR__ . '/system/classes/Cookies.php';
 require_once __DIR__ . '/system/classes/Session.php';
+require_once __DIR__ . '/system/classes/Services.php';
 
 try
 {
     Database::setConfiguration($config['pdo']['dsn'], $config['pdo']['username'], $config['pdo']['password']);
     Security::setSecret($config['security_token']);
-    Session::setDefaultRole($config['default_role']);
-    $config['security_token'] = null;
-    $config['pdo'] = null;
+    Session::setConfiguration($config['session']);
+    $config['pdo'] = $config['security_token'] = null;
 }
 catch (Exception $e)
 {

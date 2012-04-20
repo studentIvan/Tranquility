@@ -15,17 +15,15 @@ class Session
     protected static
         $uid = 0,
         $role = 0,
-        $defaultRole = 4,
+        $options = array(),
         $token = '',
         $started = false;
 
-    /**
-     * @static
-     *
-     */
     public static function start()
     {
-        if (self::$started) return;
+        if (self::$started)
+            throw new SessionException('Session already started');
+
         list($token, $uid, $pass, $signature) = Cookies::get(array('t', 'u', 'p', 's'));
 
         if ($token and $signature == Security::getDigest(array($token, $uid, $pass)))
@@ -48,12 +46,17 @@ class Session
         self::$started = true;
     }
 
-    /**
-     * @static
-     * @param string $token
-     * @param int $uid
-     * @param string $pass
-     */
+    public static function dumpGarbage()
+    {
+        $pdo = Database::getInstance();
+
+    }
+
+    public static function isAuth()
+    {
+        return (self::$uid !== 0);
+    }
+
     protected static function restore($token, $uid, $pass)
     {
         if (!self::authenticateByUserId($uid, $pass))
@@ -62,18 +65,11 @@ class Session
         self::create($token, $uid, $pass);
     }
 
-    /**
-     * @static
-     * @throws Exception
-     * @param null|string $token
-     * @param null|int $uid
-     * @param null|string $pass
-     */
     protected static function create($token = null, $uid = null, $pass = null)
     {
         $pdo = Database::getInstance();
         $ip = $_SERVER['REMOTE_ADDR'];
-        $agent = substr(htmlspecialchars(trim($_SERVER['HTTP_USER_AGENT']), ENT_QUOTES), 0, 50);
+        $agent = substr(htmlspecialchars(trim($_SERVER['HTTP_USER_AGENT']), ENT_QUOTES), 0, 100);
 
         if (self::isBot($agent))
         {
@@ -85,16 +81,16 @@ class Session
                 $pdo->query("UPDATE sessions SET uptime='$now' WHERE token='$token'");
             }
 
-            self::$role = self::$defaultRole;
+            self::$role = self::$options['default_role'];
         }
         else
         {
             if (Database::count("sessions WHERE ip=INET_ATON('$ip')") > 10)
-                throw new Exception('Too many connections', 403);
+                throw new SessionException('Too many connections', 403);
 
             $token = (is_null($token)) ? Security::getDigest(array($ip, $agent, rand(1000, 9999))) : $token;
 
-            $role = (is_null($uid)) ? self::$defaultRole :
+            $role = (is_null($uid)) ? self::$options['default_role'] :
                 Database::getSingleResult("SELECT role FROM users WHERE id='$uid'");
 
             self::$role = $role;
@@ -122,42 +118,21 @@ class Session
         ));
     }
 
-    /**
-     * @static
-     * @param bool|int $role
-     */
-    public static function setDefaultRole($role = false)
+    public static function setConfiguration($configuration)
     {
-        self::$defaultRole = ($role) ? intval($role) : self::$defaultRole;
+        self::$options = $configuration;
     }
 
-    /**
-     * @static
-     * @param string $agent
-     * @return bool
-     */
     protected static function isBot($agent)
     {
         return false;
     }
 
-    /**
-     * @static
-     * @param int $uid
-     * @param string $pass
-     * @return bool
-     */
     protected static function authenticateByUserId($uid, $pass)
     {
         return (Database::count("users WHERE id='$uid' AND password='$pass'") !== 0);
     }
 
-    /**
-     * @static
-     * @param string $login
-     * @param string $pass
-     * @return bool
-     */
     protected static function authenticateByLogin($login, $pass)
     {
         return (Database::count("users WHERE login='$login' AND password='$pass'") !== 0);
@@ -169,12 +144,18 @@ class Session
      * @param string $password
      * @param bool $temporary
      * @param bool $authenticate
-     * @return bool
      */
     public static function authorize($login, $password, $temporary = false, $authenticate = true)
     {
+        if (self::isAuth())
+            throw new AuthException('You are logged in');
+
         $password = Security::getDigest($password);
-        if (self::$started and (!$authenticate or ($authenticate and self::authenticateByLogin($login, $password))))
+
+        if ($authenticate and !self::authenticateByLogin($login, $password))
+            throw new AuthException('Authenticate failed');
+
+        if (self::$started)
         {
             $token = self::$token;
             $pdo = Database::getInstance();
@@ -194,22 +175,17 @@ class Session
 
                 null, (($temporary) ? 1 : false)
             );
-
-            return true;
         }
         else
         {
-            return false;
+            throw new SessionException('Session not started');
         }
     }
 
-    /**
-     * @static
-     * @return mixed
-     */
     public static function stop()
     {
-        if (!self::$started) return;
+        if (!self::$started)
+            throw new SessionException('Session not started');
 
         $token = self::$token;
         self::$token = '';
@@ -220,28 +196,16 @@ class Session
         Database::getInstance()->query("DELETE FROM sessions WHERE token='$token'");
     }
 
-    /**
-     * @static
-     * @return int
-     */
     public static function getUid()
     {
         return self::$uid;
     }
 
-    /**
-     * @static
-     * @return int
-     */
     public static function getRole()
     {
         return self::$role;
     }
 
-    /**
-     * @static
-     * @return string
-     */
     public static function getToken()
     {
         return self::$token;

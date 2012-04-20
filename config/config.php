@@ -47,7 +47,12 @@ return array(
     'security_token' => 'ololo',
 
     /**
-     * Default user role id
+     * Session configuration
      */
-    'default_role' => 4,
+    'session' => array(
+        'default_role' => 4,
+        'lifetime_hours' => 1,
+        'garbage_auto_dump' => true, // Call dumpGarbage() every EVEN minute
+                                     // Recommended: false (but it need cronjob configuration)
+    ),
 );
