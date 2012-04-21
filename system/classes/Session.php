@@ -231,4 +231,30 @@ class Session
     {
         return self::$token;
     }
+
+    /**
+     * @static
+     * @param int $offset
+     * @param bool|int $limit
+     * @return array
+     */
+    public static function getAll($offset = 0, $limit = 30)
+    {
+        $statement = Database::getInstance()->prepare("
+            SELECT s.token AS token, u.login AS user,
+            INET_NTOA(s.ip) AS ip, s.useragent AS user_agent,
+            s.uptime AS uptime, r.title AS session_role
+            FROM sessions s
+            LEFT JOIN users u ON s.uid=u.id
+            LEFT JOIN roles r ON r.id=s.role
+            ORDER BY s.uptime DESC
+            LIMIT :limit OFFSET :offset
+        ");
+
+        $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
+        $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
+        $statement->execute();
+
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

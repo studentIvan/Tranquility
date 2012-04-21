@@ -23,9 +23,25 @@ class Admin
             exit;
         }
 
-        if ($component)
+        if ($component and isset(Process::$context['cms']))
         {
             Process::$context['component'] = $component;
+            $page = isset($_GET['page']) ? abs($_GET['page']) : 1;
+
+            switch($component)
+            {
+                case 'sessions':
+                    if (!isset(Process::$context['cms']['sessions']))
+                        throw new NotFoundException();
+                    $perPage = isset(Process::$context['cms']['sessions']['limit_per_page']) ?
+                        Process::$context['cms']['sessions']['limit_per_page'] : 20;
+                    $pagination = Data::paginate(Database::count('sessions'), $perPage, $page);
+                    Process::$context['sessions_list'] = Session::getAll($pagination['offset'], $perPage);
+                    Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
+                    break;
+
+                default:
+            }
         }
         else
         {

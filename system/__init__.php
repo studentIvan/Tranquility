@@ -45,6 +45,7 @@ if (isset($config['cms']))
 
     if (isset($config['cms']['users']) and $config['cms']['users']) {
         require_once __DIR__ . '/solutions/Users.php';
+        require_once __DIR__ . '/solutions/Roles.php';
     }
 }
 

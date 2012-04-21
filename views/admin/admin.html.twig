@@ -39,10 +39,45 @@
     </div>
     <!-- /content -->
 
+    {% if not pagination %}
     <div data-theme="c" data-role="footer">
         <h3>
             Powered by TurboBatman CMF
         </h3>
     </div>
+    {% else %}
+    <div data-theme="a" data-role="footer" data-position="fixed">
+        <div data-role="navbar">
+            <ul>
+                {% if pagination.prev_id %}
+                    {% if pagination.prev_id > 1 %}
+                    <li>
+                        <a href="{{ uri }}?page=1" data-role="button">
+                            1
+                        </a>
+                    </li>{% endif %}
+                <li>
+                    <a href="{{ uri }}?page={{ pagination.prev_id }}" data-role="button">
+                        {{ pagination.prev_id }}
+                    </a>
+                </li>{% endif %}
+                <li>
+                    <a href="#" data-role="button" class="ui-btn-active">
+                        {{ pagination.current_id }}
+                    </a>
+                </li>
+                {% if pagination.next_id %}<li>
+                <a href="{{ uri }}?page={{ pagination.next_id }}" data-role="button">
+                    {{ pagination.next_id }}
+                </a>
+            </li>{% if pagination.total_pages > pagination.next_id %}<li>
+                <a href="{{ uri }}?page={{ pagination.total_pages }}" data-role="button">
+                    {{ pagination.total_pages }}
+                </a>
+            </li>{% endif %}{% endif %}
+            </ul>
+        </div><!-- /navbar -->
+    </div>
+    {% endif %}
 
 </div><!-- /page -->{% endblock %}

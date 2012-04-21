@@ -58,9 +58,11 @@ return array(
 
     /**
      * Content Management System configuration
+     * You can mark component as false for off it
      */
     'cms' => array(
-        'news' => array('limit_per_page' => 10), //set false for off
-        'users' => true, //set false for off
+        'news' => array('limit_per_page' => 10),
+        'sessions' => array('limit_per_page' => 20),
+        'users' => true,
     ),
 );

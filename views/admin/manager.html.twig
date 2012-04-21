@@ -43,6 +43,6 @@
         </li>
     </ul>
     {% else %}
-    {{ component }}
+    {% include "admin/components/" ~ component ~ ".html.twig" %}
     {% endif %}
 </div>

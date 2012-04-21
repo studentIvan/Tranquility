@@ -24,8 +24,12 @@ class Database
             throw new Exception('Database is not configured');
         }
 
-        if (is_null(self::$instance)) {
-            self::$instance = new PDO(self::$dsn, self::$username, self::$password);
+        if (is_null(self::$instance))
+        {
+            self::$instance = new PDO(self::$dsn, self::$username, self::$password, array(
+                PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
+            ));
+
             self::$instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         }
 

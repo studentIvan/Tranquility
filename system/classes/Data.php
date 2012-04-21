@@ -40,17 +40,17 @@ class Data
 
         return $error ?
             array(
-                'page_prev_id' => false,
-                'page_next_id' => 2,
+                'prev_id' => false,
+                'next_id' => 2,
                 'total_pages' => $pages,
-                'page_id' => 1,
+                'current_id' => 1,
                 'offset' => 0,
             ) :
             array(
-                'page_prev_id' => $prev,
-                'page_next_id' => $next,
+                'prev_id' => $prev,
+                'next_id' => $next,
                 'total_pages' => $pages,
-                'page_id' => $page,
+                'current_id' => $page,
                 'offset' => $start,
             );
     }
