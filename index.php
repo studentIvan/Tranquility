@@ -39,6 +39,9 @@ class Process
             self::$twig = new Twig_Environment($loader, array(
                 'cache' => DEVELOPER_MODE ? false : __DIR__ . '/system/cache',
             ));
+
+            include_once __DIR__ . '/system/classes/Twig_i18nPlural.php';
+            self::$twig->addExtension(new Twig_i18nPlural());
         }
 
         return self::$twig;

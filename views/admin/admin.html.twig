@@ -1,10 +1,12 @@
 {% extends 'admin/skeleton.admin.html.twig' %}
-{% block title %}Админ-Панель Авторизация{% endblock %}
+{% block title %}Админ-Панель{% endblock %}
 {% block page %}
 <div data-role="page">
 
-    <div data-theme="a" data-role="header">
+    <div data-theme="a" data-role="header" data-position="inline">
+        <a href="#" data-icon="back" data-rel="back">Назад</a>
         <h1>Админ панель</h1>
+        <a href="/" data-icon="forward" rel="external">Перейти к сайту</a>
     </div><!-- /header -->
 
     <div data-role="content">
@@ -19,7 +21,7 @@
                 <li>
                     <a href="/admin/manager/" data-icon="gear" data-ajax="false"
                             {% if admin_page == 'manager' %} class="ui-btn-active"{% endif %}>
-                        Менеджер
+                        Управление
                     </a>
                 </li>
                 <li>
@@ -29,10 +31,10 @@
                 </li>
             </ul>
         </div>
-        {% if admin_page == 'manager' %}
-        <div id="managerldr">
-            test
-        </div>
+        {% if not admin_page %}
+        {% include 'admin/info.html.twig' %}
+        {% else %}
+        {% if admin_page == 'manager' %}{% include 'admin/manager.html.twig' %}{% endif %}
         {% endif %}
     </div>
     <!-- /content -->

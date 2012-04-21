@@ -15,6 +15,29 @@ class Admin
         }
     }
 
+    public static function manager($component = false)
+    {
+        if (Session::getRole() !== 1)
+        {
+            header('Location: /admin/');
+            exit;
+        }
+
+        if ($component)
+        {
+            Process::$context['component'] = $component;
+        }
+        else
+        {
+            Process::$context['news_count'] = Database::count('news');
+            Process::$context['users_count'] = Database::count('users');
+            Process::$context['sessions_count'] = Database::count('sessions');
+            Process::$context['roles_count'] = Database::count('roles');
+        }
+
+        Process::getTwigInstance()->display('admin/admin.html.twig', Process::$context);
+    }
+
     public static function secure()
     {
         if (Session::getRole() !== 1) {

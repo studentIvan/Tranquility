@@ -1,0 +1,48 @@
+<div data-role="content" id="manager_content">
+    {% if not component %}
+    <ul data-role="listview">
+        <li>
+            <a href="/admin/manager/news">
+                <img src="/images/admin/news.png" alt="" />
+                <h3>Новостной блог</h3>
+                <p>Размещайте новости или ведите блог на своём сайте.</p>
+            </a>
+                <span class="ui-li-count">
+                    {{ (news_count ~ " новост")|plural("ь", "и", "ей") }}
+                </span>
+        </li>
+        <li>
+            <a href="/admin/manager/users">
+                <img src="/images/admin/users.png" alt=""/>
+                <h3>Пользователи</h3>
+                <p>Создание, листинг, редактирование и удаление пользователей.</p>
+            </a>
+                <span class="ui-li-count">
+                    {{ (users_count ~ " пользовател")|plural("ь", "я", "ей") }}
+                </span>
+        </li>
+        <li>
+            <a href="/admin/manager/acl">
+                <img src="/images/admin/acl.png" alt="" />
+                <h3>Роли пользователей</h3>
+                <p>Благодаря ролям вы можете изменять уровни доступа пользователей.</p>
+            </a>
+                <span class="ui-li-count">
+                    {{ (roles_count ~ " рол")|plural("ь", "и", "ей") }}
+                </span>
+        </li>
+        <li>
+            <a href="/admin/manager/sessions">
+                <img src="/images/admin/sessions.png" alt="" />
+                <h3>Монитор сессий</h3>
+                <p>Посмотрите кто находится на вашем сайте в данный момент.</p>
+            </a>
+                <span class="ui-li-count">
+                    {{ (sessions_count ~ " сесси")|plural("я", "и", "й") }}
+                </span>
+        </li>
+    </ul>
+    {% else %}
+    {{ component }}
+    {% endif %}
+</div>
