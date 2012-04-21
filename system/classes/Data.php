@@ -22,4 +22,36 @@ class Data
             $result[] = self::input($postVariableName);
         return $result;
     }
+
+    /**
+     * @static
+     * @param int $total
+     * @param int $count
+     * @param int $page
+     * @return array
+     */
+    public static function paginate($total, $count = 30, $page = 1)
+    {
+        $start = $count * ($page - 1);
+        $prev = (($page - 1) > 0) ? $page - 1 : false;
+        $pages = ceil($total / $count);
+        $next = (($page + 1) <= $pages) ? $page + 1 : false;
+        $error = ((!$next && !$prev) or ($prev >= $pages) or ($page < 1));
+
+        return $error ?
+            array(
+                'page_prev_id' => false,
+                'page_next_id' => 2,
+                'total_pages' => $pages,
+                'page_id' => 1,
+                'offset' => 0,
+            ) :
+            array(
+                'page_prev_id' => $prev,
+                'page_next_id' => $next,
+                'total_pages' => $pages,
+                'page_id' => $page,
+                'offset' => $start,
+            );
+    }
 }

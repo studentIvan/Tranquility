@@ -1,19 +1,19 @@
 <div data-role="content" id="manager_content">
     {% if not component %}
     <ul data-role="listview">
-        <li>
+        {% if cms.news %}<li>
             <a href="/admin/manager/news">
-                <img src="/images/admin/news.png" alt="" />
+                {% if not mobile %}<img src="/images/admin/news.png" alt="" />{% endif %}
                 <h3>Новостной блог</h3>
                 <p>Размещайте новости или ведите блог на своём сайте.</p>
             </a>
                 <span class="ui-li-count">
                     {{ (news_count ~ " новост")|plural("ь", "и", "ей") }}
                 </span>
-        </li>
-        <li>
+        </li>{% endif %}
+        {% if cms.users %}<li>
             <a href="/admin/manager/users">
-                <img src="/images/admin/users.png" alt=""/>
+                {% if not mobile %}<img src="/images/admin/users.png" alt=""/>{% endif %}
                 <h3>Пользователи</h3>
                 <p>Создание, листинг, редактирование и удаление пользователей.</p>
             </a>
@@ -23,17 +23,17 @@
         </li>
         <li>
             <a href="/admin/manager/acl">
-                <img src="/images/admin/acl.png" alt="" />
+                {% if not mobile %}<img src="/images/admin/acl.png" alt="" />{% endif %}
                 <h3>Роли пользователей</h3>
                 <p>Благодаря ролям вы можете изменять уровни доступа пользователей.</p>
             </a>
                 <span class="ui-li-count">
                     {{ (roles_count ~ " рол")|plural("ь", "и", "ей") }}
                 </span>
-        </li>
+        </li>{% endif %}
         <li>
             <a href="/admin/manager/sessions">
-                <img src="/images/admin/sessions.png" alt="" />
+                {% if not mobile %}<img src="/images/admin/sessions.png" alt="" />{% endif %}
                 <h3>Монитор сессий</h3>
                 <p>Посмотрите кто находится на вашем сайте в данный момент.</p>
             </a>

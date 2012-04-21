@@ -99,12 +99,11 @@ class Session
                 Database::getSingleResult("SELECT role FROM users WHERE id='$uid'");
 
             self::$role = $role;
-            $now = Database::getDateTimeNow();
             $usid = (is_null($uid)) ? '0' : $uid;
 
             $pdo->query(
                 "INSERT INTO sessions (`token`, `uid`, `role`, `ip`, `useragent`, `uptime`)
-                  VALUES ('$token', '$usid', '$role', INET_ATON('$ip'), '$agent', '$now')"
+                  VALUES ('$token', '$usid', '$role', INET_ATON('$ip'), '$agent', NOW())"
             );
         }
 
@@ -130,6 +129,23 @@ class Session
 
     protected static function isBot($agent)
     {
+        $bots = array('yandex', 'yadirect', 'google', 'rambler', 'yahoo', 'msn', 'alexa', 'archiver', 'dotnet');
+        $block = array('xrumer', 'xpymep', 'xspider');
+
+        foreach ($block as $b)
+        {
+            if (stripos($agent, $b) !== false) {
+                throw new Exception('fucking bot', 403);
+            }
+        }
+
+        foreach ($bots as $bot)
+        {
+            if (stripos($agent, $bot) !== false) {
+                return true;
+            }
+        }
+
         return false;
     }
 
@@ -203,12 +219,12 @@ class Session
 
     public static function getUid()
     {
-        return self::$uid;
+        return intval(self::$uid);
     }
 
     public static function getRole()
     {
-        return self::$role;
+        return intval(self::$role);
     }
 
     public static function getToken()

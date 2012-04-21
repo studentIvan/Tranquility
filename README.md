@@ -1,5 +1,5 @@
 # TurboBatman Content Management Framework
-## Version 0.0.4 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
+## Version 0.0.5 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
 
 ### Features (something in progress)
 * News posting

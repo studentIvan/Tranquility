@@ -77,9 +77,10 @@ Process::$context['mobile'] =
 
 Process::$context['resource'] = isset($config['resources']) ? $config['resources'] : array();
 Process::$context['uri'] = htmlspecialchars($_SERVER['REQUEST_URI']);
+Process::$context['cms'] = isset($config['cms']) ? $config['cms'] : array();
 
 if (($pos = strpos(Process::$context['uri'], '?')) !== false) {
-    $output['uri'] = substr(Process::$context['uri'], 0, $pos);
+    Process::$context['uri'] = substr(Process::$context['uri'], 0, $pos);
 }
 
 try

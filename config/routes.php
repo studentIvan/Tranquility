@@ -7,5 +7,6 @@
  */
 return array(
     '/' => 'homepage',
+    '/test' => '!common:test',
     '/admin/?([^/]+)?/?([^/]+)?/?' => array('!common:session', '!admin:control'),
 );

@@ -1,4 +1,8 @@
 <?php
+/**
+ * Example: {{ (users_count ~ " пользовател")|plural("ь", "я", "ей") }}
+ * @license BSD
+ */
 class Twig_i18nPlural extends Twig_Extension
 {
     public function getName()

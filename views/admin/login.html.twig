@@ -7,10 +7,6 @@
         <h1>Авторизация</h1>
     </div><!-- /header -->
 
-    {% if flash_error %}<div data-theme="e" data-role="header">
-        <h1>Ошибка авторизации. Попробуйте ещё раз</h1>
-    </div>{% endif %}
-
     <div data-role="content">
         <form action="/admin/login" method="POST" data-ajax="false">
             <div data-role="fieldcontain">
@@ -18,7 +14,7 @@
                     <label for="logininput">
                         Логин
                     </label>
-                    <input id="logininput" name="xcya94n8cdjscam" value="" type="text" />
+                    <input id="logininput" name="xcya94n8cdjscam" value="" type="text" required />
                 </fieldset>
             </div>
             <div data-role="fieldcontain">
@@ -26,7 +22,7 @@
                     <label for="passinput">
                         Пароль
                     </label>
-                    <input id="passinput" name="asdj91n43fbdsvas0o4" value="" type="password" />
+                    <input id="passinput" name="asdj91n43fbdsvas0o4" value="" type="password" required />
                 </fieldset>
             </div>
             <div data-role="fieldcontain">
@@ -44,4 +40,9 @@
         </h3>
     </div>
 
-</div><!-- /page -->{% endblock %}
+</div><!-- /page -->
+{% if flash_error %}<script type="text/javascript">
+    $(document).bind('pagecreate', function() {
+        alert("Ошибка авторизации. Попробуйте ещё раз");
+    });
+</script>{% endif %}{% endblock %}

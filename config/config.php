@@ -55,4 +55,12 @@ return array(
         'garbage_auto_dump' => true, // Call dumpGarbage() every EVEN minute
                                      // Recommended: false (but it need cronjob configuration)
     ),
+
+    /**
+     * Content Management System configuration
+     */
+    'cms' => array(
+        'news' => array('limit_per_page' => 10), //set false for off
+        'users' => true, //set false for off
+    ),
 );

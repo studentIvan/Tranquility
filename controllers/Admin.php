@@ -66,9 +66,8 @@ class Admin
 
             try {
                 Session::authorize($login, $password, $temporary);
-                header('Location: /admin/');
+                header('Location: /admin/manager/');
             } catch (Exception $e) {
-                echo $e->getMessage();
                 Process::$context['flash_error'] = true;
                 Process::getTwigInstance()->display('admin/login.html.twig', Process::$context);
             }
