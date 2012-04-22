@@ -1,6 +1,16 @@
 {% if not data_action %}
 <a href="/admin/manager/news?action=new" data-role="button" data-icon="plus">Создать новую запись</a>
+<ul data-role="listview" data-inset="true">
+    {% for post in news_list %}
+    <li>
+        <a href="/admin/manager/news?action=select&amp;identify={{ post.id }}">
+            <strong>{{ post.title }}</strong> ({{ post.created_at|dtl10n }})
+        </a>
+    </li>
+    {% endfor %}
+</ul>
 {% else %}
+{% if data_action=='new' %}
 <form action="/admin/manager/news?action=new" method="POST" data-ajax="false">
     <div data-role="fieldcontain">
         <label for="ftitle">Заголовок:</label>
@@ -18,4 +28,8 @@
         <button type="submit">Сохранить</button>
     </div>
 </form>
+{% endif %}
+{% if data_action=='select' %}
+{{ object_content }}
+{% endif %}
 {% endif %}

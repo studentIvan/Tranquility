@@ -100,7 +100,6 @@ class News
             u.login AS poster_login
             FROM news n LEFT JOIN users u
             ON n.posted_by=u.id
-            ORDER BY n.created_at DESC
             WHERE n.id=:id
         ");
 

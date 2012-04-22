@@ -52,6 +52,28 @@ class Admin
                     elseif ($action == 'new')
                     {
                         Process::$context['data_title'] = 'Новостной блог (новая запись)';
+                        list($title, $content, $tags) = Data::inputsList('title', 'content', 'tags');
+
+                        if (($title !== false) and ($content !== false) and ($tags !== false))
+                        {
+                            if (News::create(Session::getUid(), $title, $content, $tags))
+                            {
+                                header('Location: /admin/manager/news');
+                                exit;
+                            }
+                        }
+                    }
+                    elseif ($action == 'select' and $identify)
+                    {
+                        $post = News::getObjectById($identify);
+                        Process::$context['data_title'] = $post->title;
+                        Process::$context['object_content'] = $post->content;
+                        Process::$context['object_created_at'] = $post->created_at;
+                        Process::$context['object_identify'] = $identify;
+                    }
+                    else
+                    {
+                        throw new NotFoundException();
                     }
 
 
