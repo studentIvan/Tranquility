@@ -1,25 +1,19 @@
 <?php
 class Roles
 {
-    public static function create($authorId, $title, $content, $tags)
+    public static function create($title)
     {
-        $sql = "INSERT INTO news (title, content, tags, created_at, posted_by)
-                    VALUES (:title, :content, :tags, NOW(), :posted_by)";
+        $sql = "INSERT INTO roles (title) VALUES (:title)";
         $statement = Database::getInstance()->prepare($sql);
         $statement->bindParam(':title', $title, PDO::PARAM_STR);
-        $statement->bindParam(':content', $content, PDO::PARAM_STR);
-        $statement->bindParam(':tags', $tags, PDO::PARAM_STR);
-        $statement->bindParam(':posted_by', $authorId, PDO::PARAM_INT);
         return $statement->execute();
     }
 
-    public static function edit($id, $title, $content, $tags)
+    public static function edit($id, $title)
     {
-        $sql = "UPDATE news SET title=:title, content=:content, tags=:tags WHERE id=:id";
+        $sql = "UPDATE roles SET title=:title WHERE id=:id";
         $statement = Database::getInstance()->prepare($sql);
         $statement->bindParam(':title', $title, PDO::PARAM_STR);
-        $statement->bindParam(':content', $content, PDO::PARAM_STR);
-        $statement->bindParam(':tags', $tags, PDO::PARAM_STR);
         $statement->bindParam(':id', $id, PDO::PARAM_INT);
         return $statement->execute();
     }
@@ -33,38 +27,23 @@ class Roles
     {
         if (is_array($id)) {
             return Database::getInstance()
-                ->prepare("DELETE FROM news WHERE id IN (?)")
+                ->prepare("DELETE FROM roles WHERE id IN (?)")
                 ->execute($id);
         } else {
             return Database::getInstance()
-                ->prepare("DELETE FROM news WHERE id=?")
+                ->prepare("DELETE FROM roles WHERE id=?")
                 ->execute(array($id));
         }
     }
 
     /**
      * @static
-     * @param int $offset
-     * @param bool|int $limit
      * @return array
      */
-    public static function listing($offset = 0, $limit = 30)
+    public static function listing()
     {
-        $statement = Database::getInstance()->prepare("
-            SELECT n.id AS id, n.title AS title,
-            n.content AS content, n.tags AS tags,
-            n.created_at AS created_at, n.posted_by AS poster_id,
-            u.login AS poster_login
-            FROM news n LEFT JOIN users u
-            ON n.posted_by=u.id
-            ORDER BY n.created_at DESC
-            LIMIT :limit OFFSET :offset
-        ");
-
-        $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
-        $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
-        $statement->execute();
-
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        return Database::getInstance()
+            ->query("SELECT * FROM roles")
+            ->fetchAll(PDO::FETCH_ASSOC);
     }
 }

@@ -32,6 +32,24 @@ class Admin
 
             switch($component)
             {
+                case 'users':
+                    if (!isset(Process::$context['cms']['users']))
+                        throw new NotFoundException();
+                    $perPage = isset(Process::$context['cms']['users']['limit_per_page']) ?
+                        Process::$context['cms']['users']['limit_per_page'] : 20;
+                    $pagination = Data::paginate(Database::count('users'), $perPage, $page);
+                    Process::$context['users_list'] = Users::listing($pagination['offset'], $perPage);
+                    Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
+                    Process::$context['data_title'] = 'Пользователи';
+                    break;
+
+                case 'acl':
+                    if (!isset(Process::$context['cms']['users']))
+                        throw new NotFoundException();
+                    Process::$context['roles_list'] = Roles::listing();
+                    Process::$context['data_title'] = 'Роли пользователей';
+                    break;
+
                 case 'sessions':
                     if (!isset(Process::$context['cms']['sessions']))
                         throw new NotFoundException();
