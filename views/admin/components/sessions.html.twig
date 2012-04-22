@@ -1,21 +1,21 @@
 <ul data-role="listview" data-filter="true" data-inset="true">
     {% for session in sessions_list %}
-    <li>
-        <h3>{{ session.session_role }}</h3>
+    <li{% if user_token==session.token %} class="ui-overlay-e"{% endif %}>
+        <h3>{{ session.token }}</h3>
         <p>
-            IP посетителя: {{ session.ip }}
+            Роль: {{ session.session_role }}
         </p>
         <p>
-            Токен: {{ session.token }}
+            Обновление: {{ session.uptime|date("F jS \\a\\t g:ia") }}
         </p>
-        <p>
+        <p>{% if user_token==session.token %}Это ваша текущая сессия{% else %}
             Посетитель {% if session.user %}авторизован как <strong>{{ session.user }}</strong>
-            {% else %}не авторизован{% endif %}
+            {% else %}не авторизован{% endif %}{% endif %}
         </p>
         <p>
             {{ session.user_agent }}
         </p>
-        <p class="ui-li-aside"><strong>{{ session.uptime }}</strong></p>
+        <p class="ui-li-aside"><strong>{{ session.ip }}</strong></p>
     </li>
     {% endfor %}
 </ul>

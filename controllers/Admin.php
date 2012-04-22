@@ -23,6 +23,8 @@ class Admin
             exit;
         }
 
+        Process::$context['data_title'] = 'Управление';
+
         if ($component and isset(Process::$context['cms']))
         {
             Process::$context['component'] = $component;
@@ -38,6 +40,8 @@ class Admin
                     $pagination = Data::paginate(Database::count('sessions'), $perPage, $page);
                     Process::$context['sessions_list'] = Session::getAll($pagination['offset'], $perPage);
                     Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
+                    Process::$context['data_title'] = 'Монитор сессий';
+                    Process::$context['user_token'] = Session::getToken();
                     break;
 
                 default:

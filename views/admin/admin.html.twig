@@ -1,49 +1,34 @@
 {% extends 'admin/skeleton.admin.html.twig' %}
-{% block title %}Админ-Панель{% endblock %}
+{% block title %}{% if data_title %}{{ data_title }}{% else %}Статистика{% endif %}{% endblock %}
 {% block page %}
 <div data-role="page">
 
-    <div data-theme="a" data-role="header" data-position="inline">
+    <div data-theme="a" data-role="header" data-position="fixed">
         <a href="#" data-icon="back" data-rel="back">Назад</a>
-        <h1>Админ панель</h1>
-        <a href="/" data-icon="forward" rel="external">Перейти к сайту</a>
+        {% if not pagination %}
+        <a href="/admin/logout/" data-icon="delete" rel="external">Выход</a>
+        {% else %}
+        <a href="/admin/manager/" data-icon="gear">Управление</a>
+        {% endif %}
+        <h1>{% if data_title %}{{ data_title }}{% else %}Статистика{% endif %}</h1>
     </div><!-- /header -->
 
     <div data-role="content">
-        <div data-role="navbar" data-iconpos="top">
-            <ul>
-                <li>
-                    <a href="/admin/" data-icon="star" data-ajax="false"
-                            {% if not admin_page %} class="ui-btn-active"{% endif %}>
-                        Инфо
-                    </a>
-                </li>
-                <li>
-                    <a href="/admin/manager/" data-icon="gear" data-ajax="false"
-                            {% if admin_page == 'manager' %} class="ui-btn-active"{% endif %}>
-                        Управление
-                    </a>
-                </li>
-                <li>
-                    <a href="/admin/logout/" data-icon="delete" data-ajax="false">
-                        Выход
-                    </a>
-                </li>
-            </ul>
-        </div>
         {% if not admin_page %}
-        {% include 'admin/info.html.twig' %}
+            {% include 'admin/info.html.twig' %}
         {% else %}
-        {% if admin_page == 'manager' %}{% include 'admin/manager.html.twig' %}{% endif %}
+            {% if admin_page == 'manager' %}{% include 'admin/manager.html.twig' %}{% endif %}
         {% endif %}
     </div>
     <!-- /content -->
 
     {% if not pagination %}
-    <div data-theme="c" data-role="footer">
-        <h3>
-            Powered by TurboBatman CMF
-        </h3>
+    <div data-theme="a" data-role="footer" class="ui-bar" data-position="fixed">
+        <a href="/admin/" data-role="button" data-icon="star"
+                {% if not admin_page %} class="ui-btn-active"{% endif %}>Статистика</a>
+        <a href="/admin/manager/" data-role="button" data-icon="gear"
+                {% if admin_page == 'manager' %} class="ui-btn-active"{% endif %}>Управление</a>
+        <a href="/" data-role="button" data-icon="home" rel="external">Сайт</a>
     </div>
     {% else %}
     <div data-theme="a" data-role="footer" data-position="fixed">

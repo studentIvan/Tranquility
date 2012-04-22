@@ -54,7 +54,7 @@ CREATE TABLE `roles` (
   `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -63,7 +63,7 @@ CREATE TABLE `roles` (
 
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (1,'Администратор'),(2,'Модератор'),(3,'Пользователь'),(4,'Гость');
+INSERT INTO `roles` VALUES (1,'Администратор'),(2,'Модератор'),(3,'Пользователь'),(4,'Гость'),(5,'Бот');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -79,7 +79,7 @@ CREATE TABLE `sessions` (
   `uid` int(10) unsigned NOT NULL DEFAULT '0',
   `role` tinyint(3) unsigned NOT NULL,
   `ip` int(10) unsigned NOT NULL,
-  `useragent` varchar(100) NOT NULL,
+  `useragent` varchar(110) NOT NULL,
   `uptime` datetime NOT NULL,
   `data` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`token`),
@@ -94,7 +94,7 @@ CREATE TABLE `sessions` (
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
-INSERT INTO `sessions` VALUES ('e0d5f7bbccf00ffcaa2baa61638024d6',1,1,2130706433,'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0','2012-04-22 03:20:18',NULL),('5281228e89c40e2487c28a8eef56f87e',0,4,2130706433,'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.162 Safa','2012-04-22 03:03:23',NULL),('0d40df51d4f365bf00c3983662160def',1,1,2130706433,'Opera/9.80 (Windows NT 6.1; Opera Mobi/23731; U; en) Presto/2.9.201 Version/11.50','2012-04-22 03:21:24',NULL);
+INSERT INTO `sessions` VALUES ('162b40871548681ca946404da8995c6e',1,1,2130706433,'Mozilla/5.0 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)','2012-04-22 04:26:39',NULL),('c0faaffbf235206d0f999b58b844e3f4',0,4,2130706433,'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.162 Safari/535.19','2012-04-22 03:36:26',NULL),('0d40df51d4f365bf00c3983662160def',1,1,2130706433,'Opera/9.80 (Windows NT 6.1; Opera Mobi/23731; U; en) Presto/2.9.201 Version/11.50','2012-04-22 04:26:52',NULL),('ce150dd1d8f9148718129d30f3cfcce2',0,4,2130706433,'Opera/9.80 (Windows NT 6.1; U; ru) Presto/2.10.229 Version/11.61','2012-04-22 04:05:09',NULL);
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -136,4 +136,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-04-22  3:24:10
+-- Dump completed on 2012-04-22  4:27:36

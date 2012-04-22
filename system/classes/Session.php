@@ -75,18 +75,26 @@ class Session
     {
         $pdo = Database::getInstance();
         $ip = $_SERVER['REMOTE_ADDR'];
-        $agent = substr(htmlspecialchars(trim($_SERVER['HTTP_USER_AGENT']), ENT_QUOTES), 0, 100);
+        $agent = substr(htmlspecialchars(trim($_SERVER['HTTP_USER_AGENT']), ENT_QUOTES), 0, 110);
 
         if (self::isBot($agent))
         {
             $token = (is_null($token)) ? Security::getDigest(array($ip, $agent)) : $token;
+            $role = self::$options['bot_role'];
 
             if (Database::count("sessions WHERE token='$token'") !== 0)
             {
                 $pdo->query("UPDATE sessions SET uptime=NOW() WHERE token='$token'");
             }
+            else
+            {
+                $pdo->query(
+                    "INSERT INTO sessions (`token`, `uid`, `role`, `ip`, `useragent`, `uptime`)
+                  VALUES ('$token', '0', '$role', INET_ATON('$ip'), '$agent', NOW())"
+                );
+            }
 
-            self::$role = self::$options['default_role'];
+            self::$role = $role;
         }
         else
         {
@@ -95,7 +103,7 @@ class Session
 
             $token = (is_null($token)) ? Security::getDigest(array($ip, $agent, rand(1000, 9999))) : $token;
 
-            $role = (is_null($uid)) ? self::$options['default_role'] :
+            $role = (is_null($uid)) ? self::$options['guest_role'] :
                 Database::getSingleResult("SELECT role FROM users WHERE id='$uid'");
 
             self::$role = $role;

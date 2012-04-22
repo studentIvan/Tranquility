@@ -50,7 +50,8 @@ return array(
      * Session configuration
      */
     'session' => array(
-        'default_role' => 4,
+        'bot_role' => 5,
+        'guest_role' => 4,
         'lifetime_hours' => 1,
         'garbage_auto_dump' => true, // Call dumpGarbage() every EVEN minute
                                      // Recommended: false (but it need cronjob configuration)
