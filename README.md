@@ -1,5 +1,5 @@
 # TurboBatman Content Management Framework
-## Version 0.0.5 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
+## Version 0.0.6 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
 
 ### Features (something in progress)
 * News posting
@@ -15,3 +15,8 @@
 ### Requirements
 * php 5.2.4
 * pdo mysql
+
+### After production install
+* Turn off developer mode in config/config.php
+* Remove all files from root directory, excluding index.php, favicon.ico, robots.txt and .htaccess
+* Remove testing directory

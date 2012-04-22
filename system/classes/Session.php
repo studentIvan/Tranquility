@@ -88,10 +88,17 @@ class Session
             }
             else
             {
-                $pdo->query(
-                    "INSERT INTO sessions (`token`, `uid`, `role`, `ip`, `useragent`, `uptime`)
-                  VALUES ('$token', '0', '$role', INET_ATON('$ip'), '$agent', NOW())"
-                );
+                $sql = "INSERT INTO sessions (`token`, `uid`, `role`, `ip`, `useragent`, `uptime`)
+                  VALUES (:token, 0, :role, INET_ATON(:ip), :agent, NOW())";
+
+                $statement = $pdo->prepare($sql);
+                $statement->bindParam(':token', $token, PDO::PARAM_STR);
+                $statement->bindParam(':role', $role, PDO::PARAM_INT);
+                $statement->bindParam(':ip', $ip, PDO::PARAM_STR);
+                $statement->bindParam(':agent', $agent, PDO::PARAM_STR);
+
+                if (!$statement->execute())
+                    throw new SessionException('Database error', 403);
             }
 
             self::$role = $role;
@@ -109,10 +116,18 @@ class Session
             self::$role = $role;
             $usid = (is_null($uid)) ? '0' : $uid;
 
-            $pdo->query(
-                "INSERT INTO sessions (`token`, `uid`, `role`, `ip`, `useragent`, `uptime`)
-                  VALUES ('$token', '$usid', '$role', INET_ATON('$ip'), '$agent', NOW())"
-            );
+            $sql = "INSERT INTO sessions (`token`, `uid`, `role`, `ip`, `useragent`, `uptime`)
+                  VALUES (:token, :uid, :role, INET_ATON(:ip), :agent, NOW())";
+
+            $statement = $pdo->prepare($sql);
+            $statement->bindParam(':token', $token, PDO::PARAM_STR);
+            $statement->bindParam(':uid', $usid, PDO::PARAM_INT);
+            $statement->bindParam(':role', $role, PDO::PARAM_INT);
+            $statement->bindParam(':ip', $ip, PDO::PARAM_STR);
+            $statement->bindParam(':agent', $agent, PDO::PARAM_STR);
+
+            if (!$statement->execute())
+                throw new SessionException('Database error', 403);
         }
 
         self::$token = $token;
@@ -128,6 +143,20 @@ class Session
                 array($token, $uid, $pass)
             ),
         ));
+
+        /**
+         * Referer register
+         */
+        if (isset(self::$options['referers']) and self::$options['referers']
+            and isset($_SERVER['HTTP_REFERER']) and !empty($_SERVER['HTTP_REFERER'])
+            and filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL))
+        {
+            $ref = substr(str_replace(array('<', '>'), '', $_SERVER['HTTP_REFERER']), 0, 200);
+            $statement = $pdo->prepare("INSERT INTO referers (timepoint, token, url) VALUES (NOW(), :token, :url)");
+            $statement->bindParam(':token', $token, PDO::PARAM_STR);
+            $statement->bindParam(':url', $ref, PDO::PARAM_STR);
+            $statement->execute();
+        }
     }
 
     public static function setConfiguration($configuration)
@@ -251,10 +280,11 @@ class Session
         $statement = Database::getInstance()->prepare("
             SELECT s.token AS token, u.login AS user,
             INET_NTOA(s.ip) AS ip, s.useragent AS user_agent,
-            s.uptime AS uptime, r.title AS session_role
+            s.uptime AS uptime, r.title AS session_role, f.url AS referer
             FROM sessions s
             LEFT JOIN users u ON s.uid=u.id
             LEFT JOIN roles r ON r.id=s.role
+            LEFT JOIN referers f ON f.token=s.token
             ORDER BY s.uptime DESC
             LIMIT :limit OFFSET :offset
         ");

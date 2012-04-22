@@ -12,6 +12,11 @@
             Посетитель {% if session.user %}авторизован как <strong>{{ session.user }}</strong>
             {% else %}не авторизован{% endif %}{% endif %}
         </p>
+        {% if session.referer %}
+        <p>
+            Реферер: <a href="{{ session.referer }}" rel="external" target="_blank">{{ session.referer|escape }}</a>
+        </p>
+        {% endif %}
         <p>
             {{ session.user_agent }}
         </p>
