@@ -65,6 +65,6 @@ return array(
     'cms' => array(
         'news' => array('limit_per_page' => 10),
         'sessions' => array('limit_per_page' => 20),
-        'users' => true,
+        'users' => array('limit_per_page' => 20),
     ),
 );
