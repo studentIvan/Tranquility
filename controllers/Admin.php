@@ -29,9 +29,34 @@ class Admin
         {
             Process::$context['component'] = $component;
             $page = isset($_GET['page']) ? abs($_GET['page']) : 1;
+            $action = isset($_GET['action']) ? $_GET['action'] : false;
+            $identify = isset($_GET['identify']) ? abs($_GET['identify']) : false;
+
+            Process::$context['data_action'] = $action;
 
             switch($component)
             {
+                case 'news':
+                    if (!isset(Process::$context['cms']['news']))
+                        throw new NotFoundException();
+
+                    if (!$action)
+                    {
+                        $perPage = isset(Process::$context['cms']['news']['limit_per_page']) ?
+                            Process::$context['cms']['news']['limit_per_page'] : 20;
+                        $pagination = Data::paginate(Database::count('news'), $perPage, $page);
+                        Process::$context['news_list'] = News::listing($pagination['offset'], $perPage);
+                        Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
+                        Process::$context['data_title'] = 'Новостной блог';
+                    }
+                    elseif ($action == 'new')
+                    {
+                        Process::$context['data_title'] = 'Новостной блог (новая запись)';
+                    }
+
+
+                    break;
+
                 case 'users':
                     if (!isset(Process::$context['cms']['users']))
                         throw new NotFoundException();

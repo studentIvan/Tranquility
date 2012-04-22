@@ -1,1 +1,21 @@
-its news
+{% if not data_action %}
+<a href="/admin/manager/news?action=new" data-role="button" data-icon="plus">Создать новую запись</a>
+{% else %}
+<form action="/admin/manager/news?action=new" method="POST" data-ajax="false">
+    <div data-role="fieldcontain">
+        <label for="ftitle">Заголовок:</label>
+        <input type="text" name="title" id="ftitle" value="" required />
+    </div>
+    <div data-role="fieldcontain">
+        <label for="fcontent">Содержимое:</label>
+        <textarea name="content" id="fcontent" required></textarea>
+    </div>
+    <div data-role="fieldcontain">
+        <label for="ftags">Теги:</label>
+        <input type="text" name="tags" id="ftags" value="" />
+    </div>
+    <div data-role="fieldcontain">
+        <button type="submit">Сохранить</button>
+    </div>
+</form>
+{% endif %}
