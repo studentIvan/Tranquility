@@ -41,10 +41,7 @@ class Process
             ));
 
             include_once __DIR__ . '/system/classes/Twig_i18nPlural.php';
-            include_once __DIR__ . '/system/classes/Twig_l10nDatetime.php';
-
             self::$twig->addExtension(new Twig_i18nPlural());
-            self::$twig->addExtension(new Twig_l10nDatetime());
         }
 
         return self::$twig;

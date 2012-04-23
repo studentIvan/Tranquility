@@ -65,4 +65,13 @@
     </div>
     {% endif %}
 
-</div><!-- /page -->{% endblock %}
+</div><!-- /page -->
+<script type="text/javascript">
+    $(document).bind('pageinit', function() {
+        var ldt = new LocalizedDate(4, 'ru');
+        $(".dtl10n").each(function() {
+            $(this).html(ldt.localize($(this).html()))
+        })
+    })
+</script>
+{% endblock %}

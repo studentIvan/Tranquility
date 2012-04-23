@@ -4,7 +4,7 @@
     {% for post in news_list %}
     <li>
         <a href="/admin/manager/news?action=select&amp;identify={{ post.id }}">
-            <strong>{{ post.title }}</strong> ({{ post.created_at|dtl10n }})
+            <strong>{{ post.title }}</strong> (<span class="dtl10n">{{ post.created_at }}</span>)
         </a>
     </li>
     {% endfor %}

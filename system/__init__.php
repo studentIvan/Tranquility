@@ -1,5 +1,6 @@
 <?php
 $config = require __DIR__ . '/../config/config.php';
+date_default_timezone_set('Europe/Moscow');
 
 define('STARTED_AT', microtime(true));
 define('DEVELOPER_MODE', isset($config['developer_mode']) ? $config['developer_mode'] : false);

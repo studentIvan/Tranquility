@@ -6,7 +6,7 @@
             Роль: {{ session.session_role }}
         </p>
         <p>
-            Обновление: {{ session.uptime|date("F jS \\a\\t g:ia") }}
+            Обновление: <span class="dtl10n">{{ session.uptime }}</span>
         </p>
         <p>{% if user_token==session.token %}Это ваша текущая сессия{% else %}
             Посетитель {% if session.user %}авторизован как <strong>{{ session.user }}</strong>

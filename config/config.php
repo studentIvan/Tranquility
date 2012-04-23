@@ -23,6 +23,7 @@ return array(
      * http://api.yandex.ru/jslibs/?ncrnd=7105
      */
     'resources' => array(
+        'ldt_js' => '/js/ldt.min.js',
         'jquery_js' => 'http://yandex.st/jquery/1.7.2/jquery.min.js',
         'jquery_mobile_js' => 'http://yandex.st/jquery/mobile/1.1.0/jquery.mobile.min.js',
         'jquery_mobile_css' => 'http://yandex.st/jquery/mobile/1.1.0/jquery.mobile.min.css',
