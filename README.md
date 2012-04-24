@@ -1,7 +1,7 @@
 # TurboBatman Content Management Framework
-## Version 0.0.7 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
+## Version 0.0.8 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
 
-### Features (something in progress)
+### Features
 * News posting
 * JQuery Mobile admin panel
 * Easy to install and use
@@ -16,7 +16,20 @@
 * php 5.2.4
 * pdo mysql
 
-### After production install
+### Production install
 * Turn off developer mode in config/config.php
-* Remove all files from root directory, excluding index.php, favicon.ico, robots.txt and .htaccess
-* Remove testing directory
+
+### Example apache configuration
+```apache
+<VirtualHost *>
+    ServerName turbo.local
+	DocumentRoot "/path/to/turbobatman/webroot"
+
+	<Directory /path/to/turbobatman/webroot>
+        DirectoryIndex index.php index.html
+        AllowOverride All
+        Order allow,deny
+        Allow from all
+    </Directory>
+</VirtualHost>
+```

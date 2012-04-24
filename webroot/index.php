@@ -4,7 +4,7 @@
  */
 ini_set('display_errors', 'On');
 error_reporting(E_ALL);
-require_once __DIR__ . '/system/__init__.php';
+require_once __DIR__ . '/../system/__init__.php';
 
 class Process
 {
@@ -31,16 +31,16 @@ class Process
     {
         if (is_null(self::$twig))
         {
-            include_once __DIR__ . '/vendor/Twig/Autoloader.php';
+            include_once __DIR__ . '/../vendor/Twig/Autoloader.php';
 
             Twig_Autoloader::register();
 
-            $loader = new Twig_Loader_Filesystem(__DIR__ . '/views');
+            $loader = new Twig_Loader_Filesystem(__DIR__ . '/../views');
             self::$twig = new Twig_Environment($loader, array(
-                'cache' => DEVELOPER_MODE ? false : __DIR__ . '/system/cache',
+                'cache' => DEVELOPER_MODE ? false : __DIR__ . '/../system/cache',
             ));
 
-            include_once __DIR__ . '/system/classes/Twig_i18nPlural.php';
+            include_once __DIR__ . '/../system/classes/Twig_i18nPlural.php';
             self::$twig->addExtension(new Twig_i18nPlural());
         }
 
@@ -58,7 +58,7 @@ class Process
         {
             $route = ucfirst(substr($route, 1));
             list($class, $method) = explode(':', $route);
-            include __DIR__ . "/controllers/$class.php";
+            include __DIR__ . "/../controllers/$class.php";
             call_user_func(array($class, $method), $matches);
         }
         else
@@ -73,7 +73,7 @@ class Process
 
 Process::$context['mobile'] =
     (isset($config['always_mobile']) and $config['always_mobile']) ?
-    true : require __DIR__ . '/system/ismobile.php';
+    true : require __DIR__ . '/../system/ismobile.php';
 
 Process::$context['resource'] = isset($config['resources']) ? $config['resources'] : array();
 Process::$context['uri'] = htmlspecialchars($_SERVER['REQUEST_URI']);
@@ -86,7 +86,7 @@ if (($pos = strpos(Process::$context['uri'], '?')) !== false) {
 try
 {
     if (isset($_GET['e']) and $_GET['e'] == 403) throw new Exception('Forbidden', 403);
-    foreach (require __DIR__ . '/config/routes.php' as $rule => $route)
+    foreach (require __DIR__ . '/../config/routes.php' as $rule => $route)
     {
         if (preg_match('/^' . str_replace('/', '\/', $rule) . '$/', Process::$context['uri'], $matches))
         {
