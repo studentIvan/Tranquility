@@ -4,6 +4,7 @@ date_default_timezone_set('Europe/Moscow');
 
 define('STARTED_AT', microtime(true));
 define('DEVELOPER_MODE', isset($config['developer_mode']) ? $config['developer_mode'] : false);
+$__DIR__ = dirname(__FILE__);
 
 class AuthException extends Exception {
 
@@ -31,22 +32,22 @@ function exception_error_handler($errno, $errstr, $errfile, $errline) {
 
 set_error_handler("exception_error_handler");
 
-require_once __DIR__ . '/classes/Database.php';
-require_once __DIR__ . '/classes/Security.php';
-require_once __DIR__ . '/classes/Cookies.php';
-require_once __DIR__ . '/classes/Session.php';
-require_once __DIR__ . '/classes/Services.php';
-require_once __DIR__ . '/classes/Data.php';
+require_once $__DIR__ . '/classes/Database.php';
+require_once $__DIR__ . '/classes/Security.php';
+require_once $__DIR__ . '/classes/Cookies.php';
+require_once $__DIR__ . '/classes/Session.php';
+require_once $__DIR__ . '/classes/Services.php';
+require_once $__DIR__ . '/classes/Data.php';
 
 if (isset($config['cms']))
 {
     if (isset($config['cms']['news']) and $config['cms']['news']) {
-        require_once __DIR__ . '/solutions/News.php';
+        require_once $__DIR__ . '/solutions/News.php';
     }
 
     if (isset($config['cms']['users']) and $config['cms']['users']) {
-        require_once __DIR__ . '/solutions/Users.php';
-        require_once __DIR__ . '/solutions/Roles.php';
+        require_once $__DIR__ . '/solutions/Users.php';
+        require_once $__DIR__ . '/solutions/Roles.php';
     }
 }
 
@@ -88,16 +89,17 @@ class Process
     {
         if (is_null(self::$twig))
         {
-            include_once __DIR__ . '/../vendor/Twig/Autoloader.php';
+            $__DIR__ = dirname(__FILE__);
+            include_once $__DIR__ . '/../vendor/Twig/Autoloader.php';
 
             Twig_Autoloader::register();
 
-            $loader = new Twig_Loader_Filesystem(__DIR__ . '/../views');
+            $loader = new Twig_Loader_Filesystem($__DIR__ . '/../views');
             self::$twig = new Twig_Environment($loader, array(
-                'cache' => DEVELOPER_MODE ? false : __DIR__ . '/cache',
+                'cache' => DEVELOPER_MODE ? false : $__DIR__ . '/cache',
             ));
 
-            include_once __DIR__ . '/classes/Twig_i18nPlural.php';
+            include_once $__DIR__ . '/classes/Twig_i18nPlural.php';
             self::$twig->addExtension(new Twig_i18nPlural());
         }
 
@@ -115,7 +117,7 @@ class Process
         {
             $route = ucfirst(substr($route, 1));
             list($class, $method) = explode(':', $route);
-            include __DIR__ . "/../controllers/$class.php";
+            include dirname(__FILE__) . "/../controllers/$class.php";
             call_user_func(array($class, $method), $matches);
         }
         else
@@ -132,7 +134,7 @@ if (isset($_SERVER['REQUEST_URI']))
 {
     Process::$context['mobile'] =
         (isset($config['always_mobile']) and $config['always_mobile']) ?
-            true : require __DIR__ . '/ismobile.php';
+            true : require $__DIR__ . '/ismobile.php';
 
     Process::$context['resource'] = isset($config['resources']) ? $config['resources'] : array();
     Process::$context['uri'] = htmlspecialchars($_SERVER['REQUEST_URI']);
@@ -145,7 +147,7 @@ if (isset($_SERVER['REQUEST_URI']))
     try
     {
         if (isset($_GET['e']) and $_GET['e'] == 403) throw new ForbiddenException();
-        foreach (require __DIR__ . '/../config/routes.php' as $rule => $route)
+        foreach (require $__DIR__ . '/../config/routes.php' as $rule => $route)
         {
             if (preg_match('/^' . str_replace('/', '\/', $rule) . '$/', Process::$context['uri'], $matches))
             {

@@ -11,7 +11,7 @@ if (isset($_SERVER['REMOTE_ADDR']) and $_SERVER['REMOTE_ADDR'] != '127.0.0.1' an
 }
 
 Session::dumpGarbage();
-$config = require __DIR__ . '/../config/config.php';
+$config = require dirname(__FILE__) . '/../config/config.php';
 
 if (isset($config['session']['referers']) and $config['session']['referers'])
 {
