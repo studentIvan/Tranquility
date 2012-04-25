@@ -125,18 +125,53 @@ class Admin
                 case 'users':
                     if (!isset(Process::$context['cms']['users']))
                         throw new NotFoundException();
-                    $perPage = 20;
-                    $pagination = Data::paginate(Database::count('users'), $perPage, $page);
-                    Process::$context['users_list'] = Users::listing($pagination['offset'], $perPage);
-                    Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
+
                     Process::$context['data_title'] = 'Пользователи';
+
+                    if (!$action)
+                    {
+                        $perPage = 20;
+                        $pagination = Data::paginate(Database::count('users'), $perPage, $page);
+                        Process::$context['users_list'] = Users::listing($pagination['offset'], $perPage);
+                        Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
+                    }
+                    elseif ($action == 'add' and self::$checkCsrfToken)
+                    {
+                        //
+                    }
+                    elseif ($action == 'select' and $identify)
+                    {
+                        //
+                    }
+                    else
+                    {
+                        throw new NotFoundException();
+                    }
                     break;
 
                 case 'acl':
                     if (!isset(Process::$context['cms']['users']))
                         throw new NotFoundException();
-                    Process::$context['roles_list'] = Roles::listing();
+
                     Process::$context['data_title'] = 'Роли пользователей';
+                    Process::$context['session_cfg'] = Session::getOptions();
+
+                    if (!$action)
+                    {
+                        Process::$context['roles_list'] = Roles::listing();
+                    }
+                    elseif ($action == 'add' and self::$checkCsrfToken)
+                    {
+                        //
+                    }
+                    elseif ($action == 'select' and $identify)
+                    {
+                        //
+                    }
+                    else
+                    {
+                        throw new NotFoundException();
+                    }
                     break;
 
                 case 'sessions':

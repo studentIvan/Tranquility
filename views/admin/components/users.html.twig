@@ -1,7 +1,21 @@
-<ul data-role="listview" data-inset="true">
+{% if not data_action %}
+<ul data-role="listview" data-inset="true" data-mini="true" data-filter="true">
     {% for user in users_list %}
     <li>
-        {{ user.login }}
+        <a href="/admin/manager/users?action=select&amp;identify={{ user.id }}">
+            {{ user.id }}.&nbsp;&nbsp;&nbsp;<span {% if user.role == 1 %}style="color: #8b0000;" {% endif %}>{{ user.login }}</span>
+            - {{ user.title }}, зарегистрирован <span class="dtl10n">{{ user.registered_at }}</span>
+        </a>
     </li>
     {% endfor %}
 </ul>
+
+<a href="/admin/manager/users?action=add&amp;csrf_token={{ csrf_token }}" data-role="button"
+   data-icon="plus" data-theme="d">
+    Создать нового пользователя
+</a>
+{% elseif data_action == 'add'%}
+add
+{% elseif data_action == 'select'%}
+select
+{% endif %}

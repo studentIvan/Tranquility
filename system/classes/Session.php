@@ -269,6 +269,11 @@ class Session
         return self::$token;
     }
 
+    public static function getOptions()
+    {
+        return self::$options;
+    }
+
     /**
      * @static
      * @param int $offset

@@ -3,15 +3,21 @@
 ## Version 0.0.9 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
 
 ### Features
-* News posting
-* JQuery Mobile admin panel
+* News posting (also can be used for blog)
+* Session monitor (referers, browsers, etc)
+* Easy "Session" php api (Session::getToken(), Session::start(), Session::authorize(...), etc)
+* Half ready site
 * Easy to install and use
 * Normal work on cheap hostings
 * Web/PDA automatic difference
 
-### Components
-* Twig template engine
+### Composition
+* Twig template engine + plural ends extension
 * Uri-match routing + basic application architecture
+* Many global singletons (oh god, why?)
+* TinyMCE visual editor (disabled for news by default)
+* JQuery mobile + power admin panel
+* LocalizedDate.JS
 
 ### Requirements
 * php 5.2.4
@@ -35,3 +41,6 @@
     </Directory>
 </VirtualHost>
 ```
+
+### Cheap hosting webroot placement
+You can rename webroot so as you like. For example: htdocs (as default hosting directory) or www

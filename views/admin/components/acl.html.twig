@@ -1,7 +1,28 @@
-<ul data-role="listview" data-inset="true">
+{% if not data_action %}
+<ol data-role="listview" data-inset="true" data-mini="true" data-filter="true">
     {% for role in roles_list %}
     <li>
-        {{ role.title }}
+        {% if role.id != 1 %}
+        <a href="/admin/manager/acl?action=select&amp;identify={{ role.id }}">{% endif %}
+            &nbsp;{% if role.id == 1 %}
+                <span style="color: darkred">{{ role.title }}</span> - роль полного контроля, не конфигурируема
+            {% elseif role.id == session_cfg.guest_role %}
+                <span style="color: darkgreen">{{ role.title }}</span> - роль помечена в конфигурации как guest_role
+            {% elseif role.id == session_cfg.bot_role %}
+                <span style="color: darkblue">{{ role.title }}</span> - роль помечена в конфигурации как bot_role
+            {% else %}
+                <span>{{ role.title }}</span>
+            {% endif %}
+            {% if role.id != 1 %}
+        </a>{% endif %}
     </li>
     {% endfor %}
-</ul>
+</ol>
+<a href="/admin/manager/acl?action=add&amp;csrf_token={{ csrf_token }}" data-role="button" data-icon="plus">
+    Создать новую роль
+</a>
+{% elseif data_action == 'add'%}
+add
+{% elseif data_action == 'select'%}
+select
+{% endif %}
