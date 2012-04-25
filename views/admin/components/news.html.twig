@@ -1,25 +1,24 @@
 {% if not data_action %}
-    <div data-role="navbar" class="ui-body-a">
-    	<ul>
-			<li><a href="/admin/manager/news?action=new">Создать новую запись</a></li>
-		</ul>
-	</div><!-- /navbar -->
+<div data-role="navbar" class="ui-body-a">
+    <ul><li><a href="/admin/manager/news?action=new">Создать новую запись</a></li></ul>
+</div><!-- /navbar -->
 
-	<div data-role="content">
+<div data-role="content">
 
-        <ul data-role="listview" data-inset="true" data-split-icon="gear" data-split-theme="d">
-            {% for post in news_list %}
-            <li>
-            	<a href="/admin/manager/news?action=select&amp;identify={{ post.id }}">
-		        	<h3>{{ post.title }} [<span class="dtl10n">{{ post.created_at }}</span>]</h3>
-		        	<p>Lorem ispum dolor sit amet. Lorem ispum dolor sit amet. Lore...</p>
-		        </a>
-		        <a href="/admin/manager/news?action=dialog&amp;identify={{ post.id }}" 
-                   data-rel="dialog" data-transition="slideup">Действия</a>
-	        </li>
-            {% endfor %}
-        </ul>
-    </div>
+    <ul data-role="listview" data-inset="true" data-split-icon="gear" data-split-theme="d">
+        {% for post in news_list %}
+        <li>
+            <a href="/admin/manager/news?action=select&amp;identify={{ post.id }}">
+                <h3>{{ post.title }} [<span class="dtl10n">{{ post.created_at }}</span>]</h3>
+                <p>Lorem ispum dolor sit amet. Lorem ispum dolor sit amet. Lore...</p>
+            </a>
+            <a href="/admin/manager/news?action=dialog&amp;identify={{ post.id }}" 
+                data-rel="dialog" data-transition="slideup">Действия</a>
+        </li>
+        {% endfor %}
+    </ul>
+
+</div><!-- /content -->
 {% else %}
 {% if data_action=='new' %}
 <form action="/admin/manager/news?action=new" method="POST" data-ajax="false">
