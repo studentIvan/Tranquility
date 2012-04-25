@@ -48,6 +48,7 @@ class Admin
                         Process::$context['news_list'] = News::listing($pagination['offset'], $perPage);
                         Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
                         Process::$context['data_title'] = 'Новостной блог';
+                        Process::$context['custom_content_view'] = true;
                     }
                     elseif ($action == 'new')
                     {
