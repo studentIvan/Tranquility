@@ -2,7 +2,7 @@
 <div data-role="navbar" data-iconpos="top">
     <ul>
         <li>
-            <a href="/admin/manager/news?action=new" data-icon="plus">Создать новую запись</a>
+            <a href="/admin/manager/news?action=new&amp;csrf_token={{ csrf_token }}" data-icon="plus">Создать новую запись</a>
         </li>
     </ul>
 </div><!-- /navbar -->
@@ -13,7 +13,8 @@
         {% for post in news_list %}
         <li>
             <a href="/admin/manager/news?action=select&amp;identify={{ post.id }}">
-                {{ post.title }} (<span class="dtl10n">{{ post.created_at }}</span>)
+                {{ post.title }} {% if post.poster_login %}(написал {{ post.poster_login }}, {% endif %}
+                <span class="dtl10n">{{ post.created_at }}</span>)
             </a>
             <a href="/admin/manager/news?action=delete&amp;identify={{ post.id }}&amp;csrf_token={{ csrf_token }}"
                data-ajax="false">Удалить</a>
@@ -24,7 +25,7 @@
 </div><!-- /content -->
 {% else %}
     {% if data_action=='new' %}
-    <form action="/admin/manager/news?action=new" method="POST" data-ajax="false">
+    <form action="/admin/manager/news?action=new&amp;csrf_token={{ csrf_token }}" method="POST" data-ajax="false">
         <div data-role="fieldcontain">
             <label for="ftitle">Заголовок:</label>
             <input type="text" name="title" id="ftitle" value="" required />
@@ -39,6 +40,25 @@
         </div>
         <div data-role="fieldcontain">
             <button type="submit">Сохранить</button>
+        </div>
+    </form>
+    {% endif %}
+    {% if data_action=='edit' %}
+    <form action="/admin/manager/news?action=edit&amp;identify={{ object_identify }}&amp;csrf_token={{ csrf_token }}" method="POST" data-ajax="false">
+        <div data-role="fieldcontain">
+            <label for="etitle">Заголовок:</label>
+            <input type="text" name="title" id="etitle" value="{{ object_title }}" required />
+        </div>
+        <div data-role="fieldcontain">
+            <label for="econtent">Содержимое:</label>
+            <textarea name="content" id="econtent" required>{{ object_content }}</textarea>
+        </div>
+        <div data-role="fieldcontain">
+            <label for="etags">Теги:</label>
+            <input type="text" name="tags" id="etags" value="{{ object_tags }}" />
+        </div>
+        <div data-role="fieldcontain">
+            <button type="submit" data-theme="b">Сохранить</button>
         </div>
     </form>
     {% endif %}

@@ -57,8 +57,7 @@ class Admin
 
                     if (!$action)
                     {
-                        $perPage = isset(Process::$context['cms']['news']['limit_per_page']) ?
-                            Process::$context['cms']['news']['limit_per_page'] : 20;
+                        $perPage = 20;
                         $pagination = Data::paginate(Database::count('news'), $perPage, $page);
                         Process::$context['news_list'] = News::listing($pagination['offset'], $perPage);
                         Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
@@ -70,13 +69,36 @@ class Admin
                         Process::$context['data_title'] = 'Новостной блог (новая запись)';
                         list($title, $content, $tags) = Data::inputsList('title', 'content', 'tags');
 
-                        if (($title !== false) and ($content !== false) and ($tags !== false))
+                        if (($title !== false) and ($content !== false)
+                            and ($tags !== false) and self::$checkCsrfToken)
                         {
                             if (News::create(Session::getUid(), $title, $content, $tags))
                             {
                                 header('Location: /admin/manager/news');
                                 exit;
                             }
+                        }
+                    }
+                    elseif ($action == 'edit' and $identify and self::$checkCsrfToken)
+                    {
+                        list($title, $content, $tags) = Data::inputsList('title', 'content', 'tags');
+
+                        if (($title !== false) and ($content !== false) and ($tags !== false))
+                        {
+                            if (News::edit($identify, $title, $content, $tags))
+                            {
+                                header('Location: /admin/manager/news?action=select&amp;identify=' . $identify);
+                                exit;
+                            }
+                        }
+                        else
+                        {
+                            $post = News::getObjectById($identify);
+                            Process::$context['data_title'] = $post->title . ' (редактирование)';
+                            Process::$context['object_title'] = $post->title;
+                            Process::$context['object_content'] = $post->content;
+                            Process::$context['object_tags'] = $post->tags;
+                            Process::$context['object_identify'] = $identify;
                         }
                     }
                     elseif ($action == 'select' and $identify)
@@ -105,8 +127,7 @@ class Admin
                 case 'users':
                     if (!isset(Process::$context['cms']['users']))
                         throw new NotFoundException();
-                    $perPage = isset(Process::$context['cms']['users']['limit_per_page']) ?
-                        Process::$context['cms']['users']['limit_per_page'] : 20;
+                    $perPage = 20;
                     $pagination = Data::paginate(Database::count('users'), $perPage, $page);
                     Process::$context['users_list'] = Users::listing($pagination['offset'], $perPage);
                     Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
@@ -123,8 +144,7 @@ class Admin
                 case 'sessions':
                     if (!isset(Process::$context['cms']['sessions']))
                         throw new NotFoundException();
-                    $perPage = isset(Process::$context['cms']['sessions']['limit_per_page']) ?
-                        Process::$context['cms']['sessions']['limit_per_page'] : 20;
+                    $perPage = 20;
                     $pagination = Data::paginate(Database::count('sessions'), $perPage, $page);
                     Process::$context['sessions_list'] = Session::getAll($pagination['offset'], $perPage);
                     Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
