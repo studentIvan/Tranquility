@@ -1,6 +1,8 @@
 <?php
 class Admin
 {
+    protected static $checkCsrfToken = false;
+
     public static function control($matches)
     {
         $page = isset($matches[1]) ?
@@ -9,6 +11,8 @@ class Admin
             preg_replace('/[^a-z]/', '', $matches[2]) : false;
         Process::$context['admin_page'] = $page;
         if (method_exists('Admin', $page)) {
+            self::$checkCsrfToken = (isset($_GET['csrf_token']) and
+                Process::$context['csrf_token'] === $_GET['csrf_token']);
             call_user_func(array('Admin', $page), ($express ? $express : null));
         } else {
             self::secure();
@@ -36,6 +40,17 @@ class Admin
 
             switch($component)
             {
+                case 'cronstress':
+                    if (self::$checkCsrfToken) {
+                        include_once __DIR__ . '/../system/cronjob.php';
+                        header('Location: /admin/manager?cron_result=ok');
+                        exit;
+                    } else {
+                        throw new ForbiddenException();
+                    }
+
+                    break;
+
                 case 'news':
                     if (!isset(Process::$context['cms']['news']))
                         throw new NotFoundException();
@@ -71,6 +86,13 @@ class Admin
                         Process::$context['object_content'] = $post->content;
                         Process::$context['object_created_at'] = $post->created_at;
                         Process::$context['object_identify'] = $identify;
+                        Process::$context['custom_content_view'] = true;
+                    }
+                    elseif ($action == 'delete' and $identify and self::$checkCsrfToken)
+                    {
+                        News::remove($identify);
+                        header('Location: /admin/manager/news?no_cache=' . md5(rand(111, 999)));
+                        exit;
                     }
                     else
                     {
@@ -111,6 +133,7 @@ class Admin
                     break;
 
                 default:
+                    throw new NotFoundException();
             }
         }
         else
@@ -135,9 +158,14 @@ class Admin
 
     public static function logout()
     {
-        if (Session::getRole() == 1) {
+        if (Session::getRole() == 1 and self::$checkCsrfToken)
+        {
             Session::stop();
             header('Location: /admin/');
+        }
+        else
+        {
+            throw new ForbiddenException();
         }
     }
 

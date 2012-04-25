@@ -37,4 +37,9 @@ class Security
 
         return md5($buffer . self::$secret);
     }
+
+    public static function getCsrfToken()
+    {
+        return self::getDigest(Session::getToken());
+    }
 }

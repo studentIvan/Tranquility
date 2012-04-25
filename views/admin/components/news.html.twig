@@ -1,45 +1,63 @@
 {% if not data_action %}
-<div data-role="navbar" class="ui-body-a">
-    <ul><li><a href="/admin/manager/news?action=new">Создать новую запись</a></li></ul>
+<div data-role="navbar" data-iconpos="top">
+    <ul>
+        <li>
+            <a href="/admin/manager/news?action=new" data-icon="plus">Создать новую запись</a>
+        </li>
+    </ul>
 </div><!-- /navbar -->
 
 <div data-role="content">
 
-    <ul data-role="listview" data-inset="true" data-split-icon="gear" data-split-theme="d">
+    <ol data-role="listview" data-split-icon="delete" data-split-theme="d">
         {% for post in news_list %}
         <li>
             <a href="/admin/manager/news?action=select&amp;identify={{ post.id }}">
-                <h3>{{ post.title }} [<span class="dtl10n">{{ post.created_at }}</span>]</h3>
-                <p>Lorem ispum dolor sit amet. Lorem ispum dolor sit amet. Lore...</p>
+                {{ post.title }} (<span class="dtl10n">{{ post.created_at }}</span>)
             </a>
-            <a href="/admin/manager/news?action=dialog&amp;identify={{ post.id }}" 
-                data-rel="dialog" data-transition="slideup">Действия</a>
+            <a href="/admin/manager/news?action=delete&amp;identify={{ post.id }}&amp;csrf_token={{ csrf_token }}"
+               data-ajax="false">Удалить</a>
         </li>
         {% endfor %}
-    </ul>
+    </ol>
 
 </div><!-- /content -->
 {% else %}
-{% if data_action=='new' %}
-<form action="/admin/manager/news?action=new" method="POST" data-ajax="false">
-    <div data-role="fieldcontain">
-        <label for="ftitle">Заголовок:</label>
-        <input type="text" name="title" id="ftitle" value="" required />
-    </div>
-    <div data-role="fieldcontain">
-        <label for="fcontent">Содержимое:</label>
-        <textarea name="content" id="fcontent" required></textarea>
-    </div>
-    <div data-role="fieldcontain">
-        <label for="ftags">Теги:</label>
-        <input type="text" name="tags" id="ftags" value="" />
-    </div>
-    <div data-role="fieldcontain">
-        <button type="submit">Сохранить</button>
-    </div>
-</form>
-{% endif %}
+    {% if data_action=='new' %}
+    <form action="/admin/manager/news?action=new" method="POST" data-ajax="false">
+        <div data-role="fieldcontain">
+            <label for="ftitle">Заголовок:</label>
+            <input type="text" name="title" id="ftitle" value="" required />
+        </div>
+        <div data-role="fieldcontain">
+            <label for="fcontent">Содержимое:</label>
+            <textarea name="content" id="fcontent" required></textarea>
+        </div>
+        <div data-role="fieldcontain">
+            <label for="ftags">Теги:</label>
+            <input type="text" name="tags" id="ftags" value="" />
+        </div>
+        <div data-role="fieldcontain">
+            <button type="submit">Сохранить</button>
+        </div>
+    </form>
+    {% endif %}
     {% if data_action=='select' %}
-        {{ object_content }}
+        <div data-role="navbar" data-iconpos="top" class="ui-body-b">
+            <ul>
+                <li>
+                    <a href="/admin/manager/news?action=edit&amp;identify={{ object_identify }}&amp;csrf_token={{ csrf_token }}"
+                       data-icon="gear">Редактировать</a>
+                </li>
+                <li>
+                    <a href="/admin/manager/news?action=delete&amp;identify={{ object_identify }}&amp;csrf_token={{ csrf_token }}"
+                       data-icon="delete" data-ajax="false">Удалить</a>
+                </li>
+            </ul>
+        </div><!-- /navbar -->
+
+        <div data-role="content">
+            {{ object_content }}
+        </div>
     {% endif %}
 {% endif %}

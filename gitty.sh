@@ -1,5 +1,5 @@
 #!/bin/sh
-mysqldump -u root turbo > turbo.sql
+mysqldump -u root tranquility > tranquility.sql
 echo "mysqldump ok"
 git add .
 echo "git add ok"

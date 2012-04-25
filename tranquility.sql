@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.5.16, for Win32 (x86)
 --
--- Host: localhost    Database: turbo
+-- Host: localhost    Database: tranquility
 -- ------------------------------------------------------
 -- Server version	5.5.16
 
@@ -31,7 +31,7 @@ CREATE TABLE `news` (
   `posted_by` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `tags` (`tags`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +40,7 @@ CREATE TABLE `news` (
 
 LOCK TABLES `news` WRITE;
 /*!40000 ALTER TABLE `news` DISABLE KEYS */;
-INSERT INTO `news` VALUES (1,'Hello world','Fuck you','fuck, hello','2012-04-23 00:40:29',1);
+INSERT INTO `news` VALUES (4,'Тестовая запись','Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ut lacus nisi. In cursus imperdiet massa, ut imperdiet nulla fringilla a. Mauris varius adipiscing lacinia. Donec fermentum fermentum dolor eu tincidunt. Donec ultricies molestie purus vitae scelerisque. Proin vulputate mi et lectus faucibus ac placerat leo sagittis. Nulla non nulla nec erat mollis varius. Donec vestibulum tincidunt lacus sed dictum. Integer mattis tempus eleifend. Aliquam erat volutpat. Curabitur molestie vulputate orci a mollis. Pellentesque feugiat ipsum in urna fringilla rhoncus. Maecenas ut felis sapien.\r\n\r\nCras eu erat tristique quam ultricies luctus. Maecenas egestas ipsum sit amet eros aliquam at rhoncus nisl gravida. Vestibulum vitae turpis nulla. Fusce at ultricies urna. Curabitur id ipsum nec erat pulvinar luctus. Integer interdum tincidunt rhoncus. Morbi porttitor, dolor nec aliquet fermentum, libero nunc pellentesque libero, quis consectetur est nibh eget mauris.\r\n\r\nAliquam in erat sed nulla pretium feugiat sed et odio. In semper, justo sed mollis feugiat, magna ante ultrices nisi, a adipiscing lacus mauris eu odio. Sed nulla diam, tristique nec euismod non, ultricies sed sem. Nulla blandit pulvinar elit, pretium tristique sem viverra eu. Vestibulum at dolor vel augue hendrerit facilisis. Fusce vitae massa id quam bibendum condimentum. Phasellus nunc lectus, semper vitae malesuada sit amet, aliquet mollis libero. Praesent porttitor purus non dolor eleifend non pellentesque quam fermentum. In tellus turpis, faucibus et condimentum vitae, imperdiet sed leo. Duis mollis lacus vel dui lobortis tincidunt. Ut eget sapien eu est convallis viverra. Sed bibendum, neque in scelerisque molestie, nisi erat condimentum erat, vitae elementum odio elit vel metus. Maecenas a ornare purus. Fusce ac eros quis lorem mattis condimentum.\r\n\r\nIn velit turpis, blandit eget vehicula in, varius eget turpis. Nulla facilisi. Morbi porta sollicitudin tempus. Vivamus ultricies metus vitae dui molestie accumsan. Morbi adipiscing venenatis commodo. Aliquam facilisis turpis a tortor vestibulum ac fermentum sem rhoncus. Quisque et nibh lorem, id dapibus sem. Pellentesque suscipit, augue vel varius scelerisque, nulla nisl ornare nibh, eget lobortis diam odio vulputate dui.\r\n\r\nAliquam a eros ligula, sed elementum nibh. Vivamus in leo justo, vel mattis lectus. Nam ut nisi id sem iaculis porttitor eu in metus. Cras interdum enim vitae augue vulputate pulvinar. Sed scelerisque ultrices nulla, ut mattis tortor consectetur non. Suspendisse sapien velit, sodales non euismod at, imperdiet et odio. Etiam quis magna velit, sed hendrerit ligula. Suspendisse pretium elit sed orci venenatis placerat nec ac nulla. ','','2012-04-25 20:04:12',1);
 /*!40000 ALTER TABLE `news` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -66,7 +66,7 @@ CREATE TABLE `referers` (
 
 LOCK TABLES `referers` WRITE;
 /*!40000 ALTER TABLE `referers` DISABLE KEYS */;
-INSERT INTO `referers` VALUES ('2012-04-22 12:56:57','dc5ec773bc4315d3c3e76e5b7daa6c46','http://google.com/thisisreferertest'),('2012-04-22 13:07:00','0bc7da21a3672c5a1eafa4ce0fbb0d02','http://turbo.local/admin/manager/'),('2012-04-22 13:16:06','e6f410d6078cb3f44972d4b322e85686','http://google.com/thisisreferertest');
+INSERT INTO `referers` VALUES ('2012-04-24 13:14:24','339e19fa0609188fe48fb72a5f72e5a5','http://turbo.local/admin'),('2012-04-24 14:26:29','872c4f8cb4402dc6e1877379e27ad0db','http://turbo.local/admin'),('2012-04-24 17:00:31','fc200d6a326d757580c1d401f5eac13e','http://turbo.local/admin/manager/'),('2012-04-25 18:22:58','8cbe8803f8e7da46e5f5478cef6b9d0d','http://turbo.local/admin/');
 /*!40000 ALTER TABLE `referers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -121,7 +121,7 @@ CREATE TABLE `sessions` (
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
-INSERT INTO `sessions` VALUES ('fc200d6a326d757580c1d401f5eac13e',1,1,2130706433,'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0','2012-04-23 01:17:20',NULL);
+INSERT INTO `sessions` VALUES ('54d04b71bbbac7b116872336cbd6e1b2',1,1,2130706433,'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:11.0) Gecko/20100101 Firefox/11.0','2012-04-25 20:34:15',NULL);
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -163,4 +163,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-04-23  1:27:03
+-- Dump completed on 2012-04-25 20:36:41

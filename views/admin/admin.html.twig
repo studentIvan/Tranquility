@@ -6,20 +6,20 @@
     <div data-theme="a" data-role="header" data-position="fixed">
         <a href="#" data-icon="back" data-rel="back">Назад</a>
         {% if not pagination %}
-        <a href="/admin/logout/" data-icon="delete" rel="external">Выход</a>
+        <a href="/admin/logout/?csrf_token={{ csrf_token }}" data-icon="delete" rel="external">Выход</a>
         {% else %}
         <a href="/admin/manager/" data-icon="gear">Управление</a>
         {% endif %}
         <h1>{% if data_title %}{{ data_title }}{% else %}Статистика{% endif %}</h1>
     </div><!-- /header -->
 
-    <div data-role="content">
+    {% if not custom_content_view %}<div data-role="content">{% endif %}
         {% if not admin_page %}
             {% include 'admin/info.html.twig' %}
         {% else %}
             {% if admin_page == 'manager' %}{% include 'admin/manager.html.twig' %}{% endif %}
         {% endif %}
-    </div>
+    {% if not custom_content_view %}</div>{% endif %}
     <!-- /content -->
 
     {% if not pagination %}
@@ -68,9 +68,8 @@
 </div><!-- /page -->
 <script type="text/javascript">
     $(document).bind('pageinit', function() {
-        var ldt = new LocalizedDate(4, 'ru');
         $(".dtl10n").each(function() {
-            $(this).html(ldt.localize($(this).html()))
+            $(this).html(new LocalizedDate(4, "ru").localize($(this).html())).removeClass("dtl10n")
         })
     })
 </script>

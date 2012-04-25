@@ -1,4 +1,5 @@
-# TurboBatman Content Management Framework
+# Tranquility
+## Content Management Framework
 ## Version 0.0.8 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
 
 ### Features
@@ -23,9 +24,9 @@
 ```apache
 <VirtualHost *>
     ServerName turbo.local
-	DocumentRoot "/path/to/turbobatman/webroot"
+	DocumentRoot "/path/to/tranquility/webroot"
 
-	<Directory /path/to/turbobatman/webroot>
+	<Directory /path/to/tranquility/webroot>
         DirectoryIndex index.php index.html
         AllowOverride All
         Order allow,deny

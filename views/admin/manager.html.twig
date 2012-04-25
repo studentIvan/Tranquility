@@ -41,6 +41,13 @@
                     {{ (sessions_count ~ " сесси")|plural("я", "и", "й") }}
                 </span>
         </li>
+        <li>
+            <a href="/admin/manager/cronstress?csrf_token={{ csrf_token }}" data-ajax="false">
+                {% if not mobile %}<img src="/images/admin/cron.png" alt="" />{% endif %}
+                <h3>Планировщик задач</h3>
+                <p>Выполнить задания cron прямо сейчас.</p>
+            </a>
+        </li>
     </ul>
     {% else %}
     {% include "admin/components/" ~ component ~ ".html.twig" %}
