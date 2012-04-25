@@ -24,6 +24,8 @@ return array(
      */
     'resources' => array(
         'ldt_js' => '/js/ldt.min.js',
+        'tinymce_js' => '/js/tiny_mce/tiny_mce.js',
+        'jquery_tinymce_js' => '/js/tiny_mce/jquery.tinymce.js',
         'jquery_js' => 'http://yandex.st/jquery/1.7.2/jquery.min.js',
         'jquery_mobile_js' => 'http://yandex.st/jquery/mobile/1.1.0/jquery.mobile.min.js',
         'jquery_mobile_css' => 'http://yandex.st/jquery/mobile/1.1.0/jquery.mobile.min.css',
@@ -64,7 +66,10 @@ return array(
      * You can mark component as false for off it
      */
     'cms' => array(
-        'news' => array('limit_per_page' => 10),
+        'news' => array(
+            'limit_per_page' => 10,
+            'tinymce_editor' => false, // Set true and unpack /js/tiny_mce.zip for userlike news create & edit
+        ),
         'sessions' => true,
         'users' => true,
     ),

@@ -9,6 +9,9 @@
     <script type="text/javascript" src="{{ resource.jquery_js }}"></script>
     <script type="text/javascript" src="{{ resource.jquery_mobile_js }}"></script>
     <script type="text/javascript" src="{{ resource.ldt_js }}"></script>
+    {% if cms.news.tinymce_editor %}
+    <script type="text/javascript" src="{{ resource.tinymce_js }}"></script>
+    {% endif %}
 </head>
 <body>
 {% block page %}{% endblock %}

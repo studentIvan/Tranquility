@@ -8,7 +8,7 @@ class Data
      */
     public static function input($postVariableName)
     {
-        return isset($_POST[$postVariableName]) ? $_POST[$postVariableName] : false;
+        return isset($_POST[$postVariableName]) ? trim($_POST[$postVariableName]) : false;
     }
 
     /**

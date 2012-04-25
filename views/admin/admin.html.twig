@@ -27,7 +27,7 @@
         <a href="/admin/" data-role="button" data-icon="star"
                 {% if not admin_page %} class="ui-btn-active"{% endif %}>Статистика</a>
         <a href="/admin/manager/" data-role="button" data-icon="gear"
-                {% if admin_page == 'manager' %} class="ui-btn-active"{% endif %}>Управление</a>
+                {% if admin_page == 'manager' and not component %} class="ui-btn-active"{% endif %}>Управление</a>
         <a href="/" data-role="button" data-icon="home" rel="external">Сайт</a>
     </div>
     {% else %}
@@ -68,8 +68,9 @@
 </div><!-- /page -->
 <script type="text/javascript">
     $(document).bind('pageinit', function() {
+        var ldt = new LocalizedDate(4, "ru");
         $(".dtl10n").each(function() {
-            $(this).html(new LocalizedDate(4, "ru").localize($(this).html())).removeClass("dtl10n")
+            $(this).html(ldt.localize($(this).html())).removeClass("dtl10n")
         })
     })
 </script>

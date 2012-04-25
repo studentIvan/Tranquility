@@ -6,7 +6,7 @@
  * if route first symbol is ! - this is controller (!class:method)
  */
 return array(
-    '/' => 'homepage',
+    '/' => array('!site:news', 'homepage'),
     '/test' => '!common:test',
     '/admin/?([^/]+)?/?([^/]+)?/?' => array('!common:session', '!admin:control'),
 );

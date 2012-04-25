@@ -67,7 +67,7 @@ class Admin
                     elseif ($action == 'new')
                     {
                         Process::$context['data_title'] = 'Новостной блог (новая запись)';
-                        list($title, $content, $tags) = Data::inputsList('title', 'content', 'tags');
+                        list($title, $content, $tags) = Data::inputsList('titlen', 'contentn', 'tagsn');
 
                         if (($title !== false) and ($content !== false)
                             and ($tags !== false) and self::$checkCsrfToken)
@@ -83,13 +83,11 @@ class Admin
                     {
                         list($title, $content, $tags) = Data::inputsList('title', 'content', 'tags');
 
-                        if (($title !== false) and ($content !== false) and ($tags !== false))
+                        if (($title !== false) and ($content !== false) and ($tags !== false)
+                            and News::edit($identify, $title, $content, $tags))
                         {
-                            if (News::edit($identify, $title, $content, $tags))
-                            {
-                                header('Location: /admin/manager/news?action=select&amp;identify=' . $identify);
-                                exit;
-                            }
+                            header('Location: /admin/manager/news?action=select&identify=' . $identify);
+                            exit;
                         }
                         else
                         {

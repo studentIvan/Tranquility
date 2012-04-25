@@ -28,20 +28,23 @@
     <form action="/admin/manager/news?action=new&amp;csrf_token={{ csrf_token }}" method="POST" data-ajax="false">
         <div data-role="fieldcontain">
             <label for="ftitle">Заголовок:</label>
-            <input type="text" name="title" id="ftitle" value="" required />
+            <input type="text" name="titlen" id="ftitle" value="" required />
         </div>
         <div data-role="fieldcontain">
             <label for="fcontent">Содержимое:</label>
-            <textarea name="content" id="fcontent" required></textarea>
+            <textarea name="contentn" id="fcontent" required></textarea>
         </div>
         <div data-role="fieldcontain">
-            <label for="ftags">Теги:</label>
-            <input type="text" name="tags" id="ftags" value="" />
+            <label for="ftags">Теги сообщения:</label>
+            <input type="text" name="tagsn" id="ftags" value="" />
         </div>
         <div data-role="fieldcontain">
-            <button type="submit">Сохранить</button>
+            <button type="submit" data-theme="d" data-icon="check">Сохранить</button>
         </div>
     </form>
+    {% if not mobile %}
+        {% include 'admin/tinymce.html.twig' %}
+    {% endif %}
     {% endif %}
     {% if data_action=='edit' %}
     <form action="/admin/manager/news?action=edit&amp;identify={{ object_identify }}&amp;csrf_token={{ csrf_token }}" method="POST" data-ajax="false">
@@ -54,13 +57,16 @@
             <textarea name="content" id="econtent" required>{{ object_content }}</textarea>
         </div>
         <div data-role="fieldcontain">
-            <label for="etags">Теги:</label>
+            <label for="etags">Теги сообщения:</label>
             <input type="text" name="tags" id="etags" value="{{ object_tags }}" />
         </div>
         <div data-role="fieldcontain">
-            <button type="submit" data-theme="b">Сохранить</button>
+            <button type="submit" data-theme="d" data-icon="check">Сохранить</button>
         </div>
     </form>
+    {% if not mobile %}
+        {% include 'admin/tinymce.html.twig' %}
+    {% endif %}
     {% endif %}
     {% if data_action=='select' %}
         <div data-role="navbar" data-iconpos="top" class="ui-body-b">
@@ -73,11 +79,15 @@
                     <a href="/admin/manager/news?action=delete&amp;identify={{ object_identify }}&amp;csrf_token={{ csrf_token }}"
                        data-icon="delete" data-ajax="false">Удалить</a>
                 </li>
+                <li>
+                    <a href="/admin/manager/news"
+                       data-icon="grid">К списку новостей</a>
+                </li>
             </ul>
         </div><!-- /navbar -->
 
         <div data-role="content">
-            {{ object_content }}
+            {{ object_content|raw }}
         </div>
     {% endif %}
 {% endif %}

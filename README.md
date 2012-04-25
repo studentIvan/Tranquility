@@ -1,6 +1,6 @@
 # Tranquility
 ## Content Management Framework
-## Version 0.0.8 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
+## Version 0.0.9 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
 
 ### Features
 * News posting
@@ -19,6 +19,7 @@
 
 ### Production install
 * Turn off developer mode in config/config.php
+* Install tinymce (optional): unzip js/tiny_mce.zip in js directory and set tinymce_editor => true in config/config.php
 
 ### Example apache configuration
 ```apache
