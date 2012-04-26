@@ -12,11 +12,22 @@ return array(
     'developer_mode' => true,
 
     /**
+     * Included solutions from solutions folder
+     * Note: you may set this parameter as false
+     */
+    'solutions' => array('standard'),
+
+    /**
      * Mobile template detection configuration
      * Set always_mobile as true for using permament mobile templates
      * Default false
      */
     'always_mobile' => false,
+	
+	/**
+     * Server timezone (e.g. Europe/Moscow +04:00)
+     */
+	'server_timezone' => 'Europe/Moscow',
 
     /**
      * CDN configuration

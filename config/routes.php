@@ -8,5 +8,4 @@
 return array(
     '/' => array('!site:news', 'homepage'),
     '/test' => '!common:test',
-    '/admin/?([^/]+)?/?([^/]+)?/?' => array('!common:session', '!admin:control'),
 );

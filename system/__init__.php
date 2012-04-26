@@ -1,11 +1,21 @@
 <?php
+/**
+ * Tranquility initial script
+ *
+ * Separated by sharp region directives
+ * @see http://msdn.microsoft.com/en-us/library/67w7t67f.aspx
+ */
+
+#region Loading configuration
 $config = require __DIR__ . '/../config/config.php';
-date_default_timezone_set('Europe/Moscow');
+date_default_timezone_set($config['server_timezone']);
 
 define('STARTED_AT', microtime(true));
 define('DEVELOPER_MODE', isset($config['developer_mode']) ? $config['developer_mode'] : false);
 $__DIR__ = dirname(__FILE__);
+#endregion
 
+#region Exceptions
 class AuthException extends Exception {
 
 }
@@ -31,25 +41,15 @@ function exception_error_handler($errno, $errstr, $errfile, $errline) {
 }
 
 set_error_handler("exception_error_handler");
+#endregion
 
+#region System classes - include and init
 require_once $__DIR__ . '/classes/Database.php';
 require_once $__DIR__ . '/classes/Security.php';
 require_once $__DIR__ . '/classes/Cookies.php';
 require_once $__DIR__ . '/classes/Session.php';
 require_once $__DIR__ . '/classes/Services.php';
 require_once $__DIR__ . '/classes/Data.php';
-
-if (isset($config['cms']))
-{
-    if (isset($config['cms']['news']) and $config['cms']['news']) {
-        require_once $__DIR__ . '/solutions/News.php';
-    }
-
-    if (isset($config['cms']['users']) and $config['cms']['users']) {
-        require_once $__DIR__ . '/solutions/Users.php';
-        require_once $__DIR__ . '/solutions/Roles.php';
-    }
-}
 
 try
 {
@@ -63,13 +63,15 @@ catch (Exception $e)
     echo 'Fatal error';
     exit;
 }
+#endregion
 
+#region Process class
 class Process
 {
-    /**
-     * @var array
-     */
-    public static $context = array();
+    public static
+        $context = array(),
+        $routes = array(),
+        $solutions = array();
 
     /**
      * @var Twig_Environment
@@ -94,9 +96,14 @@ class Process
 
             Twig_Autoloader::register();
 
-            $loader = new Twig_Loader_Filesystem($__DIR__ . '/../views');
+            $fileSystem = array($__DIR__ . '/../views');
+            foreach (self::$solutions as $__solution) {
+                $fileSystem[] = "$__DIR__/../solutions/$__solution/views";
+            }
+
+            $loader = new Twig_Loader_Filesystem($fileSystem);
             self::$twig = new Twig_Environment($loader, array(
-                'cache' => DEVELOPER_MODE ? false : $__DIR__ . '/cache',
+                'cache' => DEVELOPER_MODE ? false : $__DIR__ . '/cache/twig',
             ));
 
             include_once $__DIR__ . '/classes/Twig_i18nPlural.php';
@@ -116,8 +123,16 @@ class Process
         if (substr($route, 0, 1) == '!')
         {
             $route = ucfirst(substr($route, 1));
-            list($class, $method) = explode(':', $route);
-            include dirname(__FILE__) . "/../controllers/$class.php";
+            $split = explode(':', $route);
+
+            if (!isset($split[2])) {
+                list($class, $method) = $split;
+                include dirname(__FILE__) . "/../controllers/$class.php";
+            } else {
+                list($solution, $class, $method) = $split;
+                include dirname(__FILE__) . "/../solutions/$solution/controllers/$class.php";
+            }
+
             call_user_func(array($class, $method), $matches);
         }
         else
@@ -129,9 +144,28 @@ class Process
         self::$state++;
     }
 }
+#endregion
 
-if (isset($_SERVER['REQUEST_URI']))
-{
+#region Initial routes
+Process::$routes = require $__DIR__ . '/../config/routes.php';
+#endregion
+
+#region Solutions
+if (isset($config['solutions'])) {
+    Process::$solutions = $config['solutions'];
+    foreach (Process::$solutions as $_solution) {
+        require_once  "$__DIR__/../solutions/$_solution/__init__.php";
+        if (file_exists("$__DIR__/routes.php")) {
+            Process::$routes += require "$__DIR__/routes.php";
+        }
+    }
+}
+
+$__DIR__ = dirname(__FILE__); // restore $__DIR__ variable
+#endregion
+
+if (isset($_SERVER['REQUEST_URI'])) {
+    #region Routing and dispatching
     Process::$context['mobile'] =
         (isset($config['always_mobile']) and $config['always_mobile']) ?
             true : require $__DIR__ . '/ismobile.php';
@@ -147,7 +181,7 @@ if (isset($_SERVER['REQUEST_URI']))
     try
     {
         if (isset($_GET['e']) and $_GET['e'] == 403) throw new ForbiddenException();
-        foreach (require $__DIR__ . '/../config/routes.php' as $rule => $route)
+        foreach (Process::$routes as $rule => $route)
         {
             if (preg_match('/^' . str_replace('/', '\/', $rule) . '$/', Process::$context['uri'], $matches))
             {
@@ -200,4 +234,5 @@ if (isset($_SERVER['REQUEST_URI']))
             $twig->display('exception.html.twig', Process::$context);
         }
     }
+    #endregion
 }

@@ -119,7 +119,6 @@ class Admin
                         throw new NotFoundException();
                     }
 
-
                     break;
 
                 case 'users':
@@ -147,6 +146,7 @@ class Admin
                     {
                         throw new NotFoundException();
                     }
+
                     break;
 
                 case 'acl':
@@ -172,17 +172,20 @@ class Admin
                     {
                         throw new NotFoundException();
                     }
+
                     break;
 
                 case 'sessions':
                     if (!isset(Process::$context['cms']['sessions']))
                         throw new NotFoundException();
+
                     $perPage = 20;
                     $pagination = Data::paginate(Database::count('sessions'), $perPage, $page);
                     Process::$context['sessions_list'] = Session::getAll($pagination['offset'], $perPage);
                     Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
                     Process::$context['data_title'] = 'Монитор сессий';
                     Process::$context['user_token'] = Session::getToken();
+
                     break;
 
                 default:
