@@ -1,16 +1,19 @@
 # Tranquility
 ## Content Management Framework
-## Version 0.0.9.1 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
+## Version 0.0.9.2 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
 
 ### Features
+* Easy to install and use
+* Normal work on cheap hostings
+* Web/PDA automatic difference
+* Solutions difference
+* BSD license
+
+### Standard solution features
 * News posting (also can be used for blog)
 * Session monitor (referers, browsers, etc)
 * Easy "Session" php api (Session::getToken(), Session::start(), Session::authorize(...), etc)
 * Half ready site
-* Easy to install and use
-* Normal work on cheap hostings
-* Web/PDA automatic difference
-* BSD license
 
 ### Composition
 * Twig template engine + plural ends extension
