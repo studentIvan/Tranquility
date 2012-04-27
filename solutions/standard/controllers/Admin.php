@@ -140,7 +140,13 @@ class Admin
                     }
                     elseif ($action == 'select' and $identify)
                     {
-                        //
+                        $user = Users::getObjectById($identify);
+                        Process::$context['user_title'] = $user->title;
+                        Process::$context['user_login'] = $user->login;
+                        Process::$context['user_password'] = $user->password;
+                        Process::$context['user_registered_at'] = $user->registered_at;
+                        Process::$context['user_identify'] = $identify;
+                        Process::$context['custom_content_view'] = true;
                     }
                     else
                     {
