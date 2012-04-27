@@ -40,5 +40,9 @@
     <div data-role="fieldcontain">
         <button type="submit" data-theme="d" data-icon="check">Сохранить</button>
     </div>
+    <div data-role="fieldcontain">
+        <a href="/admin/manager/acl?action=delete&amp;identify={{ object_identify }}&amp;csrf_token={{ csrf_token }}"
+            data-ajax="false">Удалить</a>
+    </div>
 </form>
 {% endif %}
