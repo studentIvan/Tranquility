@@ -22,7 +22,23 @@
     Создать новую роль
 </a>
 {% elseif data_action == 'add'%}
-add
+<form action="/admin/manager/acl?action=add&amp;csrf_token={{ csrf_token }}" method="POST" data-ajax="false">
+    <div data-role="fieldcontain">
+        <label for="rtitle">Название роли:</label>
+        <input type="text" name="title" id="rtitle" value="" required />
+    </div>
+    <div data-role="fieldcontain">
+        <button type="submit" data-theme="d" data-icon="check">Сохранить</button>
+    </div>
+</form>
 {% elseif data_action == 'select'%}
-select
+<form action="/admin/manager/acl?action=edit&amp;identify={{ object_identify }}&amp;csrf_token={{ csrf_token }}" method="POST" data-ajax="false">
+    <div data-role="fieldcontain">
+        <label for="rtitle">Название роли:</label>
+        <input type="text" name="title" id="rtitle" value="{{ object_title }}" required />
+    </div>
+    <div data-role="fieldcontain">
+        <button type="submit" data-theme="d" data-icon="check">Сохранить</button>
+    </div>
+</form>
 {% endif %}
