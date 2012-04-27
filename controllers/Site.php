@@ -8,6 +8,7 @@ class Site
         $pagination = Data::paginate(Database::count('news'), $perPage, $page);
         Process::$context['news_list'] = News::listing($pagination['offset'], $perPage);
         Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
+        Process::$context['page_title'] = 'Tranquility site';
     }
 }
 

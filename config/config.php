@@ -61,6 +61,11 @@ return array(
     'security_token' => 'ololo',
 
     /**
+     * Default site title
+     */
+    'default_site_title' => 'Tranquility site',
+
+    /**
      * Session configuration
      */
     'session' => array(
@@ -78,7 +83,7 @@ return array(
      */
     'cms' => array(
         'news' => array(
-            'limit_per_page' => 10,
+            'limit_per_page' => 2,
             'tinymce_editor' => false, // Set true and unpack /js/tiny_mce.zip for userlike news create & edit
         ),
         'sessions' => true,

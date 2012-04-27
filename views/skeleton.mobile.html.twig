@@ -3,18 +3,28 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>{% block title %}Tranquility :: Mobile{% endblock %}</title>
+    <title>{{ page_title }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="{{ resource.jquery_mobile_css }}">
     <script type="text/javascript" src="{{ resource.jquery_js }}"></script>
     <script type="text/javascript" src="{{ resource.jquery_mobile_js }}"></script>
-    {% block head %}{% endblock %}
+    <script type="text/javascript" src="{{ resource.ldt_js }}"></script>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 </head>
 <body>
 <div data-role="page">
 
     <div data-role="header">
-        {% block header %}<h1>Tranquility :: Mobile</h1>{% endblock %}
+        <h1>{{ page_title }}</h1>
+
+        <div data-role="navbar">
+            <ul>
+                <li><a href="/" class="ui-btn-active">Home</a></li>
+                <li><a href="#">Link 1</a></li>
+                <li><a href="#">Link 2</a></li>
+                <li><a href="#">Contacts</a></li>
+            </ul>
+        </div><!-- /navbar -->
     </div><!-- /header -->
 
     <div data-role="content">
@@ -22,6 +32,14 @@
     </div><!-- /content -->
 
 </div><!-- /page -->
+<script type="text/javascript">
+    $(document).bind('pageinit', function() {
+        var ldt = new LocalizedDate(4);
+        $(".dtl10n").each(function() {
+            $(this).html(ldt.localize($(this).html())).removeClass("dtl10n")
+        })
+    })
+</script>
 </body>
 </html>
 {% endspaceless %}

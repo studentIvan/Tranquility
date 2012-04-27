@@ -1,59 +1,69 @@
 {% extends mobile ? 'skeleton.mobile.html.twig' : 'skeleton.html.twig' %}
 {% block body %}
-<h1>News feed</h1>
 {% for item in news_list %}
-    <p>{{ item.content|raw }}</p>
-    {% if pagination %}
-        {% if mobile %}
-          <div data-theme="a" data-role="footer" data-position="fixed">
-                <div data-role="navbar">
-                    <ul>
-                        {% if pagination.prev_id %}
-                            {% if pagination.prev_id > 1 %}
-                                <li>
-                                    <a href="/" data-role="button">
-                                        1
-                                    </a>
-                                </li>
-                            {% endif %}
-                            <li>
-                                <a href="/page_{{ pagination.prev_id }}.html" data-role="button">
-                                    {{ pagination.prev_id }}
-                                </a>
-                            </li>
-                        {% endif %}
-                        <li>
-                            <a href="#" data-role="button" class="ui-btn-active">
-                                {{ pagination.current_id }}
-                            </a>
-                        </li>
-                        {% if pagination.next_id %}
-                            <li>
-                                <a href="/page_{{ pagination.next_id }}.html" data-role="button">
-                                    {{ pagination.next_id }}
-                                </a>
-                            </li>
-                            {% if pagination.total_pages > pagination.next_id %}<li>
-                                <a href="/page_{{ pagination.total_pages }}.html" data-role="button">
-                                    {{ pagination.total_pages }}
-                                </a>
-                            </li>
-                            {% endif %}
-                        {% endif %}
-                    </ul>
-                </div><!-- /navbar -->
-            </div>
+<div class="post">
+    <h2>{{ item.title }}</h2>
+    <span class="datetime dtl10n">
+        {% if not mobile%}
+        <script type="text/javascript">document.write(ldt.localize("{{ item.created_at }}"))</script>
+        <noscript>{{ item.created_at }}</noscript>
         {% else %}
-            <!-- main pagination -->
-            <div>
-            {% if pagination.current_id != 1 %}<a href="/">[1]</a>{% endif %}
-            {% if pagination.prev_id and pagination.prev_id != 1 %}&nbsp;<a href="/page_{{ pagination.prev_id }}.html">[{{ pagination.prev_id }}]</a>{% endif %}
-            &nbsp;[{{ pagination.current_id }}]
-            {% if pagination.next_id %}&nbsp;<a href="/page_{{ pagination.next_id }}.html">[{{ pagination.next_id }}]</a>
-            {% if pagination.total_pages > pagination.next_id %}&nbsp;..
-            &nbsp;<a href="/page_{{ pagination.total_pages }}.html">[{{ pagination.total_pages }}]</a>{% endif %}{% endif %}
-            </div>
+        {{ item.created_at }}
         {% endif %}
-    {% endif %}
+    </span>
+    <p>{{ item.content|raw }}</p>
+</div>
 {% endfor %}
+{% if pagination %}
+{% if mobile %}
+<div data-theme="a" data-role="footer" data-position="fixed">
+    <div data-role="navbar">
+        <ul>
+            {% if pagination.prev_id %}
+            {% if pagination.prev_id > 1 %}
+            <li>
+                <a href="/" data-role="button">
+                    1
+                </a>
+            </li>
+            {% endif %}
+            <li>
+                <a href="/page_{{ pagination.prev_id }}.html" data-role="button">
+                    {{ pagination.prev_id }}
+                </a>
+            </li>
+            {% endif %}
+            <li>
+                <a href="#" data-role="button" class="ui-btn-active">
+                    {{ pagination.current_id }}
+                </a>
+            </li>
+            {% if pagination.next_id %}
+            <li>
+                <a href="/page_{{ pagination.next_id }}.html" data-role="button">
+                    {{ pagination.next_id }}
+                </a>
+            </li>
+            {% if pagination.total_pages > pagination.next_id %}<li>
+            <a href="/page_{{ pagination.total_pages }}.html" data-role="button">
+                {{ pagination.total_pages }}
+            </a>
+        </li>
+            {% endif %}
+            {% endif %}
+        </ul>
+    </div><!-- /navbar -->
+</div>
+{% else %}
+    <!-- main pagination -->
+    <div>
+        {% if pagination.current_id != 1 %}<a href="/">[1]</a>{% endif %}
+        {% if pagination.prev_id and pagination.prev_id != 1 %}&nbsp;<a href="/page_{{ pagination.prev_id }}.html">[{{ pagination.prev_id }}]</a>{% endif %}
+        &nbsp;[{{ pagination.current_id }}]
+        {% if pagination.next_id %}&nbsp;<a href="/page_{{ pagination.next_id }}.html">[{{ pagination.next_id }}]</a>
+        {% if pagination.total_pages > pagination.next_id %}&nbsp;..
+        &nbsp;<a href="/page_{{ pagination.total_pages }}.html">[{{ pagination.total_pages }}]</a>{% endif %}{% endif %}
+    </div>
+{% endif %}
+{% endif %}
 {% endblock %}

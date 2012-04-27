@@ -173,6 +173,9 @@ if (isset($_SERVER['REQUEST_URI'])) {
     Process::$context['resource'] = isset($config['resources']) ? $config['resources'] : array();
     Process::$context['uri'] = htmlspecialchars($_SERVER['REQUEST_URI']);
     Process::$context['cms'] = isset($config['cms']) ? $config['cms'] : array();
+    Process::$context['page_title'] = isset(Process::$context['page_title']) ?
+        Process::$context['page_title'] : (isset($config['default_site_title']) ?
+            $config['default_site_title'] : '');
 
     if (($pos = strpos(Process::$context['uri'], '?')) !== false) {
         Process::$context['uri'] = substr(Process::$context['uri'], 0, $pos);
@@ -201,10 +204,12 @@ if (isset($_SERVER['REQUEST_URI'])) {
         $twig = Process::getTwigInstance();
         if ($e->getCode() == 404) {
             header("HTTP/1.0 404 Not Found");
+            Process::$context['page_title'] = '404 Not Found';
             $twig->display('404.html.twig', Process::$context);
         }
         elseif ($e->getCode() == 403) {
             header("HTTP/1.0 403 Forbidden");
+            Process::$context['page_title'] = '403 Forbidden';
             $twig->display('403.html.twig', Process::$context);
         }
         else

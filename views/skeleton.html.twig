@@ -3,12 +3,35 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>{% block title %}Tranquility{% endblock %}</title>
-    {% block head %}{% endblock %}
+    <title>{{ page_title }}</title>
+    <link href="/css/style.css" rel="stylesheet" type="text/css" media="screen" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <script type="text/javascript" src="{{ resource.ldt_js }}"></script>
+    <script type="text/javascript">ldt = new LocalizedDate(4)</script>
 </head>
 <body>
-    {% block header %}{% endblock %}
-    {% block body %}{% endblock %}
+    <div id="container">
+        <div id="header"></div>
+        <div id="menu">
+            <table>
+                <tr>
+                    <td><a href="/">Home</a></td>
+                    <td><a href="#">Link 1</a></td>
+                    <td><a href="#">Link 2</a></td>
+                    <td><a href="#">Contacts</a></td>
+                </tr>
+            </table>
+        </div>
+        <div id="content">
+            <div id="feed">{% block body %}{% endblock %}</div>
+            <div id="sidebar">Sidebar</div>
+        </div>
+        <div id="footer">
+            If you copy material from this resource, you are obliged link back.
+            <br>Copyright 2012. All rights reserved.
+            <br>Site developer <a href="#">Anonymous</a>.
+        </div>
+    </div>
 </body>
 </html>
 {% endspaceless %}
