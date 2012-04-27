@@ -46,4 +46,22 @@ class Roles
             ->query("SELECT * FROM roles")
             ->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    /**
+     * @static
+     * @param int $id
+     * @return mixed
+     */
+    public static function getObjectById($id)
+    {
+        $statement = Database::getInstance()->prepare("
+            SELECT * FROM roles
+            WHERE id=:id
+        ");
+
+        $statement->bindParam(':id', $id, PDO::PARAM_INT);
+        $statement->execute();
+
+        return $statement->fetch(PDO::FETCH_OBJ);
+    }
 }

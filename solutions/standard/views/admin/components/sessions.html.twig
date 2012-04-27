@@ -1,4 +1,4 @@
-<ul data-role="listview" data-filter="true" data-inset="true">
+<ul data-role="listview" data-filter="true" data-inset="true" data-filter-placeholder="Фильтровать...">
     {% for session in sessions_list %}
     <li{% if user_token==session.token %} class="ui-overlay-e"{% endif %}>
         <h3>{{ session.token }}</h3>

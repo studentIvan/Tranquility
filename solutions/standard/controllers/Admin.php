@@ -179,7 +179,7 @@ class Admin
                     elseif ($action == 'add' and self::$checkCsrfToken)
                     {
                         if ($title = Data::input('title')) {
-                            Roles::add($title);
+                            Roles::create($title);
                             header("Location: /admin/manager/acl");
                             exit;
                         }
@@ -197,7 +197,7 @@ class Admin
                     elseif ($action == 'delete' and $identify and self::$checkCsrfToken)
                     {
                         Roles::remove($identify);
-                        header('Location: /admin/manager/roles?no_cache=' . md5(rand(111, 999)));
+                        header('Location: /admin/manager/acl?no_cache=' . md5(rand(111, 999)));
                         exit;
                     }
                     elseif ($action == 'select' and $identify)

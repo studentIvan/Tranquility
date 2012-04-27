@@ -211,13 +211,13 @@ if (isset($_SERVER['REQUEST_URI'])) {
         {
             if (DEVELOPER_MODE)
             {
-                $exceptMessage = (strlen($e->getMessage()) > 70) ?
-                    '...' . substr($e->getMessage(), -70, 70) : $e->getMessage();
+                /*$exceptMessage = (strlen($e->getMessage()) > 70) ?
+                    '...' . substr($e->getMessage(), -70, 70) : $e->getMessage();*/
 
                 Process::$context['exception'] = array(
                     'file' => $e->getFile(),
                     'line' => $e->getLine(),
-                    'message' => $exceptMessage,
+                    'message' => $e->getMessage(),
                     'trace' => $e->getTraceAsString(),
                 );
             }

@@ -1,5 +1,6 @@
 {% if not data_action %}
-<ul data-role="listview" data-inset="true" data-mini="true" data-filter="true">
+<ul data-role="listview" data-inset="true" data-mini="true"
+    data-filter="true" data-filter-placeholder="Фильтровать...">
     {% for user in users_list %}
     <li>
         <a href="/admin/manager/users?action=select&amp;identify={{ user.id }}">

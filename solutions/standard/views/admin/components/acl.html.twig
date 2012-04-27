@@ -1,5 +1,6 @@
 {% if not data_action %}
-<ol data-role="listview" data-inset="true" data-mini="true" data-filter="true">
+<ol data-role="listview" data-inset="true" data-mini="true"
+    data-filter="true" data-filter-placeholder="Фильтровать...">
     {% for role in roles_list %}
     <li>
         {% if role.id != 1 %}
@@ -42,7 +43,7 @@
     </div>
     <div data-role="fieldcontain">
         <a href="/admin/manager/acl?action=delete&amp;identify={{ object_identify }}&amp;csrf_token={{ csrf_token }}"
-            data-ajax="false">Удалить</a>
+            data-ajax="false" data-icon="delete" data-role="button">Удалить</a>
     </div>
 </form>
 {% endif %}
