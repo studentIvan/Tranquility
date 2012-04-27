@@ -162,11 +162,27 @@ class Admin
                     }
                     elseif ($action == 'add' and self::$checkCsrfToken)
                     {
-                        //
+                        if ($title = Data::input('title')) {
+                            Roles::add($title);
+                            header("Location: /admin/manager/acl");
+                            exit;
+                        }
+                    }
+                    elseif ($action == 'edit' and $identify and self::$checkCsrfToken)
+                    {
+                        if ($title = Data::input('title')) {
+                            Roles::edit($identify, $title);
+                            header("Location: /admin/manager/acl");
+                            exit;
+                        } else {
+                            throw new NotFoundException();
+                        }
                     }
                     elseif ($action == 'select' and $identify)
                     {
-                        //
+                        $role = Roles::getObjectById($identify);
+                        Process::$context['object_identify'] = $role->id;
+                        Process::$context['object_title'] = $role->title;
                     }
                     else
                     {
