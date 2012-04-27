@@ -138,6 +138,16 @@ class Admin
                     {
                         //
                     }
+                    elseif ($action == 'edit' and $identify and self::$checkCsrfToken)
+                    {
+                        //
+                    }
+                    elseif ($action == 'delete' and $identify and self::$checkCsrfToken)
+                    {
+                        Users::remove($identify);
+                        header('Location: /admin/manager/users?no_cache=' . md5(rand(111, 999)));
+                        exit;
+                    }
                     elseif ($action == 'select' and $identify)
                     {
                         $user = Users::getObjectById($identify);
@@ -183,6 +193,12 @@ class Admin
                         } else {
                             throw new NotFoundException();
                         }
+                    }
+                    elseif ($action == 'delete' and $identify and self::$checkCsrfToken)
+                    {
+                        Roles::remove($identify);
+                        header('Location: /admin/manager/roles?no_cache=' . md5(rand(111, 999)));
+                        exit;
                     }
                     elseif ($action == 'select' and $identify)
                     {
