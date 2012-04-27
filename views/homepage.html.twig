@@ -1,4 +1,7 @@
 {% extends mobile ? 'skeleton.mobile.html.twig' : 'skeleton.html.twig' %}
 {% block body %}
-This is {{ uri }}
+<h1>News feed</h1>
+{% for item in news_list %}
+<p>{{ item.content|raw }}</p>
+{% endfor %}
 {% endblock %}
