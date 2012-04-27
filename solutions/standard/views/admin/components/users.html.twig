@@ -17,5 +17,30 @@
 {% elseif data_action == 'add'%}
 add
 {% elseif data_action == 'select'%}
-select
+        <div data-role="navbar" data-iconpos="top" class="ui-body-b">
+            <ul>
+                <li>
+                    <a href="/admin/manager/users?action=edit&amp;identify={{ user_identify }}&amp;csrf_token={{ csrf_token }}"
+                       data-icon="gear">Редактировать</a>
+                </li>
+                <li>
+                    <a href="/admin/manager/users?action=delete&amp;identify={{ user_identify }}&amp;csrf_token={{ csrf_token }}"
+                       data-icon="delete" data-ajax="false">Удалить</a>
+                </li>
+                <li>
+                    <a href="/admin/manager/users"
+                       data-icon="grid">К списку пользователей</a>
+                </li>
+            </ul>
+        </div><!-- /navbar -->
+
+        <div data-role="content">
+            <ul data-role="listview" data-inset="true" data-mini="true">
+                <li>Идентификатор пользователя: {{ user_identify }}</li>
+                <li>Логин пользователя: {{ user_login }}</li>
+                <li>Хеш пароля пользователя: {{ user_password }}</li>
+                <li>Роль пользователя: {{ user_title }}</li>
+                <li>Дата регистрации: <span class="dtl10n">{{ user_registered_at }}</span></li>
+            </ul>
+        </div>
 {% endif %}
