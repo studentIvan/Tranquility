@@ -23,11 +23,11 @@ return array(
      * Default false
      */
     'always_mobile' => false,
-	
-	/**
+
+    /**
      * Server timezone (e.g. Europe/Moscow +04:00)
      */
-	'server_timezone' => 'Europe/Moscow',
+    'server_timezone' => 'Europe/Moscow',
 
     /**
      * CDN configuration
