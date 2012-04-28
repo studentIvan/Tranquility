@@ -15,7 +15,16 @@ class Twig_i18nPlural extends Twig_Extension
         return array(
             'plural' => new Twig_Filter_Method($this, 'plural'),
             'nplural' => new Twig_Filter_Method($this, 'nplural'),
+            'tolink' => new Twig_Filter_Method($this, 'tolink'),
         );
+    }
+
+    /**
+     * @param string $title
+     * @return mixed
+     */
+    public function tolink($title) {
+        return Data::titleToLink($title);
     }
 
     /**
