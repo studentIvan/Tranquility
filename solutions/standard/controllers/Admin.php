@@ -42,7 +42,7 @@ class Admin
             {
                 case 'cronstress':
                     if (self::$checkCsrfToken) {
-                        include_once dirname(__FILE__) . '/../system/cronjob.php';
+                        include_once dirname(__FILE__) . '/../../../system/cronjob.php';
                         header('Location: /admin/manager?cron_result=ok');
                         exit;
                     } else {

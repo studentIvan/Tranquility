@@ -1,6 +1,6 @@
 # Tranquility
 ## Content Management Framework
-## Version 0.1.0.1 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
+## Version 0.1.0.2 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
 
 ### Features
 * Easy to install and use
