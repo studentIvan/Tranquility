@@ -13,6 +13,7 @@
     </span>
     <p>{{ item.content|raw }}</p>
 </div>
+<hr>
 {% endfor %}
 {% if pagination %}
 {% if mobile %}
@@ -57,6 +58,7 @@
 {% else %}
     <!-- main pagination -->
     <div>
+        <span>Pages: </span>
         {% if pagination.current_id != 1 %}<a href="/">[1]</a>{% endif %}
         {% if pagination.prev_id and pagination.prev_id != 1 %}&nbsp;<a href="/page_{{ pagination.prev_id }}.html">[{{ pagination.prev_id }}]</a>{% endif %}
         &nbsp;[{{ pagination.current_id }}]
