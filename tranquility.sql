@@ -66,7 +66,7 @@ CREATE TABLE `referers` (
 
 LOCK TABLES `referers` WRITE;
 /*!40000 ALTER TABLE `referers` DISABLE KEYS */;
-INSERT INTO `referers` VALUES ('2012-04-24 13:14:24','339e19fa0609188fe48fb72a5f72e5a5','http://turbo.local/admin'),('2012-04-24 14:26:29','872c4f8cb4402dc6e1877379e27ad0db','http://turbo.local/admin'),('2012-04-24 17:00:31','fc200d6a326d757580c1d401f5eac13e','http://turbo.local/admin/manager/'),('2012-04-25 18:22:58','8cbe8803f8e7da46e5f5478cef6b9d0d','http://turbo.local/admin/'),('2012-04-25 23:26:24','0140bf7f70c780b8294d8417b880d14a','http://turbo.local/admin/manager/'),('2012-04-25 23:30:27','a2f511a467221e8ccae332a1f684e783','http://turbo.local/admin/manager/news?action=new&csrf_token=66c580cf268b32d6b8b645216ffbebe3'),('2012-04-26 03:48:20','fc27be8eb6630fb1cbeb1821329237b8','http://yandex.ru'),('2012-04-26 03:48:20','6facc0506896e9a3f2b84fee2c5d95e1','http://yandex.ru'),('2012-04-26 03:48:20','316d8904c7bc87f9af4293254258042a','http://yandex.ru'),('2012-04-26 03:48:21','a2fd9a7acb5e93412e4087e3b5242c51','http://yandex.ru'),('2012-04-26 03:48:21','65351812710be8acbcebc34f862567fa','http://yandex.ru'),('2012-04-26 03:48:21','0bd8e0c221d623dfe04b9bc63445837c','http://yandex.ru'),('2012-04-26 03:48:21','5a8c67747848d4bdbfd4104a357ef29c','http://yandex.ru'),('2012-04-26 03:48:22','ab5f60c3c2a203410b0f8aa744c09582','http://yandex.ru'),('2012-04-26 03:48:22','4ce79f46ce1af45eed4f926efea84281','http://yandex.ru'),('2012-04-26 03:48:22','39deee36ac841d7c6968e5b5a19befb9','http://yandex.ru'),('2012-04-26 03:48:22','b27dd1738e200819aa019aab7917d78e','http://yandex.ru'),('2012-04-28 15:19:32','2e380546100d40eb2e47032004656e8f','http://turbo.local/admin/manager/'),('2012-04-28 15:20:15','992b4de1da52497a16f51157138e9a33','http://turbo.local/admin/manager/'),('2012-04-28 15:35:01','458bb29046261f5970ed2c25e68e6e59','http://turbo.local/admin/manager/acl');
+INSERT INTO `referers` VALUES ('2012-04-24 17:00:31','fc200d6a326d757580c1d401f5eac13e','http://turbo.local/admin/manager/'),('2012-04-25 18:22:58','8cbe8803f8e7da46e5f5478cef6b9d0d','http://turbo.local/admin/'),('2012-04-25 23:26:24','0140bf7f70c780b8294d8417b880d14a','http://turbo.local/admin/manager/'),('2012-04-25 23:30:27','a2f511a467221e8ccae332a1f684e783','http://turbo.local/admin/manager/news?action=new&csrf_token=66c580cf268b32d6b8b645216ffbebe3'),('2012-04-26 03:48:20','fc27be8eb6630fb1cbeb1821329237b8','http://yandex.ru'),('2012-04-26 03:48:20','6facc0506896e9a3f2b84fee2c5d95e1','http://yandex.ru'),('2012-04-26 03:48:20','316d8904c7bc87f9af4293254258042a','http://yandex.ru'),('2012-04-26 03:48:21','a2fd9a7acb5e93412e4087e3b5242c51','http://yandex.ru'),('2012-04-26 03:48:21','65351812710be8acbcebc34f862567fa','http://yandex.ru'),('2012-04-26 03:48:21','0bd8e0c221d623dfe04b9bc63445837c','http://yandex.ru'),('2012-04-26 03:48:21','5a8c67747848d4bdbfd4104a357ef29c','http://yandex.ru'),('2012-04-26 03:48:22','ab5f60c3c2a203410b0f8aa744c09582','http://yandex.ru'),('2012-04-26 03:48:22','4ce79f46ce1af45eed4f926efea84281','http://yandex.ru'),('2012-04-26 03:48:22','39deee36ac841d7c6968e5b5a19befb9','http://yandex.ru'),('2012-04-26 03:48:22','b27dd1738e200819aa019aab7917d78e','http://yandex.ru'),('2012-04-28 15:19:32','2e380546100d40eb2e47032004656e8f','http://turbo.local/admin/manager/'),('2012-04-28 15:20:15','992b4de1da52497a16f51157138e9a33','http://turbo.local/admin/manager/'),('2012-04-28 15:35:01','458bb29046261f5970ed2c25e68e6e59','http://turbo.local/admin/manager/acl');
 /*!40000 ALTER TABLE `referers` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -121,7 +121,7 @@ CREATE TABLE `sessions` (
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
-INSERT INTO `sessions` VALUES ('0140bf7f70c780b8294d8417b880d14a',1,1,2130706433,'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0','2012-04-28 15:44:11',NULL),('992b4de1da52497a16f51157138e9a33',0,4,2130706433,'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.162 Safari/535.19','2012-04-28 15:20:15',NULL),('458bb29046261f5970ed2c25e68e6e59',2,1,1314248653,'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/535.19 (KHTML, like Gecko) Chrome/18.0.1025.162 Safari/535.19','2012-04-28 15:42:21',NULL);
+INSERT INTO `sessions` VALUES ('0140bf7f70c780b8294d8417b880d14a',1,1,2130706433,'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0','2012-04-28 16:43:01',NULL);
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -150,7 +150,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Admin','48fa05e2e7c221665db8c9d8f6980919',1,'2012-04-17 00:00:00'),(2,'Sergey','01a7af852e0fbe474bcd84fdd4101b95',1,'2012-04-28 15:20:59');
+INSERT INTO `users` VALUES (1,'Admin','48fa05e2e7c221665db8c9d8f6980919',1,'2012-04-17 00:00:00');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -163,4 +163,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-04-28 15:45:35
+-- Dump completed on 2012-04-28 16:47:50
