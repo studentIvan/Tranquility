@@ -136,11 +136,45 @@ class Admin
                     }
                     elseif ($action == 'add' and self::$checkCsrfToken)
                     {
-                        //
+                        list($login, $password, $roleId) =
+                            Data::inputsList('login', 'password', 'role');
+
+                        if ($login and $password and $roleId and
+                            Users::create($login, Security::getDigest($password), $roleId)) {
+                            header(
+                                'Location: /admin/manager/users?no_cache=' .
+                                    Security::getDigest(rand(100, 999))
+                            );
+                            exit;
+                        } else {
+                            Process::$context['roles_list'] = Roles::listing();
+                        }
                     }
                     elseif ($action == 'edit' and $identify and self::$checkCsrfToken)
                     {
-                        //
+                        list($login, $passwordChange, $password, $roleId) =
+                            Data::inputsList('login', 'pchng', 'password', 'role');
+
+                        if ($passwordChange and $password and $passwordChange == 'on') {
+                            $password = Security::getDigest($password);
+                        } else {
+                            $sql = "SELECT password FROM users WHERE id=$identify";
+                            $password = strval(Database::getSingleResult($sql));
+                        }
+
+                        if ($login and $password and $roleId and
+                            Users::edit($identify, $login, $password, $roleId)) {
+                            header(
+                                "Location: /admin/manager/users?action=select&identify=$identify"
+                            );
+                            exit;
+                        } else {
+                            Process::$context['roles_list'] = Roles::listing();
+                            $user = Users::getObjectById($identify);
+                            Process::$context['user_role'] = $user->role;
+                            Process::$context['user_login'] = $user->login;
+                            Process::$context['user_identify'] = $identify;
+                        }
                     }
                     elseif ($action == 'delete' and $identify and self::$checkCsrfToken)
                     {

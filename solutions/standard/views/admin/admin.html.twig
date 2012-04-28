@@ -25,9 +25,15 @@
     {% if not pagination %}
     <div data-theme="a" data-role="footer" class="ui-bar" data-position="fixed">
         <a href="/admin/" data-role="button" data-icon="star"
-                {% if not admin_page %} class="ui-btn-active"{% endif %}>Статистика</a>
+                {% if not admin_page %} class="ui-btn-active"{% endif %}>
+            Статистика
+            {% if not mobile %}(F8){% endif %}
+        </a>
         <a href="/admin/manager/" data-role="button" data-icon="gear"
-                {% if admin_page == 'manager' and not component %} class="ui-btn-active"{% endif %}>Управление</a>
+                {% if admin_page == 'manager' and not component %} class="ui-btn-active"{% endif %}>
+            Управление
+            {% if not mobile %}(F9){% endif %}
+        </a>
         <a href="/" data-role="button" data-icon="home" rel="external">Сайт</a>
     </div>
     {% else %}
@@ -72,6 +78,15 @@
         $(".dtl10n").each(function() {
             $(this).html(ldt.localize($(this).html())).removeClass("dtl10n")
         })
-    })
+    });
+
+    {% if not mobile %}$(document).keyup(function(event) {
+        if (event.keyCode == '120') {
+            $.mobile.changePage('/admin/manager/');
+        }
+        if (event.keyCode == '119') {
+            $.mobile.changePage('/admin/');
+        }
+    });{% endif %}
 </script>
 {% endblock %}
