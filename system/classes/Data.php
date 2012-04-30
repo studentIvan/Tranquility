@@ -13,6 +13,16 @@ class Data
 
     /**
      * @static
+     * @param string $var
+     * @return mixed
+     */
+    public static function uriVar($var)
+    {
+        return isset($_GET[$var]) ? $_GET[$var] : false;
+    }
+
+    /**
+     * @static
      * @return array
      */
     public static function inputsList()

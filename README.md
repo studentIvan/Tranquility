@@ -1,6 +1,6 @@
 # Tranquility
 ## Content Management Framework
-## Version 0.1.0.5 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
+## Version 0.1.1.2 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
 
 ### Features
 * Easy to install and use
@@ -26,6 +26,7 @@
 ### Requirements
 * php 5.2.4
 * pdo mysql
+* mb_ (optional)
 
 ### Production install
 * Turn off developer mode in config/config.php
