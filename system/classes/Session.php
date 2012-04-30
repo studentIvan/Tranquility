@@ -116,8 +116,8 @@ class Session
             self::$role = $role;
             $usid = (is_null($uid)) ? '0' : $uid;
 
-            $sql = "INSERT INTO sessions (`token`, `uid`, `role`, `ip`, `useragent`, `uptime`)
-                  VALUES (:token, :uid, :role, INET_ATON(:ip), :agent, NOW())";
+            $sql = 'INSERT INTO sessions (`token`, `uid`, `role`, `ip`, `useragent`, `uptime`)
+                  VALUES (:token, :uid, :role, INET_ATON(:ip), :agent, NOW())';
 
             $statement = $pdo->prepare($sql);
             $statement->bindParam(':token', $token, PDO::PARAM_STR);
@@ -147,12 +147,12 @@ class Session
         /**
          * Referer register
          */
-        if (isset(self::$options['referers']) and self::$options['referers']
+        if (isset(self::$options['referrers']) and self::$options['referrers']
             and isset($_SERVER['HTTP_REFERER']) and !empty($_SERVER['HTTP_REFERER'])
             and filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL))
         {
             $ref = substr(str_replace(array('<', '>'), '', $_SERVER['HTTP_REFERER']), 0, 200);
-            $statement = $pdo->prepare("INSERT INTO referers (timepoint, token, url) VALUES (NOW(), :token, :url)");
+            $statement = $pdo->prepare("INSERT INTO referrers (timepoint, token, url) VALUES (NOW(), :token, :url)");
             $statement->bindParam(':token', $token, PDO::PARAM_STR);
             $statement->bindParam(':url', $ref, PDO::PARAM_STR);
             $statement->execute();
@@ -202,6 +202,8 @@ class Session
      * @param string $password
      * @param bool $temporary
      * @param bool $authenticate
+     * @throws AuthException
+     * @throws SessionException
      */
     public static function authorize($login, $password, $temporary = false, $authenticate = true)
     {
@@ -289,7 +291,7 @@ class Session
             FROM sessions s
             LEFT JOIN users u ON s.uid=u.id
             LEFT JOIN roles r ON r.id=s.role
-            LEFT JOIN referers f ON f.token=s.token
+            LEFT JOIN referrers f ON f.token=s.token
             ORDER BY s.uptime DESC
             LIMIT :limit OFFSET :offset
         ");

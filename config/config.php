@@ -72,7 +72,7 @@ return array(
         'bot_role' => 5,
         'guest_role' => 4,
         'lifetime_hours' => 1,
-        'referers' => 4, // store referers N days, or false for offstore
+        'referrers' => 4, // store referers N days, or false for offstore
         'garbage_auto_dump' => true, // Call dumpGarbage() every EVEN minute
                                      // Recommended: false (but it need cronjob configuration)
     ),

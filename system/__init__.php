@@ -106,8 +106,8 @@ class Process
                 'cache' => DEVELOPER_MODE ? false : $__DIR__ . '/cache/twig',
             ));
 
-            include_once $__DIR__ . '/classes/Twig_i18nPlural.php';
-            self::$twig->addExtension(new Twig_i18nPlural());
+            include_once $__DIR__ . '/classes/TwigEx.php';
+            self::$twig->addExtension(new TwigEx());
         }
 
         return self::$twig;
@@ -162,6 +162,10 @@ if (isset($config['solutions'])) {
 }
 
 $__DIR__ = dirname(__FILE__); // restore $__DIR__ variable
+#endregion
+
+#region Application
+require_once $__DIR__ . '/../__init__.php';
 #endregion
 
 if (isset($_SERVER['REQUEST_URI'])) {

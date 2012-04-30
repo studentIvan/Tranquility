@@ -13,9 +13,9 @@ if (isset($_SERVER['REMOTE_ADDR']) and $_SERVER['REMOTE_ADDR'] != '127.0.0.1' an
 Session::dumpGarbage();
 $config = require dirname(__FILE__) . '/../config/config.php';
 
-if (isset($config['session']['referers']) and $config['session']['referers'])
+if (isset($config['session']['referrers']) and $config['session']['referrers'])
 {
-    $refd = intval($config['session']['referers']);
+    $refd = intval($config['session']['referrers']);
     Database::getInstance()
-        ->query("DELETE FROM referers WHERE timepoint < ( NOW() - INTERVAL $refd DAY )");
+        ->query("DELETE FROM referrers WHERE timepoint < ( NOW() - INTERVAL $refd DAY )");
 }

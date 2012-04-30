@@ -26,17 +26,28 @@ class Data
     /**
      * @static
      * @param string $title
-     * @return mixed
+     * @return string
      */
     public static function titleToLink($title)
     {
         $title = mb_strtolower(str_replace(array(' ', '.', '_'), '-',
             preg_replace('/[^a-zа-яё0-9\-\. ]/ui', '', $title)), 'UTF-8');
+
+        return self::lowerRusToLat($title);
+    }
+
+    /**
+     * @static
+     * @param string $text
+     * @return string
+     */
+    public static function lowerRusToLat($text)
+    {
         $rus = array('а','б','в','г','д','е','ё','ж','з','и','й','к','л','м','н',
             'о','п','р','с','т','у','ф','х','ц','ч','ш','щ','ъ','ы','ь','э','ю','я');
         $lat = array('a','b','v','g','d','e','yo','zh','z','i','j','k','l','m','n',
             'o','p','r','s','t','u','f','h','c','ch','sh','shh','','y','','e','yu','ya');
-        return str_replace($rus, $lat, $title);
+        return str_replace($rus, $lat, $text);
     }
 
     /**
