@@ -60,7 +60,7 @@
             <h2>Результат установки</h2>
             {% if ress %}<ol data-role="listview" data-inset="true" data-theme="a">
                 {% for res in ress %}
-                <li>{{ res|raw }}</li>
+                <li>{{ res }}</li>
                 {% endfor %}
             </ol>
             {% endif %}

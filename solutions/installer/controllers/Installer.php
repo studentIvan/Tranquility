@@ -27,13 +27,13 @@ class Installer
             Process::$context['ress'] = array();
             $command = "mysql $mysqlAuth -e \"DROP DATABASE $dbName;\"";
             shell_exec($command);
-            Process::$context['ress'][] = htmlspecialchars($command, ENT_QUOTES);
+            Process::$context['ress'][] = $command;
             $command = "mysql $mysqlAuth -e \"CREATE DATABASE $dbName CHARACTER SET utf8 COLLATE utf8_general_ci;\"";
             shell_exec($command);
-            Process::$context['ress'][] = htmlspecialchars($command, ENT_QUOTES);
+            Process::$context['ress'][] = $command;
             $command = "mysql --default-character-set=utf8 $mysqlAuth $dbName < ../solutions/installer/sql/install.sql";
             shell_exec($command);
-            Process::$context['ress'][] = htmlspecialchars($command, ENT_QUOTES);
+            Process::$context['ress'][] = $command;
 
             $pdo = new PDO("mysql:host=$mysqlHost;dbname=$dbName", $mysqlLogin, $mysqlPassword, array(
                 PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8',
@@ -43,7 +43,7 @@ class Installer
             $passwd = md5(md5('123456') . $secretToken);
             $command = "UPDATE users SET password='$passwd' WHERE id=1";
             $pdo->query($command);
-            Process::$context['ress'][] = htmlspecialchars($command, ENT_QUOTES);
+            Process::$context['ress'][] = $command;
 
             $replacement = array(
                 ", 'installer'" => '',
