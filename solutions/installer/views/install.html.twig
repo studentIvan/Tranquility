@@ -14,8 +14,7 @@
         <h1>Установка системы</h1>
     </div><!-- /header -->
     <div data-role="content">
-        <p>
-            {% if not setup %}
+        {% if not setup %}
             <form action="/install" method="GET">
                 <div data-role="fieldcontain">
                     <fieldset data-role="controlgroup">
@@ -29,14 +28,48 @@
                         <input type="text" id="secd" name="secure" required="required" />
                     </fieldset>
                 </div>
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup">
+                        <label for="mysqlhostd">Хост MySQL:</label>
+                        <input type="text" id="mysqlhostd" name="mysqlhost" required="required" value="localhost" />
+                    </fieldset>
+                </div>
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup">
+                        <label for="mysqllogind">Логин MySQL пользователя:</label>
+                        <input type="text" id="mysqllogind" name="mysqllogin" required="required" value="root" />
+                    </fieldset>
+                </div>
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup">
+                        <label for="mysqlpasswordd">Пароль MySQL пользователя:</label>
+                        <input type="text" id="mysqlpasswordd" name="mysqlpassword" value="" />
+                    </fieldset>
+                </div>
+                <div data-role="fieldcontain">
+                    <fieldset data-role="controlgroup">
+                        <label for="rootd">Авторизация MySQL client:</label>
+                        <input type="text" id="rootd" name="root" required="required" value="-uroot" />
+                    </fieldset>
+                </div>
                 <div>
-                        <button data-role="submit">Установить</button>
+                    <button data-role="submit">Установить</button>
                 </div>
             </form>
-            {% else %}
-            setup
+        {% else %}
+            <h2>Результат установки</h2>
+            {% if ress %}<ol data-role="listview" data-inset="true" data-theme="a">
+                {% for res in ress %}
+                <li>{{ res|raw }}</li>
+                {% endfor %}
+            </ol>
             {% endif %}
-        </p>
+            {% if errs%}<ol data-role="listview" data-inset="true" data-theme="e">
+                {% for err in errs %}
+                <li>{{ err }}</li>
+                {% endfor %}
+            </ol>{% endif %}
+        {% endif %}
     </div>
 </div>
 </body>
