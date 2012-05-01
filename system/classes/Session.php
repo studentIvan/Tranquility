@@ -17,7 +17,8 @@ class Session
         $role = 0,
         $options = array(),
         $token = '',
-        $started = false;
+        $started = false,
+        $sessionData = array();
 
     public static function start()
     {
@@ -186,11 +187,47 @@ class Session
         return false;
     }
 
+    /**
+     * @static
+     * @param string $key
+     * @param mixed $value
+     */
+    public static function set($key, $value)
+    {
+        self::$sessionData[$key] = $value;
+    }
+
+    /**
+     * @static
+     * @param string $key
+     * @return mixed
+     */
+    public static function get($key)
+    {
+        return self::$sessionData[$key];
+    }
+
+    /**
+     * @todo SESSION DATA STORAGE
+     */
+
+    /**
+     * @static
+     * @param $uid
+     * @param $pass
+     * @return bool
+     */
     protected static function authenticateByUserId($uid, $pass)
     {
         return (Database::count("users WHERE id='$uid' AND password='$pass'") !== 0);
     }
 
+    /**
+     * @static
+     * @param $login
+     * @param $pass
+     * @return bool
+     */
     protected static function authenticateByLogin($login, $pass)
     {
         return (Database::count("users WHERE login='$login' AND password='$pass'") !== 0);
