@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Tranquility by studentIvan</title>
+    <title>Tranquility - PHP Content Management Framework</title>
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
@@ -35,7 +35,7 @@
           <h1>Tranquility</h1>
           <p>Php 5.2 content management framework (BSD licensed)</p>
           <hr>
-          <span class="credits left">Project maintained by <a href="https://github.com/studentIvan">studentIvan</a></span>
+          <span class="credits left">Project maintained by <a href="https://github.com/studentIvan">Maslov Ivan</a></span>
           <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
         </div>
 
@@ -63,6 +63,7 @@
 <ul>
 <li>php 5.2.4</li>
 <li>pdo mysql</li>
+<li>mbstrings (recommended)</li>
 </ul><h2>Quick start</h2>
 
 <p>Hi developer. Im told you some basic information about Tranquility. Whats that Tranquility? Tranquility its a content management framework, for increase your php site development speed. You may use ready solutions and make custom. Solutions are portable so as Symfony bundles. Okay, now study framework architecture:</p>
@@ -74,6 +75,8 @@
 <strong>config</strong> - project configuration directory. Main configuration file config.php and router configuration like routes.php are places here.</li>
 <li>
 <strong>controllers</strong> - project controllers directory. Controller its simple php class whis public static methods, callable by router.</li>
+<li>
+<strong>datamappers</strong> - database helpers directory. Data Mapper can contain some helpfull methods, e.g. create, read, update, delete, listing...</li>
 <li>
 <strong>solutions</strong> - (DRY development) ready usefull solutions for something. Its may be admin panel, blog, internet shop and more more more... Dont repeat yourself!</li>
 <li>
@@ -192,7 +195,7 @@ Hello <span class="nt">&lt;b&gt;</span>{{ name }}<span class="nt">&lt;/b&gt;</sp
 
 <p>"Standard" solution includes admin panel and news feed. Go to <code>/admin/</code> uri and enter login: <strong>Admin</strong>, password: <strong>123456</strong>. You will see news manager, users editor, roles editor, session monitor and cron stress runner.</p>
 
-<h3>Configuration directives</h3>
+<h3>Some configuration directives</h3>
 
 <ul>
 <li>
