@@ -45,13 +45,13 @@ INSERT INTO `news` VALUES (4,'Тестовая запись','<p><strong>Lorem i
 UNLOCK TABLES;
 
 --
--- Table structure for table `referers`
+-- Table structure for table `referrers`
 --
 
-DROP TABLE IF EXISTS `referers`;
+DROP TABLE IF EXISTS `referrers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `referers` (
+CREATE TABLE `referrers` (
   `timepoint` datetime NOT NULL,
   `token` char(32) NOT NULL,
   `url` varchar(200) NOT NULL,
@@ -61,13 +61,12 @@ CREATE TABLE `referers` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `referers`
+-- Dumping data for table `referrers`
 --
 
-LOCK TABLES `referers` WRITE;
-/*!40000 ALTER TABLE `referers` DISABLE KEYS */;
-INSERT INTO `referers` VALUES ('2012-04-24 17:00:31','fc200d6a326d757580c1d401f5eac13e','http://turbo.local/admin/manager/'),('2012-04-25 18:22:58','8cbe8803f8e7da46e5f5478cef6b9d0d','http://turbo.local/admin/'),('2012-04-25 23:26:24','0140bf7f70c780b8294d8417b880d14a','http://turbo.local/admin/manager/'),('2012-04-25 23:30:27','a2f511a467221e8ccae332a1f684e783','http://turbo.local/admin/manager/news?action=new&csrf_token=66c580cf268b32d6b8b645216ffbebe3'),('2012-04-26 03:48:20','fc27be8eb6630fb1cbeb1821329237b8','http://yandex.ru'),('2012-04-26 03:48:20','6facc0506896e9a3f2b84fee2c5d95e1','http://yandex.ru'),('2012-04-26 03:48:20','316d8904c7bc87f9af4293254258042a','http://yandex.ru'),('2012-04-26 03:48:21','a2fd9a7acb5e93412e4087e3b5242c51','http://yandex.ru'),('2012-04-26 03:48:21','65351812710be8acbcebc34f862567fa','http://yandex.ru'),('2012-04-26 03:48:21','0bd8e0c221d623dfe04b9bc63445837c','http://yandex.ru'),('2012-04-26 03:48:21','5a8c67747848d4bdbfd4104a357ef29c','http://yandex.ru'),('2012-04-26 03:48:22','ab5f60c3c2a203410b0f8aa744c09582','http://yandex.ru'),('2012-04-26 03:48:22','4ce79f46ce1af45eed4f926efea84281','http://yandex.ru'),('2012-04-26 03:48:22','39deee36ac841d7c6968e5b5a19befb9','http://yandex.ru'),('2012-04-26 03:48:22','b27dd1738e200819aa019aab7917d78e','http://yandex.ru'),('2012-04-28 15:19:32','2e380546100d40eb2e47032004656e8f','http://turbo.local/admin/manager/'),('2012-04-28 15:20:15','992b4de1da52497a16f51157138e9a33','http://turbo.local/admin/manager/'),('2012-04-28 15:35:01','458bb29046261f5970ed2c25e68e6e59','http://turbo.local/admin/manager/acl');
-/*!40000 ALTER TABLE `referers` ENABLE KEYS */;
+LOCK TABLES `referrers` WRITE;
+/*!40000 ALTER TABLE `referrers` DISABLE KEYS */;
+/*!40000 ALTER TABLE `referrers` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -121,7 +120,6 @@ CREATE TABLE `sessions` (
 
 LOCK TABLES `sessions` WRITE;
 /*!40000 ALTER TABLE `sessions` DISABLE KEYS */;
-INSERT INTO `sessions` VALUES ('0140bf7f70c780b8294d8417b880d14a',1,1,2130706433,'Mozilla/5.0 (Windows NT 6.1; WOW64; rv:12.0) Gecko/20100101 Firefox/12.0','2012-04-28 16:43:01',NULL);
 /*!40000 ALTER TABLE `sessions` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -141,7 +139,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `login` (`login`),
   KEY `password` (`password`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -163,4 +161,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-04-28 16:47:50
+-- Dump completed on 2012-05-01  3:52:45

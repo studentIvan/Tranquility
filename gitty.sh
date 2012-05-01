@@ -1,5 +1,6 @@
 #!/bin/sh
-mysqldump -u root tranquility > tranquility.sql
+php testing/clearrs.php
+mysqldump -u root tranquility > solutions/installer/sql/install.sql
 echo "mysqldump ok"
 git add .
 echo "git add ok"

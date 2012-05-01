@@ -15,7 +15,7 @@ return array(
      * Included solutions from solutions folder
      * Note: you may set this parameter as false
      */
-    'solutions' => array('standard'),
+    'solutions' => array('standard', 'installer'),
 
     /**
      * Mobile template detection configuration

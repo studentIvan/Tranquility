@@ -154,14 +154,14 @@ Process::$routes = require $__DIR__ . '/../config/routes.php';
 if (isset($config['solutions'])) {
     Process::$solutions = $config['solutions'];
     foreach (Process::$solutions as $_solution) {
-        require_once  "$__DIR__/../solutions/$_solution/__init__.php";
-        if (file_exists("$__DIR__/routes.php")) {
-            Process::$routes += require "$__DIR__/routes.php";
+        if (file_exists("$__DIR__/../solutions/$_solution/__init__.php")) {
+            require_once  "$__DIR__/../solutions/$_solution/__init__.php";
+        }
+        if (file_exists("$__DIR__/../solutions/$_solution/routes.php")) {
+            Process::$routes += require "$__DIR__/../solutions/$_solution/routes.php";
         }
     }
 }
-
-$__DIR__ = dirname(__FILE__); // restore $__DIR__ variable
 #endregion
 
 #region Application
