@@ -143,6 +143,22 @@ class Process
 
         self::$state++;
     }
+
+    /**
+     * @static
+     * @param string $helper
+     */
+    public static function loadHelper($helper) {
+        include_once dirname(__FILE__) . '/../helpers/' . ucfirst($helper) . '.php';
+    }
+
+    /**
+     * @static
+     * @param array $helpers
+     */
+    public static function loadHelpers($helpers) {
+        foreach ($helpers as $helper) self::loadHelper($helper);
+    }
 }
 #endregion
 
@@ -170,9 +186,11 @@ require_once $__DIR__ . '/../__init__.php';
 
 if (isset($_SERVER['REQUEST_URI'])) {
     #region Routing and dispatching
-    Process::$context['mobile'] =
-        (isset($config['always_mobile']) and $config['always_mobile']) ?
-            true : require $__DIR__ . '/ismobile.php';
+    if (!isset(Process::$context['mobile'])) {
+        Process::$context['mobile'] =
+            (isset($config['always_mobile']) and $config['always_mobile']) ?
+                true : require $__DIR__ . '/ismobile.php';
+    }
 
     Process::$context['resource'] = isset($config['resources']) ? $config['resources'] : array();
     Process::$context['uri'] = htmlspecialchars($_SERVER['REQUEST_URI']);

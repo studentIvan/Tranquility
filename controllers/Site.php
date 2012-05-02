@@ -9,5 +9,22 @@ class Site
         Process::$context['news_list'] = News::listing($pagination['offset'], $perPage);
         Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
     }
+
+    public static function showPost($matches)
+    {
+        $newsId = isset($matches[1]) ? abs($matches[1]) : false;
+
+        if (!$newsId) {
+            throw new NotFoundException();
+        }
+
+        if (!$post = News::getObjectById($newsId)) {
+            throw new NotFoundException();
+        }
+
+        Process::$context['page_title'] = $post->title;
+        Process::$context['news_content'] = $post->content;
+        Process::$context['news_created_at'] = $post->created_at;
+    }
 }
 

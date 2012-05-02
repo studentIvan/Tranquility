@@ -35,6 +35,10 @@ return array(
      */
     'resources' => array(
         'ldt_js' => '/js/ldt.min.js',
+        'bootstrap_js' => '/js/bootstrap.min.js',
+        'bootstrap_css' => '/css/bootstrap.min.css',
+        'bootstrap_responsive_css' => '/css/bootstrap-responsive.min.css',
+        'html5shim_js' => 'http://html5shim.googlecode.com/svn/trunk/html5.js',
         'tinymce_js' => '/js/tiny_mce/tiny_mce.js',
         'jquery_tinymce_js' => '/js/tiny_mce/jquery.tinymce.js',
         'jquery_js' => 'http://yandex.st/jquery/1.7.2/jquery.min.js',

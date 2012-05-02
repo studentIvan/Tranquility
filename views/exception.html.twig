@@ -1,5 +1,8 @@
 {% extends mobile ? 'skeleton.mobile.html.twig' : 'skeleton.html.twig' %}
 {% block body %}
-<h2>{{ exception.message }}</h2>
-{% if exception.file %}<p>{{ exception.file }} on line {{ exception.line }}</p>{% endif %}
-<pre><code>{{ exception.trace }}</code></pre>{% endblock %}
+<div class="well alert alert-error">
+    <h2>{{ exception.message }}</h2>
+    {% if exception.file %}<p>{{ exception.file }} on line {{ exception.line }}</p>{% endif %}
+    <pre><code>{{ exception.trace }}</code></pre>
+</div>
+{% endblock %}
