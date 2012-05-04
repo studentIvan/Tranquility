@@ -1,6 +1,6 @@
 <?php
 /**
- * GD Helper
+ * GD Helper_Photo
  */
 class GDPhoto
 {

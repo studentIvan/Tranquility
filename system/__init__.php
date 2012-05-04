@@ -156,7 +156,8 @@ class Process
      * @static
      * @param string|array $helpers
      */
-    public static function load($helpers) {
+    public static function load($helpers)
+    {
         if (is_array($helpers)) {
             foreach ($helpers as $helper) self::loadHelper($helper);
         } else {
