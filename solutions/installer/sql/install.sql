@@ -107,7 +107,6 @@ CREATE TABLE `sessions` (
   `ip` int(10) unsigned NOT NULL,
   `useragent` varchar(110) NOT NULL,
   `uptime` datetime NOT NULL,
-  `data` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`token`),
   KEY `uptime` (`uptime`),
   KEY `uid` (`uid`)
@@ -161,4 +160,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-05-01  5:48:49
+-- Dump completed on 2012-05-04 16:32:08

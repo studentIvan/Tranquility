@@ -89,8 +89,8 @@ class Session
             }
             else
             {
-                $sql = "INSERT INTO sessions (`token`, `uid`, `role`, `ip`, `useragent`, `uptime`)
-                  VALUES (:token, 0, :role, INET_ATON(:ip), :agent, NOW())";
+                $sql = 'INSERT INTO sessions (token, uid, role, ip, useragent, uptime)
+                  VALUES (:token, 0, :role, INET_ATON(:ip), :agent, NOW())';
 
                 $statement = $pdo->prepare($sql);
                 $statement->bindParam(':token', $token, PDO::PARAM_STR);
@@ -117,7 +117,7 @@ class Session
             self::$role = $role;
             $usid = (is_null($uid)) ? '0' : $uid;
 
-            $sql = 'INSERT INTO sessions (`token`, `uid`, `role`, `ip`, `useragent`, `uptime`)
+            $sql = 'INSERT INTO sessions (token, uid, role, ip, useragent, uptime)
                   VALUES (:token, :uid, :role, INET_ATON(:ip), :agent, NOW())';
 
             $statement = $pdo->prepare($sql);
@@ -153,7 +153,7 @@ class Session
             and filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL))
         {
             $ref = substr(str_replace(array('<', '>'), '', $_SERVER['HTTP_REFERER']), 0, 200);
-            $statement = $pdo->prepare("INSERT INTO referrers (timepoint, token, url) VALUES (NOW(), :token, :url)");
+            $statement = $pdo->prepare('INSERT INTO referrers (timepoint, token, url) VALUES (NOW(), :token, :url)');
             $statement->bindParam(':token', $token, PDO::PARAM_STR);
             $statement->bindParam(':url', $ref, PDO::PARAM_STR);
             $statement->execute();
@@ -194,7 +194,7 @@ class Session
      */
     public static function set($key, $value)
     {
-        self::$sessionData[$key] = $value;
+        Cookies::set($key, base64_encode($value));
     }
 
     /**
@@ -204,12 +204,8 @@ class Session
      */
     public static function get($key)
     {
-        return self::$sessionData[$key];
+        return base64_decode(Cookies::get($key));
     }
-
-    /**
-     * @todo SESSION DATA STORAGE
-     */
 
     /**
      * @static

@@ -14,11 +14,7 @@ class Site
     {
         $newsId = isset($matches[1]) ? abs($matches[1]) : false;
 
-        if (!$newsId) {
-            throw new NotFoundException();
-        }
-
-        if (!$post = News::getObjectById($newsId)) {
+        if ((!$newsId) or (!$post = News::getObjectById($newsId))) {
             throw new NotFoundException();
         }
 

@@ -148,16 +148,20 @@ class Process
      * @static
      * @param string $helper
      */
-    public static function loadHelper($helper) {
+    protected static function loadHelper($helper) {
         include_once dirname(__FILE__) . '/../helpers/' . ucfirst($helper) . '.php';
     }
 
     /**
      * @static
-     * @param array $helpers
+     * @param string|array $helpers
      */
-    public static function loadHelpers($helpers) {
-        foreach ($helpers as $helper) self::loadHelper($helper);
+    public static function load($helpers) {
+        if (is_array($helpers)) {
+            foreach ($helpers as $helper) self::loadHelper($helper);
+        } else {
+            self::loadHelper($helpers);
+        }
     }
 }
 #endregion

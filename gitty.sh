@@ -8,4 +8,4 @@ git status
 echo "running commit"
 git commit -m "$1"
 echo "git commit $1 ok"
-git push
+git push -u origin dev
