@@ -22,5 +22,21 @@ class Site
         Process::$context['news_content'] = $post->content;
         Process::$context['news_created_at'] = $post->created_at;
     }
+
+    public static function logout()
+    {
+        if (Process::$context['csrf_token'] === Data::uriVar('csrf_token')) Session::stop();
+        Process::redirect('/');
+    }
+
+    public static function openAuth()
+    {
+        if (Process::$context['csrf_token'] === Data::uriVar('csrf_token')) {
+            ULogin::authorize();
+            Process::redirect('/');
+        } else {
+            throw new NotFoundException();
+        }
+    }
 }
 

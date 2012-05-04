@@ -127,10 +127,15 @@ class Process
 
             if (!isset($split[2])) {
                 list($class, $method) = $split;
-                include dirname(__FILE__) . "/../controllers/$class.php";
+                if (!class_exists($class, false)) {
+                    include dirname(__FILE__) . "/../controllers/$class.php";
+                }
             } else {
                 list($solution, $class, $method) = $split;
-                include dirname(__FILE__) . "/../solutions/$solution/controllers/$class.php";
+                $class = ucfirst($class);
+                if (!class_exists($class, false)) {
+                    include dirname(__FILE__) . "/../solutions/$solution/controllers/$class.php";
+                }
             }
 
             call_user_func(array($class, $method), $matches);
@@ -163,6 +168,15 @@ class Process
         } else {
             self::loadHelper($helpers);
         }
+    }
+
+    /**
+     * @static
+     * @param string $location
+     */
+    public static function redirect($location) {
+        header("Location: $location");
+        exit;
     }
 }
 #endregion
