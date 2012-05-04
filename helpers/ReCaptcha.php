@@ -12,7 +12,8 @@ class ReCaptcha
      */
     public static function verify($privateKey)
     {
-        include_once dirname(__FILE__) . '/../vendor/ReCaptcha/recaptchalib.php';
+        if (!function_exists('recaptcha_check_answer'))
+            include_once dirname(__FILE__) . '/../vendor/ReCaptcha/recaptchalib.php';
         $responseField = Data::input('recaptcha_response_field');
         $challengeField = Data::input('recaptcha_challenge_field');
         if ($responseField) {
