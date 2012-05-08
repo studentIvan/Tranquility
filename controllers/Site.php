@@ -23,7 +23,7 @@ class Site
         Process::$context['news_created_at'] = $post->created_at;
     }
 
-    public static function logout()
+    /*public static function logout()
     {
         if (Process::$context['csrf_token'] === Data::uriVar('csrf_token')) Session::stop();
         Process::redirect('/');
@@ -37,6 +37,6 @@ class Site
         } else {
             throw new NotFoundException();
         }
-    }
+    }*/
 }
 

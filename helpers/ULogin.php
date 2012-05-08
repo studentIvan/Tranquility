@@ -16,7 +16,7 @@ class ULogin
      *
      */
     public static function initSession() {
-        Process::$context['user'] = Session::getAllStorageData();
+        //Process::$context['user'] = Session::getAllStorageData();
     }
 
     /**
@@ -28,9 +28,9 @@ class ULogin
         if ($token = Data::input('token')) {
             $userData = self::getData($token);
             if (isset($userData['first_name']) and isset($userData['last_name'])) {
-                foreach ($userData as $key => $value) {
+                /*foreach ($userData as $key => $value) {
                     Session::setStorageData($key, $value);
-                }
+                }*/
                 return true;
             } else {
                 return false;

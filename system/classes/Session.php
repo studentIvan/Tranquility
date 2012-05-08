@@ -187,14 +187,23 @@ class Session
         return false;
     }
 
+
+    public static function setStorageData($key, $value) {
+
+    }
+
+    public static function getStorageData($key) {
+
+    }
+
     /**
      * @static
      * @param string $key
      * @param mixed $value
      */
-    public static function setStorageData($key, $value) {
+    public static function setSecureCookieData($key, $value) {
         Cookies::set('k_' . $key, base64_encode( strval($value) .
-            Security::getDigest(array($key, $value, Session::getToken())) ));
+            Security::getDigest(array($key, $value)) ));
     }
 
     /**
@@ -202,7 +211,7 @@ class Session
      * @param string $key
      * @return mixed
      */
-    public static function getStorageData($key)
+    public static function getSecureCookieData($key)
     {
         if ($cookie = Cookies::get('k_' . $key)) {
             $decoded = base64_decode($cookie);
@@ -211,11 +220,11 @@ class Session
 
             echo $key . '<br>';
             echo $control . '<br>';
-            echo Security::getDigest(array($key, $value, Session::getToken()));
+            echo Security::getDigest(array($key, $value));
             echo '<hr>';
 
             return ( $control !== Security::getDigest(
-                array($key, $value, Session::getToken())) ) ? false : $value;
+                array($key, $value)) ) ? false : $value;
         } else {
             return false;
         }
@@ -225,7 +234,7 @@ class Session
      * @static
      * @return array
      */
-    public static function getAllStorageData()
+    public static function getAllSecureCookieData()
     {
         $returns = array();
 
@@ -233,7 +242,7 @@ class Session
         {
             if (0 === strpos($key, 'k_')) {
                 $k = substr($key, 2);
-                $returns[$k] = self::getStorageData($k);
+                $returns[$k] = self::getSecureCookieData($k);
             }
         }
 

@@ -1,0 +1,8 @@
+{% extends mobile ? 'skeleton.mobile.html.twig' : 'skeleton.html.twig' %}
+{% block body %}
+<ul>
+{% for key, value in user %}
+    <li><strong>{{ key }}</strong>: {{ value }}</li>
+{% endfor %}
+</ul>
+{% endblock %}

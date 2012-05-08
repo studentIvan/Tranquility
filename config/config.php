@@ -15,7 +15,7 @@ return array(
      * Included solutions from solutions folder
      * Note: you may set this parameter as false
      */
-    'solutions' => array('standard', 'installer'),
+    'solutions' => array('standard', 'profiles', 'installer'),
 
     /**
      * Mobile template detection configuration
@@ -69,9 +69,18 @@ return array(
     ),
 
     /**
-     * PDO configuration
+     * PDO configuration (developer)
      */
-    'pdo' => array(
+    'pdo_developer_mode' => array(
+        'dsn' => 'mysql:host=localhost;dbname=tranquility',
+        'username' => 'root',
+        'password' => '',
+    ),
+
+    /**
+     * PDO configuration (production)
+     */
+    'pdo_production_mode' => array(
         'dsn' => 'mysql:host=localhost;dbname=tranquility',
         'username' => 'root',
         'password' => '',

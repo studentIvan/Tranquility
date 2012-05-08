@@ -55,7 +55,7 @@
                     <button type="submit" class="btn" style="margin-bottom: 0;">Войти</button>
                 </form>-->
                 {% if not user or not user.first_name %}
-                <script src="http://ulogin.ru/js/ulogin.js"></script>
+                <!--<script src="http://ulogin.ru/js/ulogin.js"></script>-->
                 <div style="margin-bottom: 0; margin-top: 10px;" id="uLogin" x-ulogin-params="display=small;fields=first_name,last_name,photo;providers=vkontakte,odnoklassniki,mailru,facebook,google,twitter;hidden=other;redirect_uri=http%3A%2F%2F{{ http_host }}%2Fopenauth%3Fcsrf_token%3D{{ csrf_token }}"></div>
                 {% else %}
                 <ul class="nav">

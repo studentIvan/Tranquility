@@ -1,0 +1,47 @@
+{% extends mobile ? 'skeleton.mobile.html.twig' : 'skeleton.html.twig' %}
+{% block body %}
+<form action="/registration.html" method="POST" class="well">
+    <div data-role="fieldcontain">
+        <fieldset data-role="controlgroup">
+            <label for="logininput">
+                Логин:
+            </label>
+            <input id="logininput" name="xcya94n8cdjscam" value="" type="text" required="required" />
+        </fieldset>
+    </div>
+    <div data-role="fieldcontain">
+        <fieldset data-role="controlgroup">
+            <label for="emailinput">
+                Email:
+            </label>
+            <input id="emailinput" name="e7a9fg0h790awf" value="" type="email" required="required" />
+        </fieldset>
+    </div>
+    <div data-role="fieldcontain">
+        <fieldset data-role="controlgroup">
+            <label for="passinput">
+                Пароль:
+            </label>
+            <input id="passinput" name="p218398s9gdy" value="" type="password" required="required" />
+        </fieldset>
+    </div>
+    <div data-role="fieldcontain">
+        <fieldset data-role="controlgroup">
+            <label for="pass2input">
+                Повторите пароль:
+            </label>
+            <input id="pass2input" name="padm8300092gdy" value="" type="password" required="required" />
+        </fieldset>
+    </div>
+    <div data-role="fieldcontain">
+        <fieldset data-role="controlgroup">
+            <label for="captcha">
+                <div><img src="/captcha/{{ csrf_token }}.png"></div>
+                <div>Текст с картинки:</div>
+            </label>
+            <input id="captcha" name="cydas89gfy8431sas" value="" type="text" required="required" />
+        </fieldset>
+    </div>
+    <input type="submit" class="btn" value="Зарегистрироваться" />
+</form>
+{% endblock %}

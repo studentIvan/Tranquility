@@ -53,7 +53,8 @@ require_once $__DIR__ . '/classes/Data.php';
 
 try
 {
-    Database::setConfiguration($config['pdo']['dsn'], $config['pdo']['username'], $config['pdo']['password']);
+    $pdoConfig = DEVELOPER_MODE ? $config['pdo_developer_mode'] : $config['pdo_production_mode'];
+    Database::setConfiguration($pdoConfig['dsn'], $pdoConfig['username'], $pdoConfig['password']);
     Security::setSecret($config['security_token']);
     Session::setConfiguration($config['session']);
     $config['pdo'] = $config['security_token'] = null;
@@ -71,7 +72,8 @@ class Process
     public static
         $context = array(),
         $routes = array(),
-        $solutions = array();
+        $solutions = array(),
+        $loaded = array();
 
     /**
      * @var Twig_Environment
@@ -153,8 +155,12 @@ class Process
      * @static
      * @param string $helper
      */
-    protected static function loadHelper($helper) {
-        include_once dirname(__FILE__) . '/../helpers/' . ucfirst($helper) . '.php';
+    protected static function loadHelper($helper)
+    {
+        if (!isset(self::$loaded[$helper])) {
+            include_once dirname(__FILE__) . '/../helpers/' . ucfirst($helper) . '.php';
+            self::$loaded[$helper] = true;
+        }
     }
 
     /**
@@ -199,11 +205,12 @@ if (isset($config['solutions'])) {
 }
 #endregion
 
-#region Application
-require_once $__DIR__ . '/../__init__.php';
-#endregion
+if (isset($_SERVER['REQUEST_URI']))
+{
+    #region Application
+    require_once $__DIR__ . '/../__init__.php';
+    #endregion
 
-if (isset($_SERVER['REQUEST_URI'])) {
     #region Routing and dispatching
     if (!isset(Process::$context['mobile'])) {
         Process::$context['mobile'] =
