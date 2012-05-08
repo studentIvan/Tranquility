@@ -41,7 +41,7 @@ class GDCaptcha
                 ),
             ),
             array(
-                'base' => array(255, 56, 0),
+                'base' => array(147, 33, 0),
                 'text' => array(
                     array(255, 255, 255),
                     array(255, 252, 196),
@@ -60,8 +60,8 @@ class GDCaptcha
                 'base' => array(218, 61, 30),
                 'text' => array(
                     array(217, 208, 197),
-                    array(166, 156, 148),
-                    array(138, 137, 130),
+                    array(200, 156, 148),
+                    array(200, 137, 130),
                 ),
             ),
             array(

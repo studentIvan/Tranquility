@@ -33,6 +33,17 @@ class ProfilesController
     public static function register()
     {
         Process::$context['page_title'] = 'Регистрация';
+        $formCode = substr(Process::$context['csrf_token'], 0, 3);
+        Process::$context['form_code'] = $formCode;
+        list($login, $password, $passwordRepeat, $email, $captcha) =
+            Data::inputsList(
+                "xcya94n8cdjscam$formCode", "p218398s9gdy$formCode", "padm8300092gdy$formCode",
+                "e7a9fg0h790awf$formCode", "cydas89gfy8431sas$formCode"
+            );
+
+        if ($login and $password and $passwordRepeat and $email and $captcha) {
+
+        }
     }
 
     public static function getCaptcha($matches)
