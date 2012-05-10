@@ -1,5 +1,8 @@
 {% extends mobile ? 'skeleton.mobile.html.twig' : 'skeleton.html.twig' %}
-{% block body %}
+{% block body %}{% if not complete %}
+{% if flash_error %}<div class="alert alert-error ui-overlay-e">
+    {{ flash_error }}
+</div>{% endif %}
 <form action="/registration.html" method="POST" class="well">
     <div data-role="fieldcontain">
         <fieldset data-role="controlgroup">
@@ -7,7 +10,7 @@
                 Логин:
             </label>
             <input id="logininput" name="xcya94n8cdjscam{{ form_code }}"
-                   value="" type="text" required="required" />
+                   value="{{ x_login }}" type="text" required="required" />
         </fieldset>
     </div>
     <div data-role="fieldcontain">
@@ -16,7 +19,7 @@
                 Email:
             </label>
             <input id="emailinput" name="e7a9fg0h790awf{{ form_code }}"
-                   value="" type="email" required="required" />
+                   value="{{ x_email }}" type="email" required="required" />
         </fieldset>
     </div>
     <div data-role="fieldcontain">
@@ -40,7 +43,7 @@
     <div data-role="fieldcontain">
         <fieldset data-role="controlgroup">
             <label for="captcha">
-                <div><img src="/captcha/{{ csrf_token }}.png"></div>
+                <div><img src="/captcha/{{ csrf_token }}.png?access={% if rrr %}{{ rrr }}{% else %}first{% endif %}"></div>
                 <div>Текст с картинки:</div>
             </label>
             <input id="captcha" name="cydas89gfy8431sas{{ form_code }}"
@@ -49,4 +52,8 @@
     </div>
     <input type="submit" class="btn" value="Зарегистрироваться" />
 </form>
-{% endblock %}
+{% else %}
+<p>Регистрация завершена успешно</p>
+{% if cms.email_confirm %}<p>Для завершения регистрации откройте ваш email и пройдите по ссылке подтверждения</p>{% endif %}
+<p><a href="/">Вернуться на главную</a></p>
+{% endif %}{% endblock %}

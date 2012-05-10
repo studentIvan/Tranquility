@@ -99,11 +99,24 @@
 
         <div data-role="content">
             <ul data-role="listview" data-inset="true" data-mini="true">
+                {% if profiles %}
+                <li data-role="list-divider">Служебная информация</li>
+                {% endif %}
                 <li>Идентификатор пользователя: {{ user_identify }}</li>
                 <li>Логин пользователя: {{ user_login }}</li>
-                <li>Хеш пароля пользователя: {{ user_password }}</li>
+                <li>Хеш пароля: {{ user_password }}</li>
                 <li>Роль пользователя: {{ user_title }}</li>
                 <li>Дата регистрации: <span class="dtl10n">{{ user_registered_at }}</span></li>
+                {% if profiles %}
+                <li data-role="list-divider">Профиль пользователя</li>
+                {% if user_nickname %}<li>Никнейм: {{ user_nickname }}</li>{% endif %}
+                {% if user_full_name %}<li>Полное имя: {{ user_full_name }}</li>{% endif %}
+                {% if user_email %}<li>Email: {{ user_email }}</li>{% endif %}
+                {% if user_email_confirm %}<li>Статус подтверждения email: {{ user_email_confirm }}</li>{% endif %}
+                {% if user_birthday %}<li>Дата рождения: {{ user_birthday }}</li>{% endif %}
+                {% if user_photo %}<li>Фотография: <a href="{{ user_photo }}">{{ user_photo }}</a></li>{% endif %}
+                {% if user_gender %}<li>Пол пользователя: {{ user_gender }}</li>{% endif %}
+                {% endif %}
             </ul>
         </div>
 {% endif %}

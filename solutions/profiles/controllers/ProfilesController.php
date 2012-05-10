@@ -30,6 +30,37 @@ class ProfilesController
         }
     }
 
+    public static function activate($matches)
+    {
+        if (!(isset(Process::$context['cms']['email_confirm']) and
+            Process::$context['cms']['email_confirm'])) {
+            throw new NotFoundException();
+        }
+
+        $key = $matches[1];
+        $login = $matches[2];
+
+        try {
+            $user = UserProfile::loadFromLogin($login);
+        } catch (Exception $e) {
+            throw new ForbiddenException();
+        }
+
+        if (
+            $data = $user->getNonIndexedData() and
+            isset($data['email_confirm']) and !$data['email_confirm'] and
+            isset($data['email_confirm_key']) and $data['email_confirm_key'] and
+            $data['email_confirm_key'] === $key
+        ) {
+            unset($data['email_confirm_key']);
+            $data['email_confirm'] = true;
+            $user->setNonIndexedData($data)->save();
+            Process::redirect('/');
+        } else {
+            throw new ForbiddenException();
+        }
+    }
+
     public static function register()
     {
         Process::$context['page_title'] = 'Регистрация';
@@ -41,8 +72,53 @@ class ProfilesController
                 "e7a9fg0h790awf$formCode", "cydas89gfy8431sas$formCode"
             );
 
-        if ($login and $password and $passwordRepeat and $email and $captcha) {
+        if ($login and $password and $passwordRepeat and $email and $captcha)
+        {
+            try
+            {
+                Process::load('GDCaptcha');
 
+                if (!GDCaptcha::checkCorrect($captcha)) {
+                    throw new InvalidArgumentException("Неверно введён код с картинки");
+                }
+
+                $user = new UserProfile();
+                $user->setLogin($login);
+                $user->setPassword($password, $passwordRepeat);
+                $user->setEmail($email);
+                $user->setRole(3);
+
+                if (isset(Process::$context['cms']['email_confirm']) and
+                    Process::$context['cms']['email_confirm'])
+                {
+                    $user->setNonIndexedData(array(
+                        'email_confirm' => false,
+                        'email_confirm_key' => Registration::getActivationKey($user),
+                    ));
+                }
+
+                if ($user->save())
+                {
+                    Process::$context['complete'] = true;
+                    if (isset(Process::$context['cms']['email_confirm']) and
+                        Process::$context['cms']['email_confirm']) {
+                        if (!Registration::sendConfirmationEmail($user)) {
+                            $user->remove();
+                            throw new InvalidArgumentException("Не удалось отправить письмо подтверждения");
+                        }
+                    }
+                }
+                else
+                {
+                    throw new InvalidArgumentException("Ошибка сервера, попробуйте позднее");
+                }
+            }
+            catch (InvalidArgumentException $e) {
+                Process::$context['flash_error'] = $e->getMessage();
+                Process::$context['x_login'] = $login;
+                Process::$context['x_email'] = $email;
+                Process::$context['rrr'] = rand(111,999);
+            }
         }
     }
 

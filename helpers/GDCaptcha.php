@@ -9,7 +9,7 @@ class GDCaptcha
     public static function checkCorrect($input)
     {
         $token = Session::getToken();
-        if ($input == Database::getSingleResult("SELECT phrase FROM captcha WHERE token='$token'")) {
+        if (strtoupper($input) == Database::getSingleResult("SELECT phrase FROM captcha WHERE token='$token'")) {
             Database::getInstance()
                 ->query("DELETE FROM captcha WHERE token='$token'");
             return true;
@@ -185,14 +185,10 @@ class GDCaptcha
         imagesetstyle($image, $style);
 
         foreach(range(1, $lines) as $i) {
-            $what = rand(1, 100);
-            if ($what > 50) {
-                imageline($image, rand(2, $width - 2), rand(2, $height - 2),
-                    rand(2, $width - 2), rand(2, $height - 2), IMG_COLOR_STYLED);
-            } else {
-                imageline($image, rand(2, $width - 2), rand(2, $height - 2),
-                    rand(2, $width - 2), rand(2, $height - 2), $textThemes[rand(0, $textThemesCount)]);
-            }
+            imageline($image, rand(2, $width - 2), rand(2, $height - 2),
+                rand(2, $width - 2), rand(2, $height - 2),
+                ((rand(1, 100) > 50) ? IMG_COLOR_STYLED :
+                    $textThemes[rand(0, $textThemesCount)]));
         }
 
         header('Content-Type: image/png');

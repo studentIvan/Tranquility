@@ -119,5 +119,6 @@ return array(
         ),
         'sessions' => true,
         'users' => true,
+        'email_confirm' => true,
     ),
 );

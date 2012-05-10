@@ -16,6 +16,7 @@ class UserProfile
         'login_exists' => 'Такой логин уже зарегистрирован',
         'password' => 'Пароль не должен равняться логину',
         'password_length' => 'Пароль должен быть не менее четырёх символов в длину',
+        'password_repeat' => 'Введённые пароли не совпадают',
         'user_not_exists' => 'Такого пользователя не существует',
         'role' => 'Неверно указана роль',
         'nickname' => 'Ник может состоять только из символа "подчеркивание", букв a-z, а-я и цифр,
@@ -144,11 +145,17 @@ class UserProfile
 
     /**
      * @param string $password
-     * @return UserProfile
+     * @param bool|string $passwordRepeat
      * @throws InvalidArgumentException
+     * @return UserProfile
      */
-    public function setPassword($password)
+    public function setPassword($password, $passwordRepeat = false)
     {
+        if ($passwordRepeat and ($password != $passwordRepeat)) {
+            throw new InvalidArgumentException(
+                UserProfile::$exceptions['password_repeat']
+            );
+        }
         $length = mb_strlen($password, 'UTF-8');
         if ($length > 3) {
             if ($password != $this->login) {
@@ -492,5 +499,28 @@ class UserProfile
         {
             return false;
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function remove()
+    {
+        $userId = $this->id;
+
+        return (!is_null($userId)) ?
+            Users::remove($userId) : false;
+    }
+
+    /**
+     * @param int $minutesInterval
+     * @return bool
+     */
+    public function isOnline($minutesInterval)
+    {
+        $userId = $this->id;
+
+        return (!is_null($userId)) ?
+            Users::checkOnlineState($userId, $minutesInterval) : false;
     }
 }

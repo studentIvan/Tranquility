@@ -106,4 +106,24 @@ class Users
 
         return $statement->fetch(PDO::FETCH_OBJ);
     }
+
+    /**
+     * @static
+     * @param int $userId
+     * @param int $minutesInterval
+     * @return bool
+     */
+    public static function checkOnlineState($userId, $minutesInterval)
+    {
+        $statement = Database::getInstance()->prepare("
+            SELECT COUNT(*) FROM sessions
+            WHERE uid=:userId AND uptime >= ( NOW() - INTERVAL :minutesInterval MINUTE )
+        ");
+
+        $statement->bindParam(':userId', $userId, PDO::PARAM_INT);
+        $statement->bindParam(':minutesInterval', $minutesInterval, PDO::PARAM_INT);
+        $statement->execute();
+
+        return ($statement->fetchColumn() > 0);
+    }
 }

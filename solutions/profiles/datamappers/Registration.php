@@ -26,19 +26,36 @@ class Registration
                 );
             }
 
-            /**
-             * TODO: FUCKING MESSAGE EMAIL
-             */
+            $subject = $_SERVER['HTTP_HOST'] . ' - подтверждение email';
+            $text = '<h3>Подтверждение адреса электронной почты</h3>
+            <p>С вашего адреса электронной почты была зафиксирована попытка
+            регистрации аккаунта на сайте $site</p>
+            <p>Если это были действительно Вы, то пройдите пожалуйста по ссылке активации:</p>
+            <p><a href="$activate">$activate</a></p>';
 
-            $subject = '';
-            $text = '';
-            $message = Mailer::createMessage($subject, $to, $text);
+            $message = Mailer::createMessage(
+                $subject, $to, str_replace(array('$site', '$activate'),
+                array($_SERVER['HTTP_HOST'], 'http://' . $_SERVER['HTTP_HOST'] . '/activate/' .
+                    Registration::getActivationKey($user) . '/' . $user->getLogin() . '.html'), $text
+            ));
 
-            return true;
+            return Mailer::send($message, true);
         }
         catch (LogicException $e)
         {
             return false;
         }
+    }
+
+    /**
+     * @static
+     * @param UserProfile $user
+     * @return string
+     */
+    public static function getActivationKey(UserProfile $user)
+    {
+        return Security::getDigest(array(
+            Session::getToken(), $user->getLogin()
+        ));
     }
 }

@@ -36,7 +36,6 @@ CREATE TABLE `captcha` (
 
 LOCK TABLES `captcha` WRITE;
 /*!40000 ALTER TABLE `captcha` DISABLE KEYS */;
-INSERT INTO `captcha` VALUES ('d30f9338c1a4822d5c0b6e076b2a255a','U8TNG');
 /*!40000 ALTER TABLE `captcha` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -208,7 +207,7 @@ CREATE TABLE `users_data` (
 
 LOCK TABLES `users_data` WRITE;
 /*!40000 ALTER TABLE `users_data` DISABLE KEYS */;
-INSERT INTO `users_data` VALUES (1,'studentIvan','Иван Маслов','cryptox3@gmail.com',NULL,'m','1992-03-12','{\"test\":null}');
+INSERT INTO `users_data` VALUES (1,'studentIvan','Иван Маслов',NULL,NULL,'m','1992-03-12','{\"test\":null}');
 /*!40000 ALTER TABLE `users_data` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -221,4 +220,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-05-09  2:49:00
+-- Dump completed on 2012-05-10 20:24:40
