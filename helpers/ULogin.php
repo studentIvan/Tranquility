@@ -2,6 +2,10 @@
 class ULogin
 {
     /**
+     * TODO: MAKE FUCKING SOCIAL AUTH
+     */
+
+    /**
      * @static
      * @param string $token
      * @return array

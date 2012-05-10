@@ -65,6 +65,16 @@
             <label for="epassword">Новый пароль:</label>
             <input type="text" name="password" id="epassword" value="" disabled="disabled" />
         </div>
+        {% if profiles %}
+        <div data-role="fieldcontain">
+            <label for="enickname">Никнейм:</label>
+            <input type="text" name="nickname" id="enickname" value="{{ user_nickname }}" />
+        </div>
+        <div data-role="fieldcontain">
+            <label for="efullname">Полное имя:</label>
+            <input type="text" name="full_name" id="efullname" value="{{ user_full_name }}" />
+        </div>
+        {% endif %}
         <button type="submit" data-theme="d" name="submit" value="submit-value">
             Сохранить изменения
         </button>

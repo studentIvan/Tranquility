@@ -162,6 +162,10 @@ class Admin
                             $password = strval(Database::getSingleResult($sql));
                         }
 
+                        /**
+                         * TODO: EDIT FUCKING USER PROFILE
+                         */
+
                         if ($login and $password and $roleId and
                             Users::edit($identify, $login, $password, $roleId)) {
                             header(
