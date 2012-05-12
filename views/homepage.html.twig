@@ -1,20 +1,19 @@
 {% extends mobile ? 'skeleton.mobile.html.twig' : 'skeleton.html.twig' %}
 {% block body %}
+
+{% if not news_content %}
 {% for item in news_list %}
-<div class="post">
-    <h2>{{ item.title }}</h2>
-    <span class="datetime dtl10n">
-        {% if not mobile%}
-        <script type="text/javascript">document.write(ldt.localize("{{ item.created_at }}"))</script>
-        <noscript>{{ item.created_at }}</noscript>
-        {% else %}
+<div class="well">
+    <h2><a href="/{{ item.id }}-{{ item.title|tolink }}.html">{{ item.title }}</a></h2>
+    {% if not mobile %}<h3><small class="dtl10n">{{ item.created_at }}</small></h3>{% endif %}
+    {% if mobile %}<span class="dtl10n">
         {{ item.created_at }}
-        {% endif %}
-    </span>
-    <p>{{ item.content|raw }}</p>
+    </span>{% endif %}
+    <p style="margin-top: 6px;">{{ item.content|raw }}</p>
 </div>
 <hr>
 {% endfor %}
+
 {% if pagination %}
 {% if mobile %}
 <div data-theme="a" data-role="footer" data-position="fixed">
@@ -57,15 +56,30 @@
 </div>
 {% else %}
     <!-- main pagination -->
-    <div>
-        <span>Pages: </span>
-        {% if pagination.current_id != 1 %}<a href="/">[1]</a>{% endif %}
-        {% if pagination.prev_id and pagination.prev_id != 1 %}&nbsp;<a href="/page_{{ pagination.prev_id }}.html">[{{ pagination.prev_id }}]</a>{% endif %}
-        &nbsp;[{{ pagination.current_id }}]
-        {% if pagination.next_id %}&nbsp;<a href="/page_{{ pagination.next_id }}.html">[{{ pagination.next_id }}]</a>
-        {% if pagination.total_pages > pagination.next_id %}&nbsp;..
-        &nbsp;<a href="/page_{{ pagination.total_pages }}.html">[{{ pagination.total_pages }}]</a>{% endif %}{% endif %}
+    <div class="pagination">
+        <ul>
+            {% if pagination.current_id != 1 %}<li><a href="/">1</a></li>{% endif %}
+            {% if pagination.prev_id and pagination.prev_id != 1 %}<li><a href="/page_{{ pagination.prev_id }}.html">{{ pagination.prev_id }}</a></li>{% endif %}
+            <li class="active"><a href="#">{{ pagination.current_id }}</a></li>
+            {% if pagination.next_id %}
+            <li><a href="/page_{{ pagination.next_id }}.html">{{ pagination.next_id }}</a></li>
+            {% if pagination.total_pages > pagination.next_id %}
+            <li><a href="/page_{{ pagination.total_pages }}.html">{{ pagination.total_pages }}</a></li>
+            {% endif %}
+            {% endif %}
+        </ul>
     </div>
 {% endif %}
+{% endif %}
+{% else %}
+<div class="hero-unit">
+    <h2>{{ page_title }}</h2>
+    {% if not mobile %}<h3><small class="dtl10n">{{ news_created_at }}</small></h3>{% endif %}
+    {% if mobile %}<span class="dtl10n">
+        {{ news_created_at }}
+    </span>{% endif %}
+    <p>{{ news_content|raw }}</p>
+    <p><a href="/">Вернуться</a></p>
+</div>
 {% endif %}
 {% endblock %}

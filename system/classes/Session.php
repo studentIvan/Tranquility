@@ -17,7 +17,8 @@ class Session
         $role = 0,
         $options = array(),
         $token = '',
-        $started = false;
+        $started = false,
+        $sessionData = array();
 
     public static function start()
     {
@@ -88,8 +89,8 @@ class Session
             }
             else
             {
-                $sql = "INSERT INTO sessions (`token`, `uid`, `role`, `ip`, `useragent`, `uptime`)
-                  VALUES (:token, 0, :role, INET_ATON(:ip), :agent, NOW())";
+                $sql = 'INSERT INTO sessions (token, uid, role, ip, useragent, uptime)
+                  VALUES (:token, 0, :role, INET_ATON(:ip), :agent, NOW())';
 
                 $statement = $pdo->prepare($sql);
                 $statement->bindParam(':token', $token, PDO::PARAM_STR);
@@ -116,7 +117,7 @@ class Session
             self::$role = $role;
             $usid = (is_null($uid)) ? '0' : $uid;
 
-            $sql = 'INSERT INTO sessions (`token`, `uid`, `role`, `ip`, `useragent`, `uptime`)
+            $sql = 'INSERT INTO sessions (token, uid, role, ip, useragent, uptime)
                   VALUES (:token, :uid, :role, INET_ATON(:ip), :agent, NOW())';
 
             $statement = $pdo->prepare($sql);
@@ -152,7 +153,7 @@ class Session
             and filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL))
         {
             $ref = substr(str_replace(array('<', '>'), '', $_SERVER['HTTP_REFERER']), 0, 200);
-            $statement = $pdo->prepare("INSERT INTO referrers (timepoint, token, url) VALUES (NOW(), :token, :url)");
+            $statement = $pdo->prepare('INSERT INTO referrers (timepoint, token, url) VALUES (NOW(), :token, :url)');
             $statement->bindParam(':token', $token, PDO::PARAM_STR);
             $statement->bindParam(':url', $ref, PDO::PARAM_STR);
             $statement->execute();
@@ -186,11 +187,85 @@ class Session
         return false;
     }
 
+
+    public static function setStorageData($key, $value) {
+
+    }
+
+    public static function getStorageData($key) {
+
+    }
+
+    /**
+     * @static
+     * @param string $key
+     * @param mixed $value
+     */
+    public static function setSecureCookieData($key, $value) {
+        Cookies::set('k_' . $key, base64_encode( strval($value) .
+            Security::getDigest(array($key, $value)) ));
+    }
+
+    /**
+     * @static
+     * @param string $key
+     * @return mixed
+     */
+    public static function getSecureCookieData($key)
+    {
+        if ($cookie = Cookies::get('k_' . $key)) {
+            $decoded = base64_decode($cookie);
+            $control = substr($decoded, -32, 32);
+            $value = str_replace($control, '', $decoded);
+
+            echo $key . '<br>';
+            echo $control . '<br>';
+            echo Security::getDigest(array($key, $value));
+            echo '<hr>';
+
+            return ( $control !== Security::getDigest(
+                array($key, $value)) ) ? false : $value;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * @static
+     * @return array
+     */
+    public static function getAllSecureCookieData()
+    {
+        $returns = array();
+
+        foreach ($_COOKIE as $key => $value)
+        {
+            if (0 === strpos($key, 'k_')) {
+                $k = substr($key, 2);
+                $returns[$k] = self::getSecureCookieData($k);
+            }
+        }
+
+        return $returns;
+    }
+
+    /**
+     * @static
+     * @param $uid
+     * @param $pass
+     * @return bool
+     */
     protected static function authenticateByUserId($uid, $pass)
     {
         return (Database::count("users WHERE id='$uid' AND password='$pass'") !== 0);
     }
 
+    /**
+     * @static
+     * @param $login
+     * @param $pass
+     * @return bool
+     */
     protected static function authenticateByLogin($login, $pass)
     {
         return (Database::count("users WHERE login='$login' AND password='$pass'") !== 0);

@@ -65,6 +65,16 @@
             <label for="epassword">Новый пароль:</label>
             <input type="text" name="password" id="epassword" value="" disabled="disabled" />
         </div>
+        {% if profiles %}
+        <div data-role="fieldcontain">
+            <label for="enickname">Никнейм:</label>
+            <input type="text" name="nickname" id="enickname" value="{{ user_nickname }}" />
+        </div>
+        <div data-role="fieldcontain">
+            <label for="efullname">Полное имя:</label>
+            <input type="text" name="full_name" id="efullname" value="{{ user_full_name }}" />
+        </div>
+        {% endif %}
         <button type="submit" data-theme="d" name="submit" value="submit-value">
             Сохранить изменения
         </button>
@@ -99,11 +109,28 @@
 
         <div data-role="content">
             <ul data-role="listview" data-inset="true" data-mini="true">
+                {% if profiles %}
+                <li data-role="list-divider">Служебная информация</li>
+                {% endif %}
                 <li>Идентификатор пользователя: {{ user_identify }}</li>
                 <li>Логин пользователя: {{ user_login }}</li>
-                <li>Хеш пароля пользователя: {{ user_password }}</li>
+                <li>Хеш пароля: {{ user_password }}</li>
                 <li>Роль пользователя: {{ user_title }}</li>
                 <li>Дата регистрации: <span class="dtl10n">{{ user_registered_at }}</span></li>
+                {% if profiles %}
+                <li data-role="list-divider">Профиль пользователя</li>
+                {% if user_nickname %}<li>Никнейм: {{ user_nickname }}</li>{% endif %}
+                {% if user_full_name %}<li>Полное имя: {{ user_full_name }}</li>{% endif %}
+                {% if user_email %}<li>Email: {{ user_email }}</li>{% endif %}
+                {% if user_email_confirm %}<li>Статус подтверждения email: {{ user_email_confirm }}</li>{% endif %}
+                {% if user_birthday %}<li>Дата рождения: {{ user_birthday }}</li>{% endif %}
+                {% if user_gender %}<li>Пол пользователя: {{ user_gender }}</li>{% endif %}
+                {% if user_photo or user_photo_big %}
+                <li data-role="list-divider">Фотография пользователя</li>
+                {% if user_photo %}<li><a href="{{ user_photo }}" rel="external" target="_blank">Смотреть</a></li>{% endif %}
+                {% if user_photo_big %}<li><a href="{{ user_photo_big }}" rel="external" target="_blank">Смотреть оригинал</a></li>{% endif %}
+                {% endif %}
+                {% endif %}
             </ul>
         </div>
 {% endif %}

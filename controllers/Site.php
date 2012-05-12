@@ -9,5 +9,38 @@ class Site
         Process::$context['news_list'] = News::listing($pagination['offset'], $perPage);
         Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
     }
+
+    public static function showPost($matches)
+    {
+        $newsId = isset($matches[1]) ? abs($matches[1]) : false;
+
+        if ((!$newsId) or (!$post = News::getObjectById($newsId))) {
+            throw new NotFoundException();
+        }
+
+        Process::$context['page_title'] = $post->title;
+        Process::$context['news_content'] = $post->content;
+        Process::$context['news_created_at'] = $post->created_at;
+    }
+
+    public static function logout()
+    {
+        if (Process::$context['csrf_token'] === Data::uriVar('csrf_token')) Session::stop();
+        Process::redirect('/');
+    }
+
+    public static function openAuth()
+    {
+        Process::load('uLogin');
+        if (Process::$context['csrf_token'] == Data::uriVar('csrf_token')) {
+            if (!ULogin::authorize()) {
+                throw new ForbiddenException();
+            } else {
+                Process::redirect('/');
+            }
+        } else {
+            throw new NotFoundException();
+        }
+    }
 }
 

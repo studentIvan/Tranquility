@@ -16,6 +16,30 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `captcha`
+--
+
+DROP TABLE IF EXISTS `captcha`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `captcha` (
+  `token` char(32) NOT NULL,
+  `phrase` varchar(10) NOT NULL,
+  PRIMARY KEY (`token`),
+  KEY `phrase` (`phrase`)
+) ENGINE=MEMORY DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `captcha`
+--
+
+LOCK TABLES `captcha` WRITE;
+/*!40000 ALTER TABLE `captcha` DISABLE KEYS */;
+/*!40000 ALTER TABLE `captcha` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `news`
 --
 
@@ -107,7 +131,6 @@ CREATE TABLE `sessions` (
   `ip` int(10) unsigned NOT NULL,
   `useragent` varchar(110) NOT NULL,
   `uptime` datetime NOT NULL,
-  `data` varchar(150) DEFAULT NULL,
   PRIMARY KEY (`token`),
   KEY `uptime` (`uptime`),
   KEY `uid` (`uid`)
@@ -151,6 +174,42 @@ LOCK TABLES `users` WRITE;
 INSERT INTO `users` VALUES (1,'Admin','48fa05e2e7c221665db8c9d8f6980919',1,'2012-04-17 00:00:00');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `users_data`
+--
+
+DROP TABLE IF EXISTS `users_data`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users_data` (
+  `user_id` int(10) unsigned NOT NULL,
+  `nickname` varchar(20) NOT NULL DEFAULT '',
+  `full_name` varchar(100) NOT NULL DEFAULT '',
+  `email` varchar(50) DEFAULT NULL,
+  `photo` varchar(255) DEFAULT NULL,
+  `gender` enum('m','w') DEFAULT NULL,
+  `birthday` date DEFAULT NULL,
+  `non_indexed_data` text,
+  PRIMARY KEY (`user_id`),
+  UNIQUE KEY `email` (`email`),
+  KEY `birthday` (`birthday`),
+  KEY `nickname` (`nickname`),
+  KEY `gender` (`gender`),
+  KEY `full_name` (`full_name`),
+  CONSTRAINT `users_data_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users_data`
+--
+
+LOCK TABLES `users_data` WRITE;
+/*!40000 ALTER TABLE `users_data` DISABLE KEYS */;
+INSERT INTO `users_data` VALUES (1,'','',NULL,NULL,'m',NULL,NULL);
+/*!40000 ALTER TABLE `users_data` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -161,4 +220,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-05-01  5:48:49
+-- Dump completed on 2012-05-12 20:31:37

@@ -53,7 +53,8 @@ require_once $__DIR__ . '/classes/Data.php';
 
 try
 {
-    Database::setConfiguration($config['pdo']['dsn'], $config['pdo']['username'], $config['pdo']['password']);
+    $pdoConfig = DEVELOPER_MODE ? $config['pdo_developer_mode'] : $config['pdo_production_mode'];
+    Database::setConfiguration($pdoConfig['dsn'], $pdoConfig['username'], $pdoConfig['password']);
     Security::setSecret($config['security_token']);
     Session::setConfiguration($config['session']);
     $config['pdo'] = $config['security_token'] = null;
@@ -71,7 +72,8 @@ class Process
     public static
         $context = array(),
         $routes = array(),
-        $solutions = array();
+        $solutions = array(),
+        $loaded = array();
 
     /**
      * @var Twig_Environment
@@ -127,10 +129,15 @@ class Process
 
             if (!isset($split[2])) {
                 list($class, $method) = $split;
-                include dirname(__FILE__) . "/../controllers/$class.php";
+                if (!class_exists($class, false)) {
+                    include dirname(__FILE__) . "/../controllers/$class.php";
+                }
             } else {
                 list($solution, $class, $method) = $split;
-                include dirname(__FILE__) . "/../solutions/$solution/controllers/$class.php";
+                $class = ucfirst($class);
+                if (!class_exists($class, false)) {
+                    include dirname(__FILE__) . "/../solutions/$solution/controllers/$class.php";
+                }
             }
 
             call_user_func(array($class, $method), $matches);
@@ -142,6 +149,40 @@ class Process
         }
 
         self::$state++;
+    }
+
+    /**
+     * @static
+     * @param string $helper
+     */
+    protected static function loadHelper($helper)
+    {
+        if (!isset(self::$loaded[$helper])) {
+            include_once dirname(__FILE__) . '/../helpers/' . ucfirst($helper) . '.php';
+            self::$loaded[$helper] = true;
+        }
+    }
+
+    /**
+     * @static
+     * @param string|array $helpers
+     */
+    public static function load($helpers)
+    {
+        if (is_array($helpers)) {
+            foreach ($helpers as $helper) self::loadHelper($helper);
+        } else {
+            self::loadHelper($helpers);
+        }
+    }
+
+    /**
+     * @static
+     * @param string $location
+     */
+    public static function redirect($location) {
+        header("Location: $location");
+        exit;
     }
 }
 #endregion
@@ -164,15 +205,18 @@ if (isset($config['solutions'])) {
 }
 #endregion
 
-#region Application
-require_once $__DIR__ . '/../__init__.php';
-#endregion
+if (isset($_SERVER['REQUEST_URI']))
+{
+    #region Application
+    require_once $__DIR__ . '/../__init__.php';
+    #endregion
 
-if (isset($_SERVER['REQUEST_URI'])) {
     #region Routing and dispatching
-    Process::$context['mobile'] =
-        (isset($config['always_mobile']) and $config['always_mobile']) ?
-            true : require $__DIR__ . '/ismobile.php';
+    if (!isset(Process::$context['mobile'])) {
+        Process::$context['mobile'] =
+            (isset($config['always_mobile']) and $config['always_mobile']) ?
+                true : require $__DIR__ . '/ismobile.php';
+    }
 
     Process::$context['resource'] = isset($config['resources']) ? $config['resources'] : array();
     Process::$context['uri'] = htmlspecialchars($_SERVER['REQUEST_URI']);

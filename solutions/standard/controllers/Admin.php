@@ -162,6 +162,10 @@ class Admin
                             $password = strval(Database::getSingleResult($sql));
                         }
 
+                        /**
+                         * TODO: EDIT FUCKING USER PROFILE
+                         */
+
                         if ($login and $password and $roleId and
                             Users::edit($identify, $login, $password, $roleId)) {
                             header(
@@ -170,9 +174,9 @@ class Admin
                             exit;
                         } else {
                             Process::$context['roles_list'] = Roles::listing();
-                            $user = Users::getObjectById($identify);
-                            Process::$context['user_role'] = $user->role;
-                            Process::$context['user_login'] = $user->login;
+                            $_user = Users::getObjectById($identify);
+                            Process::$context['user_role'] = $_user->role;
+                            Process::$context['user_login'] = $_user->login;
                             Process::$context['user_identify'] = $identify;
                         }
                     }
@@ -184,11 +188,48 @@ class Admin
                     }
                     elseif ($action == 'select' and $identify)
                     {
-                        $user = Users::getObjectById($identify);
-                        Process::$context['user_title'] = $user->title;
-                        Process::$context['user_login'] = $user->login;
-                        Process::$context['user_password'] = $user->password;
-                        Process::$context['user_registered_at'] = $user->registered_at;
+                        if (in_array('profiles', Process::$solutions))
+                        {
+                            $user = UserProfile::loadFromId($identify);
+                            Process::$context['profiles'] = true;
+                            Process::$context['user_title'] = $user->getRole(true);
+                            Process::$context['user_login'] = $user->getLogin();
+                            Process::$context['user_password'] = $user->getPassword();
+                            Process::$context['user_registered_at'] = $user->getRegisteredAt();
+                            Process::$context['user_email'] = $user->getEmail();
+                            Process::$context['user_birthday'] = $user->getBirthday();
+                            Process::$context['user_full_name'] = $user->getFullName();
+                            Process::$context['user_nickname'] = $user->getNickname();
+                            Process::$context['user_photo'] = $user->getPhoto();
+
+                            if ($gender = $user->getGender()) {
+                                Process::$context['user_gender'] =
+                                    ($gender == 'm') ? 'мужской' : 'женский';
+                            }
+
+                            if ($data = $user->getNonIndexedData())
+                            {
+                                if (isset($data['photo_big'])) {
+                                    Process::$context['user_photo_big'] = $data['photo_big'];
+                                }
+
+                                if (isset(Process::$context['cms']['email_confirm']) and
+                                    Process::$context['cms']['email_confirm'] and
+                                        isset($data['email_confirm'])) {
+                                    Process::$context['user_email_confirm'] =
+                                        $data['email_confirm'] ? 'подтверждён' : 'не подтверждён';
+                                }
+                            }
+                        }
+                        else
+                        {
+                            $_user = Users::getObjectById($identify);
+                            Process::$context['user_title'] = $_user->title;
+                            Process::$context['user_login'] = $_user->login;
+                            Process::$context['user_password'] = $_user->password;
+                            Process::$context['user_registered_at'] = $_user->registered_at;
+                        }
+
                         Process::$context['user_identify'] = $identify;
                         Process::$context['custom_content_view'] = true;
                     }
