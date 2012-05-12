@@ -162,7 +162,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `login` (`login`),
   KEY `password` (`password`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -171,7 +171,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Admin','48fa05e2e7c221665db8c9d8f6980919',1,'2012-04-17 00:00:00'),(8,'ehttpvkcomid60585718','f0879fd47c7bfc73aa85bffe46b7d0f7',3,'2012-05-12 20:04:52'),(9,'twittercombatman_php','56325028fe0da1bf48de4bc31d677904',3,'2012-05-12 20:19:28');
+INSERT INTO `users` VALUES (1,'Admin','48fa05e2e7c221665db8c9d8f6980919',1,'2012-04-17 00:00:00');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -207,7 +207,7 @@ CREATE TABLE `users_data` (
 
 LOCK TABLES `users_data` WRITE;
 /*!40000 ALTER TABLE `users_data` DISABLE KEYS */;
-INSERT INTO `users_data` VALUES (1,'studentIvan','Иван Маслов',NULL,NULL,'m','1992-03-12','{\"test\":null}'),(8,'rom_ntic','Олеся Ковалова','kovalova@mail.ru','http://cs5776.userapi.com/u60585718/e_40c112e9.jpg','w','1994-02-13','{\"photo_big\":\"http:\\/\\/cs5776.userapi.com\\/u60585718\\/a_8a434a16.jpg\",\"phone\":\"\"}'),(9,'batman_php','batman php','php.batman@yandex.ru','https://si0.twimg.com/profile_images/1964506311/ava_normal.png',NULL,'2012-05-12','{\"photo_big\":\"https:\\/\\/si0.twimg.com\\/profile_images\\/1964506311\\/ava_bigger.png\"}');
+INSERT INTO `users_data` VALUES (1,'','',NULL,NULL,'m',NULL,NULL);
 /*!40000 ALTER TABLE `users_data` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -220,4 +220,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-05-12 20:28:34
+-- Dump completed on 2012-05-12 20:31:37
