@@ -124,8 +124,12 @@
                 {% if user_email %}<li>Email: {{ user_email }}</li>{% endif %}
                 {% if user_email_confirm %}<li>Статус подтверждения email: {{ user_email_confirm }}</li>{% endif %}
                 {% if user_birthday %}<li>Дата рождения: {{ user_birthday }}</li>{% endif %}
-                {% if user_photo %}<li>Фотография: <a href="{{ user_photo }}">{{ user_photo }}</a></li>{% endif %}
                 {% if user_gender %}<li>Пол пользователя: {{ user_gender }}</li>{% endif %}
+                {% if user_photo or user_photo_big %}
+                <li data-role="list-divider">Фотография пользователя</li>
+                {% if user_photo %}<li><a href="{{ user_photo }}" rel="external" target="_blank">Смотреть</a></li>{% endif %}
+                {% if user_photo_big %}<li><a href="{{ user_photo_big }}" rel="external" target="_blank">Смотреть оригинал</a></li>{% endif %}
+                {% endif %}
                 {% endif %}
             </ul>
         </div>

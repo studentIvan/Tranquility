@@ -207,12 +207,18 @@ class Admin
                                     ($gender == 'm') ? 'мужской' : 'женский';
                             }
 
-                            if (isset(Process::$context['cms']['email_confirm']) and
-                                Process::$context['cms']['email_confirm'] and
-                                $data = $user->getNonIndexedData() and
-                                isset($data['email_confirm'])) {
-                                Process::$context['user_email_confirm'] =
-                                    $data['email_confirm'] ? 'подтверждён' : 'не подтверждён';
+                            if ($data = $user->getNonIndexedData())
+                            {
+                                if (isset($data['photo_big'])) {
+                                    Process::$context['user_photo_big'] = $data['photo_big'];
+                                }
+
+                                if (isset(Process::$context['cms']['email_confirm']) and
+                                    Process::$context['cms']['email_confirm'] and
+                                        isset($data['email_confirm'])) {
+                                    Process::$context['user_email_confirm'] =
+                                        $data['email_confirm'] ? 'подтверждён' : 'не подтверждён';
+                                }
                             }
                         }
                         else

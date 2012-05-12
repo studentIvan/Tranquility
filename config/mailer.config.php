@@ -11,17 +11,11 @@ return array(
     /**
      * Configuration for smtp
      */
-    /*'smtp' => array(
+    'smtp' => array(
         'host' => 'example.com:25', // server:port
         'username' => 'admin@example.com',
         'password' => 'example',
         'encryption' => null, // 'encryption' => 'ssl'
-    ),*/
-    'smtp' => array(
-        'host' => 'smtp.yandex.ru:25', // server:port
-        'username' => 'php.batman@yandex.ru',
-        'password' => 'batman.php',
-        'encryption' => null,
     ),
 
     /**
@@ -42,14 +36,9 @@ return array(
      * VCard for Mailer::createMessage function
      * $mailer->setFrom($email => "$firstName $lastName");
      */
-    /*'v_card' => array(
+    'v_card' => array(
         'email' => 'admin@example.com',
         'first_name' => 'Admin',
         'last_name' => 'Example',
-    ),*/
-    'v_card' => array(
-        'email' => 'php.batman@yandex.ru',
-        'first_name' => 'Batman',
-        'last_name' => 'Php',
     ),
 );

@@ -23,7 +23,7 @@ class Site
         Process::$context['news_created_at'] = $post->created_at;
     }
 
-    /*public static function logout()
+    public static function logout()
     {
         if (Process::$context['csrf_token'] === Data::uriVar('csrf_token')) Session::stop();
         Process::redirect('/');
@@ -31,12 +31,16 @@ class Site
 
     public static function openAuth()
     {
-        if (Process::$context['csrf_token'] === Data::uriVar('csrf_token')) {
-            ULogin::authorize();
-            Process::redirect('/');
+        Process::load('uLogin');
+        if (Process::$context['csrf_token'] == Data::uriVar('csrf_token')) {
+            if (!ULogin::authorize()) {
+                throw new ForbiddenException();
+            } else {
+                Process::redirect('/');
+            }
         } else {
             throw new NotFoundException();
         }
-    }*/
+    }
 }
 

@@ -40,7 +40,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-            <a class="brand" href="#">{{ page_title }}</a>
+            <a class="brand" href="/">{{ page_title }}</a>
             <!--<div class="nav-collapse">
                 <ul class="nav">
                     <li class="active"><a href="#">Home</a></li>
@@ -54,21 +54,22 @@
                     <input type="password" class="input-small" style="margin-left: 2px;" placeholder="Пароль">
                     <button type="submit" class="btn" style="margin-bottom: 0;">Войти</button>
                 </form>-->
-                {% if not user or not user.first_name %}
-                <!--<script src="http://ulogin.ru/js/ulogin.js"></script>-->
-                <div style="margin-bottom: 0; margin-top: 10px;" id="uLogin" x-ulogin-params="display=small;fields=first_name,last_name,photo;providers=vkontakte,odnoklassniki,mailru,facebook,google,twitter;hidden=other;redirect_uri=http%3A%2F%2F{{ http_host }}%2Fopenauth%3Fcsrf_token%3D{{ csrf_token }}"></div>
+                {% if not current_user %}
+                <script src="http://ulogin.ru/js/ulogin.js"></script>
+                <div style="margin-bottom: 0; margin-top: 10px;" id="uLogin"
+                     x-ulogin-params="display=small;fields=first_name,email;optional=last_name,nickname,photo,bdate,sex,photo_big;providers=vkontakte,odnoklassniki,mailru,facebook,twitter;hidden=;redirect_uri=http%3A%2F%2F{{ http_host }}%2Fopenauth%3Fcsrf_token%3D{{ csrf_token }}"></div>
                 {% else %}
                 <ul class="nav">
                     <li class="dropdown" id="menu1">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
-                            {% if user.photo %}
-                            <img src="{{ user.photo }}" alt="" width="22" height="22" />&nbsp;
+                            {% if current_user.photo %}
+                            <img src="{{ current_user.photo }}" alt="" width="22" height="22" />&nbsp;
                             {% endif %}
-                            &nbsp;&nbsp;{{ user.first_name }} {{ user.last_name }}
+                            &nbsp;&nbsp;{{ current_user.full_name }}
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="#">Мой профиль</a></li>
+                            <li><a href="/profile/{{ current_user.id }}.html">Мой профиль</a></li>
                             <li class="divider"></li>
                             <li><a href="/logout?csrf_token={{ csrf_token }}">Выход</a></li>
                         </ul>
