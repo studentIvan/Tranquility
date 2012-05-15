@@ -307,7 +307,9 @@ class Admin
         }
         else
         {
-            Process::$context['news_count'] = Database::count('news');
+            if (isset(Process::$context['cms']['news']) and Process::$context['cms']['news']) {
+                Process::$context['news_count'] = Database::count('news');
+            }
             Process::$context['users_count'] = Database::count('users');
             Process::$context['sessions_count'] = Database::count('sessions');
             Process::$context['roles_count'] = Database::count('roles');
