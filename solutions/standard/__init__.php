@@ -14,4 +14,12 @@ if (isset($config['cms']))
         require_once $__DIRADM__ . '/datamappers/Users.php';
         require_once $__DIRADM__ . '/datamappers/Roles.php';
     }
+
+    if (isset($config['cms']['extends']) and $config['cms']['extends']) {
+        require_once $__DIRADM__ . '/extends/AdminPartition.php';
+        foreach ($config['cms']['extends'] as $extend) {
+            $extend = ucfirst($extend) . 'Part.php';
+            require_once $__DIRADM__ . '/../../controllers/admin/' . $extend;
+        }
+    }
 }
