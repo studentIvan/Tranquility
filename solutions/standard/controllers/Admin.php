@@ -2,6 +2,8 @@
 class Admin
 {
     protected static $checkCsrfToken = false;
+    protected static $extends = array();
+    public static $notFoundBreak = false;
 
     public static function control($matches)
     {
@@ -10,9 +12,16 @@ class Admin
         $express = isset($matches[2]) ?
             preg_replace('/[^a-z]/', '', $matches[2]) : false;
         Process::$context['admin_page'] = $page;
+        self::$checkCsrfToken = (isset($_GET['csrf_token']) and
+            Process::$context['csrf_token'] === $_GET['csrf_token']);
+        if (isset(Process::$context['cms']['extends']) and Process::$context['cms']['extends'])
+        {
+            foreach (Process::$context['cms']['extends'] as $extend) {
+                $extend = ucfirst($extend) . 'Part';
+                self::$extends[] = new $extend(($express ? $express : null));
+            }
+        }
         if (method_exists('Admin', $page)) {
-            self::$checkCsrfToken = (isset($_GET['csrf_token']) and
-                Process::$context['csrf_token'] === $_GET['csrf_token']);
             call_user_func(array('Admin', $page), ($express ? $express : null));
         } else {
             self::secure();
@@ -302,12 +311,24 @@ class Admin
                     break;
 
                 default:
-                    throw new NotFoundException();
+                    if (!self::$notFoundBreak)
+                        throw new NotFoundException();
             }
         }
         else
         {
-            Process::$context['news_count'] = Database::count('news');
+            Process::$context['admin_extend'] = array();
+
+            foreach (self::$extends as $extend) {
+                /**
+                 * @var $extend AdminPartition
+                 */
+                Process::$context['admin_extend'][] = $extend->getUserInterfaceData();
+            }
+
+            if (isset(Process::$context['cms']['news']) and Process::$context['cms']['news']) {
+                Process::$context['news_count'] = Database::count('news');
+            }
             Process::$context['users_count'] = Database::count('users');
             Process::$context['sessions_count'] = Database::count('sessions');
             Process::$context['roles_count'] = Database::count('roles');

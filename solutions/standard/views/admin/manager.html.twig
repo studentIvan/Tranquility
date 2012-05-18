@@ -1,6 +1,18 @@
 {% if not custom_content_view %}<div data-role="content" id="manager_content">{% endif %}
     {% if not component %}
     <ul data-role="listview">
+        {% for custom_admin_part in admin_extend %}
+        <li>
+            <a href="/admin/manager/{{ custom_admin_part.link }}">
+                {% if not mobile %}<img src="/images/admin/{{ custom_admin_part.link }}.png" alt="" />{% endif %}
+                <h3>{{ custom_admin_part.name }}</h3>
+                <p>{{ custom_admin_part.description }}</p>
+            </a>
+                {% if custom_admin_part.count %}<span class="ui-li-count">
+                    {{ (custom_admin_part.count ~ " " ~ custom_admin_part.plural.root)|plural(custom_admin_part.plural.first, custom_admin_part.plural.second, custom_admin_part.plural.third) }}
+                </span>{% endif %}
+        </li>
+        {% endfor %}
         {% if cms.news %}<li>
             <a href="/admin/manager/news">
                 {% if not mobile %}<img src="/images/admin/news.png" alt="" />{% endif %}
