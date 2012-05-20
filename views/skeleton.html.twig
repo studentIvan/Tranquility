@@ -49,12 +49,13 @@
                 </ul>
             </div>-->
             <div class="pull-right">
-                <!--<form class="navbar-form form-inline">
-                    <input type="text" class="input-small" placeholder="Логин">
-                    <input type="password" class="input-small" style="margin-left: 2px;" placeholder="Пароль">
+                {% if not current_user %}
+                <!--<form class="navbar-form form-inline" action="/login" method="POST">
+                    <input type="text" class="input-small" placeholder="Логин" name="login">
+                    <input type="password" class="input-small" style="margin-left: 2px;" placeholder="Пароль" name="password">
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     <button type="submit" class="btn" style="margin-bottom: 0;">Войти</button>
                 </form>-->
-                {% if not current_user %}
                 <script src="http://ulogin.ru/js/ulogin.js"></script>
                 <div style="margin-bottom: 0; margin-top: 10px;" id="uLogin"
                      x-ulogin-params="display=small;fields=first_name,email;optional=last_name,nickname,photo,bdate,sex,photo_big;providers=vkontakte,odnoklassniki,mailru,facebook,twitter;hidden=;redirect_uri=http%3A%2F%2F{{ http_host }}%2Fopenauth%3Fcsrf_token%3D{{ csrf_token }}"></div>
@@ -64,8 +65,9 @@
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
                             {% if current_user.photo %}
                             <img src="{{ current_user.photo }}" alt="" width="22" height="22" />&nbsp;
+                            {% endif %}{% if current_user.full_name %}&nbsp;&nbsp;{{ current_user.full_name }}
+                            {% else %}{{ current_user.login }}
                             {% endif %}
-                            &nbsp;&nbsp;{{ current_user.full_name }}
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
