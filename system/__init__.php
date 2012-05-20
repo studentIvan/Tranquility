@@ -7,12 +7,12 @@
  */
 
 #region Loading configuration
-$config = require __DIR__ . '/../config/config.php';
+$__DIR__ = dirname(__FILE__);
+$config = require $__DIR__ . '/../config/config.php';
 date_default_timezone_set($config['server_timezone']);
 
 define('STARTED_AT', microtime(true));
 define('DEVELOPER_MODE', isset($config['developer_mode']) ? $config['developer_mode'] : false);
-$__DIR__ = dirname(__FILE__);
 #endregion
 
 #region Exceptions
@@ -134,6 +134,7 @@ class Process
                 }
             } else {
                 list($solution, $class, $method) = $split;
+                $solution = strtolower($solution);
                 $class = ucfirst($class);
                 if (!class_exists($class, false)) {
                     include dirname(__FILE__) . "/../solutions/$solution/controllers/$class.php";

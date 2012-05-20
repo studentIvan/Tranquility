@@ -177,6 +177,14 @@ class Admin
 
                         if ($login and $password and $roleId and
                             Users::edit($identify, $login, $password, $roleId)) {
+                            $statement = Database::getInstance()->prepare("
+                                UPDATE sessions
+                                SET role=:roleId
+                                WHERE uid=:userId
+                            ");
+                            $statement->bindParam(':roleId', $roleId, PDO::PARAM_INT);
+                            $statement->bindParam(':userId', $identify, PDO::PARAM_INT);
+                            $statement->execute();
                             header(
                                 "Location: /admin/manager/users?action=select&identify=$identify"
                             );

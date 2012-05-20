@@ -10,6 +10,7 @@ function afterSessionStartedCallback()
         $user = new UserProfile(Session::getUid());
         Process::$context['current_user'] = array(
             'id' => $user->getId(),
+            'login' => $user->getLogin(),
             'full_name' => $user->getFullName(),
             'photo' => $user->getPhoto(),
         );

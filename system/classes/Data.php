@@ -39,14 +39,27 @@ class Data
     /**
      * @static
      * @param string $title
+     * @param string $diffChar
      * @return string
      */
-    public static function titleToLink($title)
+    public static function titleToLink($title, $diffChar = '-')
     {
-        $title = mb_strtolower(str_replace(array(' ', '.', '_'), '-',
+        $title = mb_strtolower(str_replace(array(' ', '.', '_', '-'), $diffChar,
             preg_replace('/[^a-zа-яё0-9\-\. ]/ui', '', $title)), 'UTF-8');
 
         return self::lowerRusToLat($title);
+    }
+
+    /**
+     * @static
+     * @param $string
+     * @return string
+     */
+    public static function wordsToSoundex($string)
+    {
+        $a = explode(' ', $string);
+        foreach ($a as &$v) $v = soundex($v);
+        return join(' ', $a);
     }
 
     /**
