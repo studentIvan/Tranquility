@@ -1,7 +1,7 @@
 <?php
 class Admin
 {
-    protected static $checkCsrfToken = false;
+    public static $checkCsrfToken = false;
     protected static $extends = array();
     public static $notFoundBreak = false;
 
@@ -36,7 +36,8 @@ class Admin
             exit;
         }
 
-        Process::$context['data_title'] = 'Управление';
+        Process::$context['data_title'] = isset(Process::$context['data_title']) ?
+            Process::$context['data_title'] : 'Управление';
 
         if ($component and isset(Process::$context['cms']))
         {
