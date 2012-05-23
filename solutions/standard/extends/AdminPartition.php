@@ -13,8 +13,11 @@ abstract class AdminPartition
             $identify = isset($_GET['identify']) ? abs($_GET['identify']) : false;
 
             Process::$context['data_action'] = $action;
+
             if (method_exists($this, $action)) {
                 $this->$action($page, $identify);
+            } else {
+                $this->main($page, $identify);
             }
         }
     }
@@ -33,5 +36,10 @@ abstract class AdminPartition
                 'third' => 'ов',
             )
         );
+    }
+
+    public function main($page, $identify)
+    {
+        // index page
     }
 }
