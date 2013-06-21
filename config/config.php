@@ -74,7 +74,7 @@ return array(
     'pdo_developer_mode' => array(
         'dsn' => 'mysql:host=localhost;dbname=tranquility',
         'username' => 'root',
-        'password' => '',
+        'password' => '123456',
     ),
 
     /**
@@ -83,7 +83,7 @@ return array(
     'pdo_production_mode' => array(
         'dsn' => 'mysql:host=localhost;dbname=tranquility',
         'username' => 'root',
-        'password' => '',
+        'password' => '123456',
     ),
 
     /**
