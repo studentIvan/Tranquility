@@ -1,6 +1,8 @@
 <?php
 /**
- * Vkontakte.Ru groups management helper
+ * VK.COM groups management helper
+ * @author Maslov Ivan (http://vk.com/student_ivan)
+ * @version 2.0
  */
 class VKPublic
 {
@@ -37,7 +39,7 @@ class VKPublic
             <body><a href='http://api.vkontakte.ru/oauth/authorize?" .
             "client_id={$this->appId}&scope=offline,wall,groups,pages," .
             "photos,docs,audio,video,notes,stats,messages,notify,notifications,nohttps&amp;" .
-            "redirect_uri=http://api.vkontakte.ru/blank.html&amp;response_type=code'
+            "redirect_uri=blank.html&amp;response_type=code'
                 target='_blank'>Получить CODE</a><br>Ссылка для получения токена:<br>
                 <b>https://api.vkontakte.ru/oauth/access_token?client_id={$this->appId}" .
             "&amp;client_secret={$this->secretKey}&amp;code=CODE</b></body></html>";
