@@ -171,7 +171,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Admin','48fa05e2e7c221665db8c9d8f6980919',1,'2012-04-17 00:00:00'),(2,'ttpmymailrubkcryptox','67b475613978ef22f6069cdd750896a7',3,'2013-06-22 00:40:18'),(3,'httpvkcomid123237230','9c3a1c5ba4335d0a3d4654802e5520f9',3,'2013-06-22 00:47:45');
+INSERT INTO `users` VALUES (1,'Admin','48fa05e2e7c221665db8c9d8f6980919',1,'2012-04-17 00:00:00');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -207,7 +207,7 @@ CREATE TABLE `users_data` (
 
 LOCK TABLES `users_data` WRITE;
 /*!40000 ALTER TABLE `users_data` DISABLE KEYS */;
-INSERT INTO `users_data` VALUES (1,'','',NULL,NULL,'m',NULL,NULL),(2,'','Jack Cryptox','cryptox@bk.ru','http://avt.appsmail.ru/bk/cryptox/_avatar',NULL,NULL,'{\"photo_big\":\"http:\\/\\/avt.appsmail.ru\\/bk\\/cryptox\\/_avatarbig\"}'),(3,'student_ivan','Иван Маслов','cryptox3@gmail.com','http://cs303605.vk.me/u123237230/e_1b6f1721.jpg','m','1992-03-12','{\"photo_big\":\"http:\\/\\/cs303605.vk.me\\/u123237230\\/a_1b90a47d.jpg\"}');
+INSERT INTO `users_data` VALUES (1,'','',NULL,NULL,'m',NULL,NULL);
 /*!40000 ALTER TABLE `users_data` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -220,4 +220,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-07-27 23:34:36
+-- Dump completed on 2013-07-27 23:49:12
