@@ -1,6 +1,7 @@
 # ![Tranquility](http://habrastorage.org/storage2/cef/853/3d7/cef8533d75bb0f8f014282a7a3c81668.png)
 ## Content Management Framework
-## Version 0.4.0.3 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
+## Version 0.5.0.0 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
+## Bootstrap 3 + jQuery 2 branch development
 
 ### Features
 * Easy to install and use
@@ -19,8 +20,6 @@
 * Twig template engine + plural ends extension
 * Uri-match routing + basic application architecture
 * Many global singletons (oh god, why?)
-* TinyMCE visual editor (disabled for news by default)
-* JQuery mobile + power admin panel
 * LocalizedDate.JS
 
 ### Requirements

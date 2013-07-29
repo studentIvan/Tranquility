@@ -1,6 +1,6 @@
 <?php
 /**
- * Tranquility
+ * Tranquility revolution
  */
 //ini_set('display_errors', 'On');
 //error_reporting(E_ALL);

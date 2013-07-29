@@ -37,14 +37,14 @@ return array(
         'ldt_js' => '/js/ldt.min.js',
         'bootstrap_js' => '/js/bootstrap.min.js',
         'bootstrap_css' => '/css/bootstrap.min.css',
-        'bootstrap_responsive_css' => '/css/bootstrap-responsive.min.css',
         'html5shim_js' => 'http://html5shim.googlecode.com/svn/trunk/html5.js',
         'tinymce_js' => '/js/tiny_mce/tiny_mce.js',
 
         /**
          * JQuery
          */
-        'jquery_js' => 'http://yandex.st/jquery/1.7.2/jquery.min.js',
+        //'jquery_js' => 'http://yandex.st/jquery/2.0.3/jquery.min.js',
+        'jquery_js' => '/js/jquery.min.js',
         'jquery_tinymce_js' => '/js/tiny_mce/jquery.tinymce.js',
         'jquery_mobile_js' => 'http://yandex.st/jquery/mobile/1.1.0/jquery.mobile.min.js',
         'jquery_mobile_css' => 'http://yandex.st/jquery/mobile/1.1.0/jquery.mobile.min.css',
@@ -115,7 +115,6 @@ return array(
     'cms' => array(
         'news' => array(
             'limit_per_page' => 2,
-            'tinymce_editor' => false, // Set true and unpack /js/tiny_mce.zip for userlike news create & edit
         ),
         'sessions' => true,
         'users' => true,
