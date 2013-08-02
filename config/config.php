@@ -45,6 +45,7 @@ return array(
          */
         //'jquery_js' => 'http://yandex.st/jquery/2.0.3/jquery.min.js',
         'jquery_js' => '/js/jquery.min.js',
+        'jquery_tablesorter_js' => '/js/jquery.tablesorter.min.js',
         'jquery_tinymce_js' => '/js/tiny_mce/jquery.tinymce.js',
         'jquery_mobile_js' => 'http://yandex.st/jquery/mobile/1.1.0/jquery.mobile.min.js',
         'jquery_mobile_css' => 'http://yandex.st/jquery/mobile/1.1.0/jquery.mobile.min.css',
@@ -119,6 +120,5 @@ return array(
         'sessions' => true,
         'users' => true,
         'email_confirm' => false,
-        'extends' => array('demo'),
     ),
 );

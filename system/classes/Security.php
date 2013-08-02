@@ -38,6 +38,16 @@ class Security
         return md5($buffer . self::$secret);
     }
 
+    /**
+     * @static
+     * @param string|int|array $var
+     * @return string
+     */
+    public static function getUniqueDigestForUserIP($var)
+    {
+        return self::getDigest($var . $_SERVER['REMOTE_ADDR']);
+    }
+
     public static function getCsrfToken()
     {
         return self::getDigest(Session::getToken());
