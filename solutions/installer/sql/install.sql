@@ -76,11 +76,13 @@ DROP TABLE IF EXISTS `referrers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `referrers` (
+  `url_hash` char(32) NOT NULL,
   `timepoint` datetime NOT NULL,
   `token` char(32) NOT NULL,
   `url` varchar(200) NOT NULL,
   KEY `token` (`token`),
-  KEY `created_at` (`timepoint`)
+  KEY `created_at` (`timepoint`),
+  KEY `url_hash` (`url_hash`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -162,7 +164,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `login` (`login`),
   KEY `password` (`password`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -220,4 +222,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-07-29 17:38:57
+-- Dump completed on 2013-08-05 19:18:37

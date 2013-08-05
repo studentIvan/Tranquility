@@ -1,4 +1,7 @@
 <?php
+/**
+ * Class CRUDNews
+ */
 class CRUDNews extends CRUDObject
 {
     protected $menuName = 'Новости';
@@ -26,8 +29,8 @@ class CRUDNews extends CRUDObject
             'display' => true,
         ),
         'posted_by' => array(
-            'type' => 'integer',
-            'modify' => '(автор $1)',
+            'type' => 'select',
+            'modify' => '<a href="#">@$1</a>',
             'from' => array(
                 'table' => 'users',
                 'field' => 'id',

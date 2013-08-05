@@ -4,5 +4,5 @@
  */
 return array(
     'base_uri' => '/admin',
-    'registered_crud' => array('CRUDNews', 'CRUDUsers', 'CRUDRoles')
+    'registered_crud' => array('CRUDNews', 'CRUDUsers', 'CRUDUsersData', 'CRUDRoles', 'CRUDReferrers', 'CRUDSessions')
 );

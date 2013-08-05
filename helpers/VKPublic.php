@@ -1,7 +1,7 @@
 <?php
 /**
  * VK.COM groups management helper
- * @author Maslov Ivan (http://vk.com/student_ivan)
+ * @author Maslov Ivan
  * @version 2.0
  */
 class VKPublic

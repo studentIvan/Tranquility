@@ -16,9 +16,15 @@
             color: #5f5f5f;
         }
 
-        /*.field-string {
-            font-weight: bold;
-        }*/
+        .table-expand tr {
+            height: 60px;
+        }
+
+        .modify {
+            position: absolute;
+            top: 25px;
+            white-space: nowrap;
+        }
     </style>
 </head>
 <body>
@@ -60,15 +66,18 @@
         <div class="pull-left">
             <p class="navbar-text">
                 Отображено
-                <span id="display-info-total" style="font-weight: bold;">{{ container.count }}</span>
-                элементов на странице
+                <span id="display-info-total" style="font-weight: bold;">
+                {{ (container.count ~ "</span> элемент")|plural("", "а", "ов")|raw }} на странице
+                    (всего <span id="display-info-all" style="font-weight: bold;">{{ container.all_count }}</span>)
             </p>
         </div>
         <div class="pull-right">
+            {% if container.create_new_message %}
             <button class="btn btn-success" style="margin-top: 5px;"
                     onclick="">
                 <i class="icon-plus icon-white"></i>&nbsp;<span id="addmsg">{{ container.create_new_message }}</span>
             </button>
+            {% endif %}
             <button class="btn btn-info" style="margin-top: 5px;"
                     onclick="$('#updt').html('обновление...');$(this).addClass('disabled');window.location.reload();">
                 <i class="icon-refresh icon-white"></i>&nbsp;<span id="updt">обновить страницу</span>
@@ -91,24 +100,28 @@
     <div class="col-lg-10">
         {% if container.type == 'text' %}
             {{ container.text }}
+        {% elseif container.type == 'page' %}
+            {% include 'admin/'~container.page~'.html.twig' %}
         {% elseif container.type == 'listing' %}
-            <ul class="nav nav-pills nav-stacked">
-                {% for e in container.data %}
-                    <li>
-                        <div class="btn-group">
-                            <a class="btn btn-default" href="#">
-                                <i class="icon-eye-open icon-white"></i>&nbsp;
-                                {% for h in container.fields_displayable %}
-                                    <span class="field-{{ container.fields[h].type }}">{{ e[h] }}</span>
-                                {% endfor %}
-                            </a>
-                            <button class="btn btn-default dropdown-toggle" type="button" onclick="deleteElement(this)">
-                                <span class="icon-remove icon-white"></span>
-                            </button>
+            <table class="table table-hover table-expand">
+            {% for e in container.data %}
+                <tr id="elements-row-{{ e[container.diff_field] }}" data-unique="{{ e[container.diff_field] }}">
+                {% for h in container.fields_displayable %}
+                    <td>
+                        <div style="position: relative;">
+                            <span class="field-{{ container.fields[h].type }}">
+                                {% if container.fields[h].values[e[h]] %}
+                                    {{ container.fields[h].values[e[h]] }}
+                                {% else %}
+                                    {{ e[h]|raw }}
+                                {% endif %}
+                            </span>
                         </div>
-                    </li>
+                    </td>
                 {% endfor %}
-            </ul>
+                </tr>
+            {% endfor %}
+            </table>
             {% if pagination %}
                 <ul class="pagination">
                     {% if pagination.current_id != 1 %}
@@ -139,17 +152,41 @@
 <script src="{{ resource.ldt_js }}"></script>
 <script src="{{ resource.bootstrap_js }}"></script>
 <script type="text/javascript">
-    function deleteElement(element) {
-
-        $(element).parent().parent().fadeOut();
-        var nCounter = $("#display-info-total");
-        var result = (nCounter.html())*1-1;
-        nCounter.html(result);
-    }
+    modifyPanel = {% if not container.only_display %}'<div class="modify">{% if container.create_new_message %}<a href="#change" class="change-link">Изменить</a> | {% endif %}' +
+            '<a href="#delete" class="delete-link">Удалить</a></div>';{% else %}'';{% endif %}
     $(document).ready(function () {
         var ldt = new LocalizedDate(4);
         $(".field-datetime").each(function () {
             $(this).html(ldt.localize($(this).html())).removeClass("dtl10n")
+        });
+        $(".table-expand tr").each(function() {
+            var unique = $(this).data('unique');
+            $(this).hover(function(){
+                $(this).find(".modify").fadeIn(0);
+            }, function() {
+                $(this).find(".modify").fadeOut(0);
+            });
+
+            var tmpElement = $(this).find("td:first div");
+            tmpElement.html(tmpElement.html() + modifyPanel);
+
+            var this_modify = $(this).find(".modify");
+            this_modify.find(".change-link").data('unique', unique).click(function(){
+                var unique = $(this).data('unique');
+            });
+            this_modify.find(".delete-link").data('unique', unique).click(function(){
+                var unique = $(this).data('unique');
+                $("#elements-row-" + unique).fadeOut();
+                var result, nCounter1, nCounter2;
+                nCounter1 = $("#display-info-total");
+                nCounter2 = $("#display-info-all");
+                result = (nCounter1.html())*1-1;
+                nCounter1.html(result);
+                result = (nCounter2.html())*1-1;
+                nCounter2.html(result);
+            });
+
+            this_modify.fadeOut(0);
         })
     })
 </script>

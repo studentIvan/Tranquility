@@ -150,10 +150,11 @@ class Session
          */
         if (isset(self::$options['referrers']) and self::$options['referrers']
             and isset($_SERVER['HTTP_REFERER']) and !empty($_SERVER['HTTP_REFERER'])
-            and filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL))
+            and filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL)
+            and (parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) != $_SERVER['HTTP_HOST']))
         {
             $ref = substr(str_replace(array('<', '>'), '', $_SERVER['HTTP_REFERER']), 0, 200);
-            $statement = $pdo->prepare('INSERT INTO referrers (timepoint, token, url) VALUES (NOW(), :token, :url)');
+            $statement = $pdo->prepare('INSERT INTO referrers (url_hash, timepoint, token, url) VALUES (MD5(:url), NOW(), :token, :url)');
             $statement->bindParam(':token', $token, PDO::PARAM_STR);
             $statement->bindParam(':url', $ref, PDO::PARAM_STR);
             $statement->execute();

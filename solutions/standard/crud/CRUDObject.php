@@ -24,7 +24,8 @@ abstract class CRUDObject
     protected $orderByField = 'id';
     protected $fields = array();
     protected $driver = 'MySQL';
-    protected $elementsPerPage = 15;
+    protected $elementsPerPage = 6;
+    protected $onlyDisplay = false;
 
     /**
      *
@@ -36,6 +37,8 @@ abstract class CRUDObject
             $field['display'] = isset($field['display']) ? $field['display'] : false;
             $field['from'] = isset($field['from']) ? $field['from'] : false;
             $field['modify'] = isset($field['modify']) ? $field['modify'] : false;
+            $field['function'] = isset($field['function']) ? $field['function'] : false;
+            $field['count_of'] = isset($field['count_of']) ? $field['count_of'] : false;
         }
     }
 
@@ -90,6 +93,14 @@ abstract class CRUDObject
     public function getMenuIconClass()
     {
         return $this->menuIcon;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isOnlyDisplay()
+    {
+        return $this->onlyDisplay;
     }
 
     /**
@@ -155,37 +166,96 @@ abstract class CRUDObject
      */
     public function getMySQLListing($offset = 0, $limit = 30)
     {
-        $tmpFields = array_merge(array($this->getDiffField()), $this->getDisplayable());
+        $tmpFields = array_unique(
+            array_merge(array($this->getDiffField()), $this->getDisplayable())
+        );
         $allFields = $this->getFields();
         $foreignIndex = 'b';
-        $joinString = '';
+        $orderFilter = false;
+        $foreignIndexes = array();
+        $joinString = $groupBy = '';
         foreach ($allFields as $f => $d) {
-            if ($d['from'] and in_array($f, $tmpFields)) {
-                foreach ($tmpFields as &$ff) {
-                    if ($ff == $f) {
-                        $ff = "$foreignIndex.{$d['from']['as']} AS $f";
-                        $joinString = "
-                            INNER JOIN {$d['from']['table']} as $foreignIndex
-                            ON $foreignIndex.{$d['from']['field']} = a.$f
+            if (in_array($f, $tmpFields)) {
+                if ($d['type'] == 'calculated') {
+                    foreach ($tmpFields as &$ff) {
+                        if ($ff == $f) {
+                            $ff = null;
+                        }
+                    }
+                }
+                if ($d['from']) {
+                    foreach ($tmpFields as &$ff) {
+                        if ($ff == $f) {
+                            if (isset($d['from']['group'])) {
+                                $foreignIndex = $d['from']['group'];
+                            }
+                            $foreignIndexes[] = $foreignIndex;
+                            $ff = "$foreignIndex.{$d['from']['as']} AS $f";
+                            $joinType = isset($d['from']['join']) ? $d['from']['join'] : 'INNER';
+                            $on = isset($d['from']['on']) ? "a.{$d['from']['on']}" : "a.$f";
+                            $joinString .= "
+                            $joinType JOIN {$d['from']['table']} as $foreignIndex
+                            ON $foreignIndex.{$d['from']['field']} = $on
                             ";
+                        }
+                    }
+                }
+                if ($d['count_of']) {
+                    $groupBy = "
+                        GROUP BY {$d['count_of']}
+                    ";
+
+                    foreach ($tmpFields as &$ff) {
+                        if ($ff == $f) {
+                            $ff = "COUNT(a.{$d['count_of']}) AS $f";
+                            $orderFilter = $f;
+                        }
                     }
                 }
             }
         }
-        foreach ($tmpFields as &$field)
-            $field = str_replace("a.$foreignIndex.", "$foreignIndex.", "a.$field");
+
+        $tmpFields2 = $tmpFields;
+        $tmpFields = array();
+        foreach ($tmpFields2 as $field) {
+            if (!empty($field)) $tmpFields[] = $field;
+        }
+
+        foreach ($tmpFields as &$field) {
+            $field = str_replace("a.COUNT", "COUNT", "a.$field");
+            foreach ($foreignIndexes as $index) {
+                $field = str_replace("a.$index.", "$index.", $field);
+            }
+        }
+
         $requiredFields = join(',', $tmpFields);
         $orderBy = $this->orderByField ? "ORDER BY a.{$this->orderByField} DESC" : '';
+        $orderBy = $orderFilter ? str_replace("a.{$this->orderByField}", $this->orderByField, $orderBy) : $orderBy;
         $statement = Database::getInstance()->prepare("
             SELECT $requiredFields
             FROM {$this->tableName} AS a $joinString
-            $orderBy LIMIT :limit OFFSET :offset
+            $groupBy $orderBy LIMIT :limit OFFSET :offset
         ");
 
+        //echo $statement->queryString;
         $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
         $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
         $statement->execute();
 
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        /**
+         * calculated field v.1.0
+         */
+        foreach ($allFields as $f => $d) {
+            if ($d['type'] == 'calculated' and $d['display']) {
+                foreach ($result as &$key) {
+                    $calc = $d['function'];
+                    $key[$f] = $this->$calc($key);
+                }
+            }
+        }
+
+        return $result;
     }
 }

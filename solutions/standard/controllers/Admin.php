@@ -52,6 +52,8 @@ class Admin
         Process::$context['admin_part'] = $partition;
         Process::$context['admin_part_action'] = $action;
 
+        $thisDir = dirname(__FILE__);
+
         /**
          * check CSRF Token (optionally)
          */
@@ -63,6 +65,9 @@ class Admin
          */
         self::$configuration = Process::$context['cms']['admin_cfg'];
 
+        /**
+         * Fast action for logout
+         */
         if ($partition === 'logout') {
             if (self::$checkCSRFToken) {
                 Session::stop();
@@ -72,12 +77,24 @@ class Admin
             }
         }
 
+        /**
+         * Fast database actions
+         */
         if ($partition === 'ajax') {
-            if (self::$checkCSRFToken) {
-                /**
-                 * POST AJAX DATA
-                 */
-                echo 'test';
+            if (self::$checkCSRFToken and $action = Data::input('a')) {
+                header("Content-Type: application/json");
+                switch ($action) {
+                    case 'delete':
+                        $element = Data::input('e');
+
+                        break;
+                    case 'create':
+
+                        break;
+                    case 'edit':
+
+                        break;
+                }
                 exit;
             } else {
                 throw new ForbiddenException();
@@ -91,12 +108,15 @@ class Admin
             'name' => 'Главная', 'uri' => '', 'icon' => 'icon-home',
         ));
 
-        include_once dirname(__FILE__) . '/../crud/CRUDObject.php';
+        include_once $thisDir . '/../crud/CRUDObject.php';
         foreach (self::$configuration['registered_crud'] as $crud) {
             if (!class_exists($crud)) {
-                $target = dirname(__FILE__) . '/../crud/' . $crud . '.php';
-                if (file_exists($target)) {
-                    include_once $target;
+                $targetUser = $thisDir . '/../../../crud/' . $crud . '.php';
+                $targetStandard = $thisDir . '/../crud/' . $crud . '.php';
+                if (file_exists($targetUser)) {
+                    include_once $targetUser;
+                } elseif (file_exists($targetStandard)) {
+                    include_once $targetStandard;
                 } else {
                     throw new Exception("CRUD $crud not exists");
                 }
@@ -114,12 +134,18 @@ class Admin
             Process::$context['admin_menu_elements'][] = $p->getInfo();
         }
 
-        Process::$context['page_title'] = 'Админ панель';
+        Process::$context['page_title'] = 'Панель управления и обработки информации';
         Process::$context['panel_base_uri'] = self::$configuration['base_uri'];
         if (!isset(Process::$context['current_user'])) {
-            Process::$context['current_user'] = array(
-                'login' => Data::input(Process::$context['bot_secure']['input_login'])
-            );
+            try {
+                Process::$context['current_user'] = array(
+                    'login' => Data::input(Process::$context['bot_secure']['input_login'])
+                );
+            } catch (Exception $e) {
+                Process::$context['current_user'] = array(
+                    'login' => 'Admin'
+                );
+            }
         }
 
         Process::$context['container'] = self::getContainer($partition, $action);
@@ -129,8 +155,8 @@ class Admin
     public static function getContainer($partition, $action)
     {
         $container = array(
-            'type' => 'text',
-            'text' => 'Выберите интересующий раздел'
+            'type' => 'page',
+            'page' => 'homepage'
         );
 
         if ($partition)
@@ -155,15 +181,25 @@ class Admin
                     $pagination = Data::paginate($count, $perPage, $page);
                     $container['type'] = 'listing';
                     $container['count'] = ($count > $perPage) ? $perPage : $count;
+                    $container['all_count'] = $count;
                     $container['diff_field'] = $m->getDiffField();
                     $container['fields_displayable'] = $m->getDisplayable();
                     $container['fields'] = $m->getFields();
                     $container['data'] = $m->getListing($pagination['offset'], $perPage);
                     $container['create_new_message'] = $m->getCreateString();
+                    $container['only_display'] = $m->isOnlyDisplay();
                     foreach ($container['fields'] as $f => $d) {
+                        if ($d['function']) {
+                            foreach ($container['data'] as &$e) {
+                                $function = $d['function'];
+                                if (function_exists($function)) {
+                                    $e[$f] = $function($e[$f]);
+                                }
+                            }
+                        }
                         if ($d['modify']) {
                             foreach ($container['data'] as &$e) {
-                                $e[$f] = str_replace('$1', $e[$f], $d['modify']);
+                                $e[$f] = !empty($e[$f]) ? str_replace('$1', $e[$f], $d['modify']) : '';
                             }
                         }
                     }
