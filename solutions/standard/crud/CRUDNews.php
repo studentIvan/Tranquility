@@ -11,6 +11,7 @@ class CRUDNews extends CRUDObjectInterface
     protected $fields = array(
         'id' => array(
             'default' => 'null',
+			'description' => 'ID новости',
             'type' => 'integer',
         ),
         'title' => array(
@@ -28,6 +29,7 @@ class CRUDNews extends CRUDObjectInterface
         ),
         'created_at' => array(
             'default' => 'now',
+			'description' => 'Время создания',
             'type' => 'datetime',
             'display' => true,
         ),

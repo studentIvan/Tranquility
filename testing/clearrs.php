@@ -9,6 +9,12 @@ catch (Exception $e) {
 }
 
 try {
+    $pdo->query("TRUNCATE TABLE visitors");
+}
+catch (Exception $e) {
+}
+
+try {
     $pdo->query("TRUNCATE TABLE sessions");
 }
 catch (Exception $e) {

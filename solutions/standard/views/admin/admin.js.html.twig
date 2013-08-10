@@ -52,6 +52,8 @@
 		});
 
 		
-		$('.tooltipped').tooltip();{% endif %}
+		$('.tooltipped').tooltip();
+		$('.stats-div').popover({placement: 'bottom', trigger: 'hover', html: true})
+		{% endif %}
     })
 </script>

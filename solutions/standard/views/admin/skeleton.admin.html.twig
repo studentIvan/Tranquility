@@ -5,7 +5,6 @@
     <title>{{ page_title }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="apple-mobile-web-app-capable" content="yes">
-    <!-- Bootstrap -->
     <link href="{{ resource.bootstrap_css }}" rel="stylesheet" media="screen">
     <link href="/css/icons.css" rel="stylesheet" media="screen">
     <style>
@@ -27,6 +26,51 @@
             top: 25px;
             white-space: nowrap;
         }
+		
+		.stats-div {
+			padding: 15px;
+			background-color: rgb(255, 255, 255);
+			border: 1px solid rgb(221, 221, 221);
+			border-radius: 4px 4px 4px 4px;
+			box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.05);
+			display: inline-block;
+		}
+		
+		.stats-div strong {
+			font-size: 26px;
+			margin-bottom: 3px;
+			margin-top: 6px;
+		}
+		
+		.pretty-good {
+			color: rgb(69, 157, 28);
+			font-size: 10px;
+			font-weight: bold;
+			padding: 10px 14px 6px 4px;
+		}
+		
+		.pretty-neutral {
+			color: rgb(117, 117, 117);
+			font-size: 10px;
+			font-weight: bold;
+			padding: 10px 14px 6px 4px;
+		}
+		
+		.pretty-bad {
+			color: rgb(186, 30, 32);
+			font-size: 10px;
+			font-weight: bold;
+			padding: 10px 14px 6px 4px;
+		}
+		
+		.table-stats {
+			width: 100%;
+		}
+		
+		.table-stats td {
+			text-align: center;
+			color: rgb(102, 102, 102);
+		}
     </style>
 </head>
 <body>
@@ -41,7 +85,9 @@
                 <span class="icon-bar"></span>
             </button>
 
-            {% if not mobile %}<a class="navbar-brand" style="max-width: none;" href="{{ panel_base_uri }}/">{{ page_title }}</a>{% endif %}
+            {% if not mobile %}
+				<a class="navbar-brand" style="max-width: none;" href="{{ panel_base_uri }}/">{{ page_title }}</a>
+			{% endif %}
 
             <div class="nav-collapse collapse navbar-responsive-collapse">
 				{% if mobile %}
@@ -58,7 +104,7 @@
                     <li><a href="{{ panel_base_uri }}/logout?csrf_token={{ csrf_token }}">Выход ({{ current_user.login }})</a></li>
                 </ul>
 				{% else %}
-                <ul class="nav navbar-nav pull-right" id="attach-hidescript">
+                <ul class="nav navbar-nav pull-right">
                     <li class="dropdown" id="menu1">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
                             {% if current_user.photo %}
@@ -81,7 +127,7 @@
 {% block fixedb %}{% endblock %}
 {% if not mobile %}
 <div class="row" style="width: 99%">
-    <div class="col-lg-2">
+    <div class="col-lg-2" style="min-width: 250px">
         <ul class="nav nav-pills nav-stacked">
             {% for e in admin_menu_elements %}
                 <li{% if admin_part == e.uri %} class="active"{% endif %}><a
@@ -93,7 +139,7 @@
             {% endfor %}
         </ul>
     </div>{% endif %}
-    <div class="{% if not mobile %}col-lg-10{% else %}container{% endif %}">
+    <div class="{% if not mobile %}col-lg-9{% else %}container{% endif %}">
         {% block container %}{% endblock %}
     </div>
 {% if not mobile %}</div>{% endif %}

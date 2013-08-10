@@ -1,0 +1,11 @@
+{% spaceless %}
+<div>
+	<strong>{{ (users_stats.total ~ "</strong> пользовател")|plural("ь", "я", "ей")|raw }} всего
+</div>
+<div>
+	<strong>{{ (users_stats.today ~ "</strong> пользовател")|plural("ь", "я", "ей")|raw }} сегодня
+</div>
+<div>
+	<strong>{{ (users_stats.yesterday ~ "</strong> пользовател")|plural("ь", "я", "ей")|raw }} вчера
+</div>
+{% endspaceless %}

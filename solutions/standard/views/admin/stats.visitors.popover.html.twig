@@ -1,0 +1,33 @@
+{% spaceless %}
+<div>
+	<strong>{{ (visit_stats.total.hits ~ "</strong> просмотр")|plural("", "а", "ов")|raw }} всего
+</div>
+<br>
+<div>
+	<strong>{{ (visit_stats.today.visitors ~ "</strong> посетител")|plural("ь", "я", "ей")|raw }} сегодня <small>(разница {{ visit_stats.today.diff_percent }}%)</small>
+</div>
+<div>
+	<strong>{{ (visit_stats.yesterday.visitors ~ "</strong> посетител")|plural("ь", "я", "ей")|raw }} вчера
+</div>
+<br>
+<div>
+	<strong>{{ (visit_stats.today.hits ~ "</strong> просмотр")|plural("", "а", "ов")|raw }} сегодня
+</div>
+<div>
+	<strong>{{ (visit_stats.yesterday.hits ~ "</strong> просмотр")|plural("", "а", "ов")|raw }} вчера
+</div>
+<br>
+<div>
+	<strong>{{ (visit_stats.this_week.visitors ~ "</strong> посетител")|plural("ь", "я", "ей")|raw }} за неделю <small>(разница {{ visit_stats.this_week.diff_percent }}%)</small>
+</div>
+<div>
+	<strong>{{ (visit_stats.last_week.visitors ~ "</strong> посетител")|plural("ь", "я", "ей")|raw }} на прошлой неделе
+</div>
+<br>
+<div>
+	<strong>{{ (visit_stats.this_week.hits ~ "</strong> просмотр")|plural("", "а", "ов")|raw }} за неделю
+</div>
+<div>
+	<strong>{{ (visit_stats.last_week.hits ~ "</strong> просмотр")|plural("", "а", "ов")|raw }} на прошлой неделе
+</div>
+{% endspaceless %}

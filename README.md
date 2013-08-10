@@ -1,7 +1,6 @@
 # ![Tranquility](http://habrastorage.org/storage2/cef/853/3d7/cef8533d75bb0f8f014282a7a3c81668.png)
 ## Content Management Framework
-## Version 0.5.0.0 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
-## Bootstrap 3 + jQuery 2 branch development
+## Version 0.6.0.0 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
 
 ### Features
 * Easy to install and use
@@ -17,6 +16,7 @@
 * Half ready site
 
 ### Composition
+* Bootstrap 3 + jQuery 2
 * Twig template engine + plural ends extension
 * Uri-match routing + basic application architecture
 * Many global singletons (oh god, why?)
@@ -48,3 +48,6 @@
 
 ### Cheap hosting webroot placement
 You can rename webroot so as you like. For example: htdocs (as default hosting directory) or www
+
+### Birthday
+16th April 2012

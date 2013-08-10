@@ -23,6 +23,10 @@ if (isset($config['cms']))
         require_once $__DIRADM__ . '/datamappers/Users.php';
         require_once $__DIRADM__ . '/datamappers/Roles.php';
     }
+	
+	require_once $__DIRADM__ . '/datamappers/Stats.php';
+	
+	Stats::registerVisit();
 
     $config['cms']['admin_cfg'] = require_once $__DIRADM__ . '/../../config/admin.config.php';
 }

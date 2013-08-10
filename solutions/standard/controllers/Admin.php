@@ -158,7 +158,7 @@ class Admin
         }
 
 		Process::$context['site_title'] = Process::$context['page_title'];
-        Process::$context['page_title'] = 'Панель управления и обработки информации';
+        Process::$context['page_title'] = 'Tranquility Admin';
         Process::$context['panel_base_uri'] = self::$configuration['base_uri'];
         if (!isset(Process::$context['current_user'])) {
             try {
@@ -274,10 +274,13 @@ class Admin
 			}
         } else {
 			try {
+				/** Dashboard homepage */
 				$totalSpace = round((Data::getDirSize(dirname(__FILE__) . '/../../../'))/1024/1024, 2);
 				$freeSpace = Process::$context['hosting_free_space_mb'];
 				Process::$context['total_space_info'] = $totalSpace . ' мб из ' . $freeSpace . ' мб';
 				Process::$context['total_space_percent'] = ($totalSpace/$freeSpace)*100;
+				Process::$context['visit_stats'] = Stats::getVisitors();
+				Process::$context['users_stats'] = Stats::getUsers();
 			} catch (Exception $e) {
 				Process::$context['total_space_info'] = 'не удалось получить размер сайта';
 			}
