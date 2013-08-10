@@ -96,6 +96,11 @@ return array(
      * Default site title
      */
     'default_site_title' => 'Tranquility site',
+	
+	/*
+	 * Free space on your hosting in mb
+	 */
+	'hosting_free_space_mb' => 100,
 
     /**
      * Session configuration

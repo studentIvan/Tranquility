@@ -39,8 +39,43 @@ abstract class CRUDObject
             $field['modify'] = isset($field['modify']) ? $field['modify'] : false;
             $field['function'] = isset($field['function']) ? $field['function'] : false;
             $field['count_of'] = isset($field['count_of']) ? $field['count_of'] : false;
+			
+			if ($field['from'] and $field['type'] == 'select') {
+				$field['options'] = $this->getSelectOptions($field['from']['table'], $field['from']['field'], $field['from']['as']);
+			}
+			
+			if (isset($field['values']) and $field['type'] == 'select') {
+				$field['options'] = array();
+				foreach ($field['values'] as $key => $value) {
+					$field['options'][] = array('name' => $value, 'value' => $key);
+				}
+			}
         }
     }
+	
+	/**
+     * @return array
+     */
+	protected function getSelectOptions($table, $valueField, $descriptionField) 
+	{
+		$function = "get{$this->driver}SelectOptions";
+        return $this->$function($table, $valueField, $descriptionField);
+	}
+	
+	/**
+     * @return array
+     */
+	protected function getMySQLSelectOptions($table, $valueField, $descriptionField) 
+	{
+		$statement = Database::getInstance()->prepare("
+            SELECT $valueField as value, $descriptionField as name
+            FROM $table
+        ");
+
+        $statement->execute();
+
+        return $statement->fetchAll(PDO::FETCH_ASSOC);
+	}
 
     /**
      * @return array
@@ -112,6 +147,7 @@ abstract class CRUDObject
             'name' => $this->getMenuName(),
             'uri' => $this->getMenuURI(),
             'icon' => $this->getMenuIconClass(),
+            'count' => $this->getCount(),
         );
     }
 
@@ -131,6 +167,22 @@ abstract class CRUDObject
     {
         return Database::count($this->tableName);
     }
+	
+	/**
+     * @return string
+     */
+    protected function getTableName()
+    {
+        return $this->tableName;
+    }
+	
+	/**
+     * @return string
+     */
+    public function getOrderByField()
+    {
+        return $this->orderByField;
+    }
 
     /**
      * @param int $offset
@@ -141,6 +193,35 @@ abstract class CRUDObject
     {
         $function = "get{$this->driver}Listing";
         return $this->$function($offset, $limit);
+    }
+	
+	/**
+     * @param mixed $unique
+     * @return array
+     */
+    public function readElement($unique)
+    {
+        $function = "read{$this->driver}Element";
+        return $this->$function($unique);
+    }
+	
+	/**
+     * @param mixed $unique
+     * @return array
+     */
+    protected function readMySQLElement($unique)
+    {
+        $diffField = $this->getDiffField();
+        $tableName = $this->getTableName();
+		$statement = Database::getInstance()->prepare("
+            SELECT * FROM $tableName
+			WHERE $diffField=:unique
+        ");
+
+        $statement->bindParam(':unique', $unique, PDO::PARAM_STR);
+        $statement->execute();
+
+        return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -164,7 +245,7 @@ abstract class CRUDObject
      * @param int $limit
      * @return array
      */
-    public function getMySQLListing($offset = 0, $limit = 30)
+    protected function getMySQLListing($offset = 0, $limit = 30)
     {
         $tmpFields = array_unique(
             array_merge(array($this->getDiffField()), $this->getDisplayable())
@@ -174,6 +255,8 @@ abstract class CRUDObject
         $orderFilter = false;
         $foreignIndexes = array();
         $joinString = $groupBy = '';
+		$tableName = $this->getTableName();
+		$orderByField = $this->getOrderByField();
         foreach ($allFields as $f => $d) {
             if (in_array($f, $tmpFields)) {
                 if ($d['type'] == 'calculated') {
@@ -229,11 +312,11 @@ abstract class CRUDObject
         }
 
         $requiredFields = join(',', $tmpFields);
-        $orderBy = $this->orderByField ? "ORDER BY a.{$this->orderByField} DESC" : '';
-        $orderBy = $orderFilter ? str_replace("a.{$this->orderByField}", $this->orderByField, $orderBy) : $orderBy;
+        $orderBy = $orderByField ? "ORDER BY a.$orderByField DESC" : '';
+        $orderBy = $orderFilter ? str_replace("a.$orderByField", $orderByField, $orderBy) : $orderBy;
         $statement = Database::getInstance()->prepare("
             SELECT $requiredFields
-            FROM {$this->tableName} AS a $joinString
+            FROM $tableName AS a $joinString
             $groupBy $orderBy LIMIT :limit OFFSET :offset
         ");
 

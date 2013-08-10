@@ -1,69 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>{{ page_title }}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap -->
-    <link href="{{ resource.bootstrap_css }}" rel="stylesheet" media="screen">
-    <link href="/css/icons.css" rel="stylesheet" media="screen">
-    <style>
-        body {
-            padding-top: {% if container.count %}110{% else %}60{% endif %}px;
-        }
-
-        h2 a {
-            color: #5f5f5f;
-        }
-
-        .table-expand tr {
-            height: 60px;
-        }
-
-        .modify {
-            position: absolute;
-            top: 25px;
-            white-space: nowrap;
-        }
-    </style>
-</head>
-<body>
-<div class="navbar navbar-fixed-top navbar-inverse">
-    <div class="navbar-inner">
-        <div class="container">
-
-            <button type="button" class="navbar-toggle" data-toggle="collapse"
-                    data-target=".navbar-responsive-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-
-            <a class="navbar-brand" style="max-width: none;" href="{{ panel_base_uri }}/">{{ page_title }}</a>
-
-            <div class="nav-collapse collapse navbar-responsive-collapse">
-                <ul class="nav navbar-nav pull-right">
-                    <li class="dropdown" id="menu1">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
-                            {% if current_user.photo %}
-                                <img src="{{ current_user.photo }}" alt="" width="22" height="22"/>&nbsp;
-                            {% endif %}{% if current_user.full_name %}&nbsp;&nbsp;{{ current_user.full_name }}
-                            {% else %}{{ current_user.login }}
-                            {% endif %}
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{{ panel_base_uri }}/logout?csrf_token={{ csrf_token }}">Выход</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
+{% extends 'admin/skeleton.admin.html.twig' %}
+{% block fixedb %}
 {% if container.count %}
-    <div class="navbar navbar-fixed-top" style="margin-top: 50px;">
-        <div class="pull-left">
+    <div class="navbar navbar-fixed-bottom navbar-inverse">
+        {% if not mobile %}
+		<div class="pull-left">
             <p class="navbar-text">
                 Отображено
                 <span id="display-info-total" style="font-weight: bold;">
@@ -71,41 +11,43 @@
                     (всего <span id="display-info-all" style="font-weight: bold;">{{ container.all_count }}</span>)
             </p>
         </div>
-        <div class="pull-right">
+		{% endif %}
+        <div {% if not mobile %}class="pull-right"{% endif %}>
             {% if container.create_new_message %}
-            <button class="btn btn-success" style="margin-top: 5px;"
-                    onclick="">
+            <button {% if not mobile %}data-toggle="modal" data-target="#modalCreate"{% else %}
+			onclick="window.location.href='{{ panel_base_uri }}/{{ admin_part }}/create'"
+			{% endif %} class="btn btn-default navbar-btn">
                 <i class="icon-plus icon-white"></i>&nbsp;<span id="addmsg">{{ container.create_new_message }}</span>
             </button>
             {% endif %}
-            <button class="btn btn-info" style="margin-top: 5px;"
+            {% if not mobile %}
+			<button class="btn btn-default navbar-btn"
                     onclick="$('#updt').html('обновление...');$(this).addClass('disabled');window.location.reload();">
                 <i class="icon-refresh icon-white"></i>&nbsp;<span id="updt">обновить страницу</span>
             </button>
+			{% endif %}
         </div>
     </div>
 {% endif %}
-<div class="row" style="width: 99%">
-    <div class="col-lg-2">
-        <ul class="nav nav-pills nav-stacked">
-            {% for e in admin_menu_elements %}
-                <li{% if admin_part == e.uri %} class="active"{% endif %}><a
-                            href="{{ panel_base_uri }}/{{ e.uri }}">
-                        <i class="{{ e.icon }}"></i>&nbsp;
-                        {{ e.name }}
-                    </a></li>
-            {% endfor %}
-        </ul>
-    </div>
-    <div class="col-lg-10">
-        {% if container.type == 'text' %}
+{% endblock %}
+{% block container %}
+{% if container.type == 'text' %}
             {{ container.text }}
         {% elseif container.type == 'page' %}
             {% include 'admin/'~container.page~'.html.twig' %}
         {% elseif container.type == 'listing' %}
+			{% if container.data|length == 0 %}
+			<div class="alert">
+			  <button type="button" class="close" data-dismiss="alert">&times;</button>
+			  <strong>Внимание!</strong> Нет элементов для отображения - вероятно таблица пустая.
+			</div>
+			{% endif %}
             <table class="table table-hover table-expand">
             {% for e in container.data %}
-                <tr id="elements-row-{{ e[container.diff_field] }}" data-unique="{{ e[container.diff_field] }}">
+                <tr id="elements-row-{{ e[container.diff_field] }}" data-unique="{{ e[container.diff_field] }}" 
+				{% if mobile and not container.only_display %}
+				onclick="window.location.href='{{ panel_base_uri }}/{{ admin_part }}/view?e={{ e[container.diff_field] }}'"
+				{% endif %}>
                 {% for h in container.fields_displayable %}
                     <td>
                         <div style="position: relative;">
@@ -145,50 +87,54 @@
             {% endif %}
         {% else %}
         {% endif %}
-    </div>
-</div>
+{% endblock %}
+{% block modal %}
+{% if container.create_new_message %}<!-- Modal -->
+  <div class="modal fade" id="modalCreate">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">{{ container.create_new_message }}</h4>
+        </div>
+        <div class="modal-body">
+          {% include "admin/form.create.html.twig" with container %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+          <button type="button" class="btn btn-primary">Сохранить</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
-<script src="{{ resource.jquery_js }}"></script>
-<script src="{{ resource.ldt_js }}"></script>
-<script src="{{ resource.bootstrap_js }}"></script>
-<script type="text/javascript">
-    modifyPanel = {% if not container.only_display %}'<div class="modify">{% if container.create_new_message %}<a href="#change" class="change-link">Изменить</a> | {% endif %}' +
-            '<a href="#delete" class="delete-link">Удалить</a></div>';{% else %}'';{% endif %}
-    $(document).ready(function () {
-        var ldt = new LocalizedDate(4);
-        $(".field-datetime").each(function () {
-            $(this).html(ldt.localize($(this).html())).removeClass("dtl10n")
-        });
-        $(".table-expand tr").each(function() {
-            var unique = $(this).data('unique');
-            $(this).hover(function(){
-                $(this).find(".modify").fadeIn(0);
-            }, function() {
-                $(this).find(".modify").fadeOut(0);
-            });
+<!-- Modal -->
+  <div class="modal fade" id="modalEdit">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+          <h4 class="modal-title">Modal title</h4>
+        </div>
+        <div class="modal-body">
+          {% include "admin/form.edit.html.twig" with container %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+          <button type="button" class="btn btn-primary">Сохранить изменения</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->{% endif %}
 
-            var tmpElement = $(this).find("td:first div");
-            tmpElement.html(tmpElement.html() + modifyPanel);
-
-            var this_modify = $(this).find(".modify");
-            this_modify.find(".change-link").data('unique', unique).click(function(){
-                var unique = $(this).data('unique');
-            });
-            this_modify.find(".delete-link").data('unique', unique).click(function(){
-                var unique = $(this).data('unique');
-                $("#elements-row-" + unique).fadeOut();
-                var result, nCounter1, nCounter2;
-                nCounter1 = $("#display-info-total");
-                nCounter2 = $("#display-info-all");
-                result = (nCounter1.html())*1-1;
-                nCounter1.html(result);
-                result = (nCounter2.html())*1-1;
-                nCounter2.html(result);
-            });
-
-            this_modify.fadeOut(0);
-        })
-    })
-</script>
-</body>
-</html>
+<!-- Modal -->
+  <div class="modal fade" id="modalView">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body" id="modalViewBody">
+          <div class="progress progress-striped active"><div class="progress-bar" style="width: 100%"></div></div>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+{% endblock %}

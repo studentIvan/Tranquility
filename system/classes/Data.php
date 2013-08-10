@@ -107,4 +107,34 @@ class Data
                 'offset' => $start,
             );
     }
+	
+	/**
+     * @static
+     * @param string $dirName
+     * @return int
+     */
+	public static function getDirSize($dirName) 
+	{
+		$dirSize = 0;
+		if (!is_dir($dirName)) return $dirSize;
+		
+		if ($dh = opendir($dirName)) 
+		{
+			while (($file = readdir($dh)) !== false) 
+			{
+				if ($file !='.' && $file != '..')
+				{
+					if (is_file($dirName.'/'.$file)) {
+						$dirSize += filesize($dirName.'/'.$file);
+					}
+					
+					if (is_dir($dirName.'/'.$file)) {
+						$dirSize += self::getDirSize($dirName.'/'.$file);
+					}
+				}
+			}
+		}
+		closedir($dh);
+		return $dirSize;    
+	}
 }

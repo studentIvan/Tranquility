@@ -1,0 +1,57 @@
+<script type="text/javascript">
+    modifyPanel = {% if not container.only_display %}'<div class="modify"><a href="#modalView" data-toggle="modal" class="view-link">Просмотреть</a> | {% if container.create_new_message %}<a href="#modalEdit" data-toggle="modal" class="change-link">Изменить</a> | {% endif %}' +
+            '<a href="#delete" class="delete-link">Удалить</a></div>';{% else %}'';{% endif %}
+    $(document).ready(function () {
+        ldt = new LocalizedDate(4);
+        $(".field-datetime").each(function () {
+            $(this).html(ldt.localize($(this).html())).removeClass("field-datetime")
+        });
+        {% if not mobile %}$(".table-expand tr").each(function() {
+            var unique = $(this).data('unique');
+            $(this).hover(function(){
+                $(this).find(".modify").fadeIn(0);
+            }, function() {
+                $(this).find(".modify").fadeOut(0);
+            });
+
+            var tmpElement = $(this).find("td:first div");
+            tmpElement.html(tmpElement.html() + modifyPanel);
+
+            var this_modify = $(this).find(".modify");
+			this_modify.find(".view-link").data('unique', unique).click(function(){
+                var unique = $(this).data('unique');
+				$('#modalView').data('unique', unique);
+            });
+            this_modify.find(".change-link").data('unique', unique).click(function(){
+                var unique = $(this).data('unique');
+				$('#modalEdit').data('unique', unique);
+            });
+            this_modify.find(".delete-link").data('unique', unique).click(function(){
+                var unique = $(this).data('unique');
+                $("#elements-row-" + unique).fadeOut();
+                var result, nCounter1, nCounter2;
+                nCounter1 = $("#display-info-total");
+                nCounter2 = $("#display-info-all");
+                result = (nCounter1.html())*1-1;
+                nCounter1.html(result);
+                result = (nCounter2.html())*1-1;
+                nCounter2.html(result);
+            });
+
+            this_modify.fadeOut(0);
+        });
+		
+		$('#modalView').on('shown.bs.modal', function () {
+			var unique = $(this).data('unique');
+			$.post("{{ panel_base_uri }}/ajax?csrf_token={{ csrf_token }}", { a: "view", p: "{{ admin_part }}", e: unique })
+			.done(function(data) {
+				$("#modalViewBody").html(data);
+			});
+		}).on('hidden.bs.modal', function () {
+			$("#modalViewBody").html('<div class="progress progress-striped active"><div class="progress-bar" style="width: 100%"></div></div>');
+		});
+
+		
+		$('.tooltipped').tooltip();{% endif %}
+    })
+</script>

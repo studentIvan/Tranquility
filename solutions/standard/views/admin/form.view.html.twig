@@ -1,0 +1,23 @@
+<ul class="list-group">
+	{% for field_name, field_data in fields %}
+		{% if read_data[field_name] %}
+			<li class="list-group-item">
+				<h4 class="list-group-item-heading">
+					{% if field_data.description %}{{ field_data.description }}{% else %}{{ field_name }}{% endif %}
+				</h4>
+				<p class="list-group-item-text{% if field_data.type == 'datetime' %} field-datetime{% endif %}">
+					{% if field_data.values %}
+						{{ field_data.values[read_data[field_name]] }}
+					{% else %}
+						{{ read_data[field_name]|raw }}
+					{% endif %}
+				</p>
+			</li>
+		{% endif %}
+	{% endfor %}
+</ul>
+<script type="text/javascript">
+$(".field-datetime").each(function () {
+	$(this).html(ldt.localize($(this).html())).removeClass("field-datetime")
+});
+</script>

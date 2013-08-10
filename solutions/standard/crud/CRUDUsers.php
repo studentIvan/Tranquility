@@ -9,17 +9,21 @@ class CRUDUsers extends CRUDObject
     protected $fields = array(
         'id' => array(
             'default' => 'null',
+			'description' => 'ID пользователя',
             'type' => 'integer',
         ),
         'login' => array(
             'type' => 'string',
+			'description' => 'Логин',
             'display' => true,
         ),
         'password' => array(
-            'type' => 'string',
+            'type' => 'password',
+			'description' => 'Пароль',
         ),
         'role' => array(
-            'type' => 'integer',
+            'type' => 'select',
+			'description' => 'Роль',
             'from' => array(
                 'table' => 'roles',
                 'field' => 'id',
@@ -29,6 +33,7 @@ class CRUDUsers extends CRUDObject
         ),
         'registered_at' => array(
             'default' => 'now',
+			'description' => 'Дата и время регистрации',
             'type' => 'datetime',
             'display' => true,
         ),

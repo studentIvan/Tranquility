@@ -9,12 +9,11 @@ class CRUDUsersData extends CRUDObject
     protected $orderByField = 'user_id';
     protected $fields = array(
         'user_id' => array(
-            'default' => 'null',
             'type' => 'integer',
-            'edit_as' => 'login',
+			'description' => 'User ID',
         ),
         'login' => array(
-            'type' => 'select',
+            'type' => 'infinity',
             'from' => array(
                 'table' => 'users',
                 'field' => 'id',
@@ -25,20 +24,25 @@ class CRUDUsersData extends CRUDObject
         ),
         'nickname' => array(
             'type' => 'string',
+			'description' => 'Ник',
             'display' => true,
         ),
         'full_name' => array(
             'type' => 'string',
+			'description' => 'ФИО',
             'display' => true,
         ),
         'email' => array(
-            'type' => 'string',
+            'type' => 'email',
+			'description' => 'Email',
         ),
         'photo' => array(
             'type' => 'image_uri',
+			'description' => 'Аватар (uri)',
         ),
         'gender' => array(
             'type' => 'select',
+			'description' => 'Пол',
             'values' => array(
                 'm' => 'парень',
                 'w' => 'девушка',
@@ -47,9 +51,11 @@ class CRUDUsersData extends CRUDObject
         ),
         'birthday' => array(
             'type' => 'date',
+			'description' => 'Дата рождения',
         ),
         'non_indexed_data' => array(
             'type' => 'text',
+            'default' => 'null',
         ),
     );
 }

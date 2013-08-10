@@ -8,10 +8,12 @@ class CRUDRoles extends CRUDObject
     protected $fields = array(
         'id' => array(
             'default' => 'null',
+			'description' => 'ID роли',
             'type' => 'integer',
         ),
         'title' => array(
             'type' => 'string',
+			'description' => 'Наименование',
             'display' => true,
         ),
         'info' => array(

@@ -15,13 +15,16 @@ class CRUDNews extends CRUDObject
         ),
         'title' => array(
             'type' => 'string',
+            'description' => 'Заголовок',
             'display' => true,
         ),
         'content' => array(
             'type' => 'text',
+			'description' => 'Содержание',
         ),
         'tags' => array(
             'type' => 'string',
+			'description' => 'Ключевые слова',
         ),
         'created_at' => array(
             'default' => 'now',
@@ -30,7 +33,8 @@ class CRUDNews extends CRUDObject
         ),
         'posted_by' => array(
             'type' => 'select',
-            'modify' => '<a href="#">@$1</a>',
+			'description' => 'Автор',
+            'modify' => '<a href="#" class="tooltipped" data-toggle="tooltip" title="Автор новости">@$1</a>',
             'from' => array(
                 'table' => 'users',
                 'field' => 'id',

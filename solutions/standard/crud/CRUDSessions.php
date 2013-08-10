@@ -40,7 +40,7 @@ class CRUDSessions extends CRUDObject
         ),
         'uid' => array(
             'type' => 'select',
-            'modify' => '<a href="#">@$1</a>',
+            'modify' => '<a href="#" class="tooltipped" data-toggle="tooltip" title="Этот пользователь авторизован">@$1</a>',
             'from' => array(
                 'table' => 'users',
                 'field' => 'id',
