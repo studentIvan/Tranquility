@@ -1,5 +1,5 @@
 <?php
-class CRUDUsers extends CRUDObject
+class CRUDUsers extends CRUDObjectInterface
 {
     protected $menuName = 'Пользователи';
     protected $menuCreate = 'добавить пользователя';

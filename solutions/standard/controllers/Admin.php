@@ -84,7 +84,8 @@ class Admin
             'name' => 'Главная', 'uri' => '', 'icon' => 'icon-home',
         ));
 
-        include_once $thisDir . '/../crud/CRUDObject.php';
+        include_once $thisDir . '/../crud/interfaces/CRUDDriverInterface.php';
+        include_once $thisDir . '/../crud/interfaces/CRUDObjectInterface.php';
         foreach (self::$configuration['registered_crud'] as $crud) {
             if (!class_exists($crud)) {
                 $targetUser = $thisDir . '/../../../crud/' . $crud . '.php';
@@ -99,12 +100,12 @@ class Admin
             }
 
             /**
-             * @var $p CRUDObject
+             * @var $p CRUDObjectInterface
              */
             $p = new $crud();
 
-            if (($p instanceof CRUDObject) === false)
-                throw new Exception("CRUD $p is not instance of CRUDObject");
+            if (($p instanceof CRUDObjectInterface) === false)
+                throw new Exception("CRUD $p is not instance of CRUDObjectInterface");
 
             self::$models[] = $p;
             Process::$context['admin_menu_elements'][] = $p->getInfo();
@@ -115,7 +116,7 @@ class Admin
             if (self::$checkCSRFToken and $selectedAction = Data::input('a')) 
 			{
 				/**
-				 * @var $selectedPartitionModel CRUDObject
+				 * @var $selectedPartitionModel CRUDObjectInterface
 				 */
 				$selectedPartitionModel = null;
 				list($selectedElement, $selectedPartition) = Data::inputsList('e', 'p');
@@ -191,7 +192,7 @@ class Admin
 				foreach (self::$models as $m)
 				{
 					/**
-					 * @var $m CRUDObject
+					 * @var $m CRUDObjectInterface
 					 */
 					if ($m->getMenuURI() === $partition)
 					{
@@ -229,7 +230,7 @@ class Admin
 				foreach (self::$models as $m)
 				{
 					/**
-					 * @var $m CRUDObject
+					 * @var $m CRUDObjectInterface
 					 */
 					if ($m->getMenuURI() === $partition)
 					{

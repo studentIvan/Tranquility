@@ -1,5 +1,5 @@
 <?php
-class CRUDSessions extends CRUDObject
+class CRUDSessions extends CRUDObjectInterface
 {
     protected $menuName = 'Онлайн';
     protected $menuCreate = false;
@@ -56,7 +56,8 @@ class CRUDSessions extends CRUDObject
         )
     );
 
-    protected function statusField($key) {
+    public function statusField($key) 
+	{
         $sOpts = Session::getOptions();
         if (Session::getToken() == $key['token']) {
             return '<i class="icon-eye-close"></i>

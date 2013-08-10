@@ -1,5 +1,5 @@
 <?php
-class CRUDRoles extends CRUDObject
+class CRUDRoles extends CRUDObjectInterface
 {
     protected $menuName = 'Роли';
     protected $menuCreate = 'новая роль';
@@ -23,7 +23,8 @@ class CRUDRoles extends CRUDObject
         ),
     );
 
-    protected function roleTypeField($key) {
+    public function roleTypeField($key) 
+	{
         $roleId = $key['id'];
         $sOpts = Session::getOptions();
         if ($roleId == $sOpts['bot_role']) {

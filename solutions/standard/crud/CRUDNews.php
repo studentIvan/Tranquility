@@ -2,7 +2,7 @@
 /**
  * Class CRUDNews
  */
-class CRUDNews extends CRUDObject
+class CRUDNews extends CRUDObjectInterface
 {
     protected $menuName = 'Новости';
     protected $menuCreate = 'создать еще одну новость';
