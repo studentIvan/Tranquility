@@ -1,4 +1,64 @@
-<div>
-<h4>form.edit.html.twig</h4>
-Hello world :D
-</div>
+<form id="edit-form" class="form-horizontal">
+  <fieldset>
+	{% if container.type == 'form' %}
+		<legend style="text-align: center;">
+			Редактирование
+		</legend>
+		<div style="height: 7px; width: 10px;"></div>
+	{% endif %}
+	{% for field, field_data in fields %}
+		{% if not field_data.default and field_data.type != 'calculated' and field_data.type != 'infinity' %}
+			<div class="form-group">
+				  <label for="field-{{ field }}" class="col-lg-2 control-label">
+					{% if not field_data.description %}
+						{{ field }}
+					{% else %}
+						{{ field_data.description }}
+					{% endif %}
+				  </label>
+				  <div class="col-lg-10">
+					{% if field_data.type == 'text' %}
+						<textarea name="{{ field }}" class="form-control"
+							id="field-{{ field }}">{% if read_data[field] %}{{ read_data[field] }}{% endif %}</textarea>
+					{% elseif field_data.type == 'select' %}
+						<select name="{{ field }}" class="form-control"
+							id="field-{{ field }}">
+						{% for option in field_data.options %}
+						<option value="{{ option.value }}"{% if read_data[field] == option.value %} selected="selected"{% endif %}>{{ option.name }}</option>
+						{% endfor %}
+						</select>
+					{% elseif field_data.type == 'password' %}
+						<input type="password" name="{{ field }}" class="form-control" 
+							id="field-{{ field }}">
+					{% elseif field_data.type == 'email' %}
+						<input type="email" name="{{ field }}" class="form-control" 
+							id="field-{{ field }}" placeholder="user@example.com" autocapitalize="off" autocorrect="off"
+							{% if read_data[field] %} value="{{ read_data[field] }}"{% endif %}>
+					{% elseif field_data.type == 'integer' %}
+						<input type="number" name="{{ field }}" class="form-control" 
+							id="field-{{ field }}"{% if read_data[field] %} value="{{ read_data[field] }}"{% endif %}>
+					{% elseif field_data.type == 'date' %}
+						<input type="date" name="{{ field }}" class="form-control" 
+							id="field-{{ field }}"{% if read_data[field] %} value="{{ read_data[field] }}"{% endif %}>
+					{% elseif field_data.type == 'datetime' %}
+						<input type="datetime" name="{{ field }}" class="form-control" 
+							id="field-{{ field }}"{% if read_data[field] %} value="{{ read_data[field] }}"{% endif %}>
+					{% elseif field_data.type == 'url' or field_data.type == 'uri' or field_data.type == 'image_uri' %}
+						<input type="url" name="{{ field }}" class="form-control" 
+							id="field-{{ field }}"{% if read_data[field] %} value="{{ read_data[field] }}"{% endif %}>
+					{% else %}
+						<input type="text" name="{{ field }}" class="form-control" 
+							id="field-{{ field }}"{% if read_data[field] %} value="{{ read_data[field] }}"{% endif %}>
+					{% endif %}
+				  </div>
+			</div>
+		{% endif %}
+	{% endfor %}
+	{% if container.type == 'form' %}
+		<div class="col-lg-2">&nbsp;</div>
+		<div class="col-lg-10">
+			<button type="submit" class="btn btn-success"><i class="icon-download-alt icon-white"></i>&nbsp;Сохранить</button>
+		</div>
+	{% endif %}
+  </fieldset>
+</form>

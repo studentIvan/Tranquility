@@ -50,10 +50,28 @@
 		}).on('hidden.bs.modal', function () {
 			$("#modalViewBody").html('<div class="progress progress-striped active"><div class="progress-bar" style="width: 100%"></div></div>');
 		});
-
+		
+		$('#modalEdit').on('shown.bs.modal', function () {
+			var unique = $(this).data('unique');
+			$.post("{{ panel_base_uri }}/ajax?csrf_token={{ csrf_token }}", { a: "edit-form", p: "{{ admin_part }}", e: unique })
+			.done(function(data) {
+				$("#modalEditBody").html(data);
+			});
+		}).on('hidden.bs.modal', function () {
+			$("#modalEditBody").html('<div class="progress progress-striped active"><div class="progress-bar" style="width: 100%"></div></div>');
+		});
 		
 		$('.tooltipped').tooltip();
-		$('.stats-div').popover({placement: 'bottom', trigger: 'hover', html: true})
+		
+		$('.stats-div').popover({placement: 'bottom', trigger: 'hover', html: true});
+		
+		$('.left-menu-element').click(function() {
+			$('#main-container').fadeOut();
+			$('.left-menu-element').removeClass('active');
+			$(this).addClass('active');
+		});
+		
+		$('#main-container').fadeOut(0).fadeIn();
 		{% endif %}
     })
 </script>

@@ -130,7 +130,7 @@
     <div class="col-lg-2" style="min-width: 250px">
         <ul class="nav nav-pills nav-stacked">
             {% for e in admin_menu_elements %}
-                <li{% if admin_part == e.uri %} class="active"{% endif %}><a
+                <li class="{% if admin_part == e.uri %}active{% endif %} left-menu-element"><a
                             href="{{ panel_base_uri }}/{{ e.uri }}">
                         <i class="{{ e.icon }}"></i>&nbsp;
                         {{ e.name }}
@@ -139,7 +139,7 @@
             {% endfor %}
         </ul>
     </div>{% endif %}
-    <div class="{% if not mobile %}col-lg-9{% else %}container{% endif %}">
+    <div class="{% if not mobile %}col-lg-9{% else %}container{% endif %}" id="main-container">
         {% block container %}{% endblock %}
     </div>
 {% if not mobile %}</div>{% endif %}

@@ -139,6 +139,12 @@ class Admin
                     case 'edit':
                         break;*/
 						
+					case 'edit-form':
+						Process::$context['fields'] = $selectedPartitionModel->getFields();
+						Process::$context['read_data'] = $selectedPartitionModel->readElement($selectedElement);
+						Process::getTwigInstance()->display('admin/form.edit.html.twig', Process::$context);
+                        break;
+						
 					case 'view':
 						Process::$context['fields'] = $selectedPartitionModel->getFields();
 						Process::$context['read_data'] = $selectedPartitionModel->readElement($selectedElement);

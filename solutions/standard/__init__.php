@@ -3,7 +3,6 @@
  * Standard solution
  */
 $__DIRADM__ = dirname(__FILE__);
-Process::$context['server_timezone'] = $config['server_timezone'];
 Process::$context['debug'] = DEVELOPER_MODE;
 
 $sCfg = Session::getOptions();

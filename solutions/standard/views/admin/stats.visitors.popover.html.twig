@@ -14,7 +14,11 @@
 	<strong>{{ (visit_stats.today.hits ~ "</strong> просмотр")|plural("", "а", "ов")|raw }} сегодня
 </div>
 <div>
+{% if not visit_stats.yesterday.hits %}
+	<strong>0</strong> просмотров вчера
+{% else %}
 	<strong>{{ (visit_stats.yesterday.hits ~ "</strong> просмотр")|plural("", "а", "ов")|raw }} вчера
+{% endif %}
 </div>
 <br>
 <div>
@@ -28,6 +32,10 @@
 	<strong>{{ (visit_stats.this_week.hits ~ "</strong> просмотр")|plural("", "а", "ов")|raw }} за неделю
 </div>
 <div>
+{% if not visit_stats.last_week.hits %}
+	<strong>0</strong> просмотров на прошлой неделе
+{% else %}
 	<strong>{{ (visit_stats.last_week.hits ~ "</strong> просмотр")|plural("", "а", "ов")|raw }} на прошлой неделе
+{% endif %}
 </div>
 {% endspaceless %}
