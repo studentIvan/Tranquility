@@ -26,16 +26,41 @@
                 var unique = $(this).data('unique');
 				$('#modalEdit').data('unique', unique);
             });
-            this_modify.find(".delete-link").data('unique', unique).click(function(){
-                var unique = $(this).data('unique');
-                $("#elements-row-" + unique).fadeOut();
-                var result, nCounter1, nCounter2;
-                nCounter1 = $("#display-info-total");
-                nCounter2 = $("#display-info-all");
-                result = (nCounter1.html())*1-1;
-                nCounter1.html(result);
-                result = (nCounter2.html())*1-1;
-                nCounter2.html(result);
+            this_modify.find(".delete-link").data('unique', unique).click(function()
+			{
+				if (window.confirm('Вы уверены?')) 
+				{
+					var unique = $(this).data('unique');
+					
+					$('#top-of-container').html('<div class="alert alert-info">Происходит удаление...</div>');
+					
+					$.post("{{ panel_base_uri }}/ajax?csrf_token={{ csrf_token }}", { a: "delete", p: "{{ admin_part }}", e: unique })
+					.done(function(data) 
+					{
+						if (data !== 'ok') 
+						{
+							$('#top-of-container').html(data);
+						}
+						else 
+						{
+							$("#elements-row-" + unique).fadeOut();
+							
+							var result, 
+								nCounter1 = $("#display-info-total"), 
+								nCounter2 = $("#display-info-all"), 
+								nCounter3 = $('.base-active').find('.badge');
+						
+							result = (nCounter1.html())*1-1;
+							nCounter1.html(result);
+							result = (nCounter2.html())*1-1;
+							nCounter2.html(result);
+							result = (nCounter3.html())*1-1;
+							nCounter3.html(result);
+							
+							$('#top-of-container').html('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Элемент успешно удален.</div>');
+						}
+					});
+				}
             });
 
             this_modify.fadeOut(0);
@@ -53,7 +78,7 @@
 		
 		$('#modalEdit').on('shown.bs.modal', function () {
 			var unique = $(this).data('unique');
-			$.post("{{ panel_base_uri }}/ajax?csrf_token={{ csrf_token }}", { a: "edit-form", p: "{{ admin_part }}", e: unique })
+			$.post("{{ panel_base_uri }}/ajax?csrf_token={{ csrf_token }}{% if admin_part_action %}&rp={{ admin_part_action }}{% endif %}", { a: "edit-form", p: "{{ admin_part }}", e: unique })
 			.done(function(data) {
 				$("#modalEditBody").html(data);
 			});
@@ -72,6 +97,25 @@
 		});
 		
 		$('#main-container').fadeOut(0).fadeIn();
+		
+		batmanHand.init(function (path, title) {
+			if (title == 'Главная :: управление')
+				title = 'Tranquility Admin';
+			document.title = title;
+			$('#title-brand').html(title);
+			window.location.href = path;
+		});
+		
+		document.body.onbeforeunload = function() {
+			$('.left-menu-element').removeClass('active');
+			$('.base-active').addClass('active');
+		}
 		{% endif %}
+		$('#btn-delete').click(function() {
+			if (window.confirm('Вы уверены?')) {
+				var unique = $(this).data('unique');
+				window.location.href = '{{ panel_base_uri }}/{{ admin_part }}/delete?e=' + unique + '&csrf_token={{ csrf_token }}';
+			}
+		});
     })
 </script>

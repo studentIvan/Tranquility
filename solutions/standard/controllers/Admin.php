@@ -7,7 +7,12 @@ class Admin
 
     public static function control($matches)
     {
-        if (Session::getRole() !== 1) {
+		/**
+         * Loading configuration
+         */
+        self::$configuration = Process::$context['cms']['admin_cfg'];
+	
+        if (!in_array(Session::getRole(), self::$configuration['access_roles'])) {
             Process::$context['bot_secure'] = array(
                 'input_login' => Security::getUniqueDigestForUserIP('input_login'),
                 'input_pass' => Security::getUniqueDigestForUserIP('input_pass'),
@@ -25,9 +30,10 @@ class Admin
                 $temporary = $remember ? false : true;
                 try {
                     Session::authorize($login, $password, $temporary);
-                    if (Session::getRole() !== 1) {
+                    if (!in_array(Session::getRole(), self::$configuration['access_roles'])) {
                         throw new AuthException('role error');
                     } else {
+						afterSessionStartedCallback();
                         self::load($matches);
                     }
                 } catch (Exception $e) {
@@ -59,11 +65,6 @@ class Admin
          */
         self::$checkCSRFToken = (isset($_GET['csrf_token']) and
             Process::$context['csrf_token'] === $_GET['csrf_token']);
-
-        /**
-         * Loading configuration
-         */
-        self::$configuration = Process::$context['cms']['admin_cfg'];
 
         /**
          * Fast action for logout
@@ -108,7 +109,9 @@ class Admin
                 throw new Exception("CRUD $p is not instance of CRUDObjectInterface");
 
             self::$models[] = $p;
-            Process::$context['admin_menu_elements'][] = $p->getInfo();
+			$menuInfo = $p->getInfo();
+            if ($menuInfo !== false) 
+				Process::$context['admin_menu_elements'][] = $menuInfo;
         }
 		
 		if ($partition === 'ajax') 
@@ -130,17 +133,23 @@ class Admin
 				
                 switch ($selectedAction) 
 				{
-                    /*case 'delete':
+                    case 'delete':
+						try {
+							$selectedPartitionModel->delete($selectedElement);
+							echo 'ok';
+						} catch(Exception $e) {
+							Process::$context['flash_error'] = $e->getMessage();
+							Process::getTwigInstance()->display('admin/alert.danger.html.twig', Process::$context);
+						}
                         break;
-						
-                    case 'create':
-                        break;
-						
-                    case 'edit':
-                        break;*/
 						
 					case 'edit-form':
+						Process::$context['panel_base_uri'] = self::$configuration['base_uri'];
+						Process::$context['admin_part'] = $selectedPartition;
+						$returnPage = isset($_GET['rp']) ? preg_replace('/[^a-z0-9_]/', '', $_GET['rp']) : false;
+						if ($returnPage) Process::$context['return_page'] = $returnPage;
 						Process::$context['fields'] = $selectedPartitionModel->getFields();
+						Process::$context['diff_field'] = $selectedPartitionModel->getDiffField();
 						Process::$context['read_data'] = $selectedPartitionModel->readElement($selectedElement);
 						Process::getTwigInstance()->display('admin/form.edit.html.twig', Process::$context);
                         break;
@@ -193,7 +202,7 @@ class Admin
 
         if ($partition)
         {
-			if ($action == 'create' || $action == 'edit' || $action == 'view') 
+			if ($action == 'create' || $action == 'edit' || $action == 'view' || $action == 'delete') 
 			{
 				foreach (self::$models as $m)
 				{
@@ -206,14 +215,61 @@ class Admin
 						if ($container['create_new_message'])
 						{
 							$container['type'] = 'form';
-							//$container['diff_field'] = $m->getDiffField();
+							$container['diff_field'] = $m->getDiffField();
 							$container['fields'] = $m->getFields();
+							$unique = isset($_GET['e']) ? $_GET['e'] : false;
 							
 							if ($action == 'view')
 							{
+								if (Data::input('post-action-edit') and self::$checkCSRFToken) 
+								{
+									$postedData = array();
+									
+									foreach(array_keys($container['fields']) as $fieldName) 
+										$postedData[$fieldName] = Data::input("pf-$fieldName");
+										
+									try 
+									{
+										if (!$m->update($unique, $postedData))
+											throw new Exception('edit error');
+										if ($returnPage = Data::input('return-page'))
+											Process::redirect($returnPage);
+									}
+									catch(Exception $e) 
+									{
+										Process::$context['exception_code'] = $e->getCode();
+										Process::$context['flash_error'] = $e->getMessage();
+									}
+								}
+							
 								try {
-									Process::$context['read_data'] = $m->readElement($_GET['e']);
+									Process::$context['read_data'] = $m->readElement($unique);
+									if (!Process::$context['read_data'])
+										throw new NotFoundException();
 									Process::$context['page_title'] = $m->getMenuName() . ' :: чтение';
+								} catch (Exception $e) {
+									throw new NotFoundException();
+								}
+							}
+							elseif ($action == 'edit')
+							{
+								try {
+									Process::$context['read_data'] = $m->readElement($unique);
+									Process::$context['diff_field'] = $m->getDiffField();
+									if (!Process::$context['read_data'])
+										throw new NotFoundException();
+									Process::$context['page_title'] = $m->getMenuName() . ' :: редактирование';
+								} catch (Exception $e) {
+									throw new NotFoundException();
+								}
+							}
+							elseif ($action == 'delete')
+							{
+								if (!self::$checkCSRFToken)
+									throw new ForbiddenException();
+								try {
+									$m->delete($unique);
+									Process::redirect(Process::$context['panel_base_uri'] . '/' . $m->getMenuURI());
 								} catch (Exception $e) {
 									throw new NotFoundException();
 								}
@@ -240,6 +296,28 @@ class Admin
 					 */
 					if ($m->getMenuURI() === $partition)
 					{
+						$container['fields'] = $m->getFields();
+						
+						#region POST::CREATE
+						if (Data::input('post-action-create') and self::$checkCSRFToken) {
+							$postedData = array();
+							foreach(array_keys($container['fields']) as $fieldName) {
+								$postedData[$fieldName] = Data::input("pf-$fieldName");
+							}
+							try {
+								if (!$m->create($postedData))
+									throw new Exception('create error');
+								foreach (Process::$context['admin_menu_elements'] as &$element) {
+									if ($element['uri'] == $partition)
+										$element['count']++;
+								}
+							} catch(Exception $e) {
+								Process::$context['exception_code'] = $e->getCode();
+								Process::$context['flash_error'] = $e->getMessage();
+							}
+						}
+						#endregion
+					
 						if ($action and preg_match('/page_(\d+)/', $action, $matches)) {
 							$page = $matches[1]*1;
 						} else {
@@ -255,7 +333,6 @@ class Admin
 						$container['all_count'] = $count;
 						$container['diff_field'] = $m->getDiffField();
 						$container['fields_displayable'] = $m->getDisplayable();
-						$container['fields'] = $m->getFields();
 						$container['data'] = $m->getListing($pagination['offset'], $perPage);
 						$container['create_new_message'] = $m->getCreateString();
 						$container['only_display'] = $m->isOnlyDisplay();

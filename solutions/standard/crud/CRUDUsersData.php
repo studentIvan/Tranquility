@@ -14,6 +14,7 @@ class CRUDUsersData extends CRUDObjectInterface
         ),
         'login' => array(
             'type' => 'infinity',
+            'modify' => '<a href="#" class="tooltipped" data-toggle="tooltip" title="Владелец профиля">@$1</a>',
             'from' => array(
                 'table' => 'users',
                 'field' => 'id',
@@ -35,10 +36,13 @@ class CRUDUsersData extends CRUDObjectInterface
         'email' => array(
             'type' => 'email',
 			'description' => 'Email',
+			'display' => true,
         ),
         'photo' => array(
             'type' => 'image_uri',
+            'modify' => '<img src="$1" alt="" height="40" />',
 			'description' => 'Аватар (uri)',
+			'display' => true,
         ),
         'gender' => array(
             'type' => 'select',

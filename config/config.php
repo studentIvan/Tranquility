@@ -38,7 +38,7 @@ return array(
         'bootstrap_js' => '/js/bootstrap.min.js',
         'bootstrap_css' => '/css/bootstrap.min.css',
         'html5shim_js' => 'http://html5shim.googlecode.com/svn/trunk/html5.js',
-        'tinymce_js' => '/js/tiny_mce/tiny_mce.js',
+        'batman_hand_js' => '/js/batman_hand.min.js',
 
         /**
          * JQuery
@@ -122,8 +122,6 @@ return array(
         'news' => array(
             'limit_per_page' => 2,
         ),
-        'sessions' => true,
-        'users' => true,
         'email_confirm' => false,
     ),
 );

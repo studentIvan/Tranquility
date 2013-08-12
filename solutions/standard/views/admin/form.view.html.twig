@@ -15,6 +15,16 @@
 			</li>
 		{% endif %}
 	{% endfor %}
+	{% if container.type == 'form' %}
+	<li class="list-group-item">
+		<a class="btn btn-default" href="{{ panel_base_uri }}/{{ admin_part }}/edit?e={{ read_data[container.diff_field] }}">
+			<i class="icon-edit icon-white"></i>&nbsp;Изменить
+		</a>
+		<button id="btn-delete" type="button" class="btn btn-danger" data-unique="{{ read_data[container.diff_field] }}">
+			<i class="icon-remove icon-white"></i>&nbsp;Удалить
+		</button>
+	</li>
+	{% endif %}
 </ul>
 <script type="text/javascript">
 $(".field-datetime").each(function () {

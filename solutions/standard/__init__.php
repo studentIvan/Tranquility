@@ -7,7 +7,6 @@ Process::$context['debug'] = DEVELOPER_MODE;
 
 $sCfg = Session::getOptions();
 Process::$context['session_lifetime_hours'] = $sCfg['lifetime_hours'];
-Process::$context['session_referrers'] = $sCfg['referrers'];
 Process::$context['session_garbage_auto_dump'] = $sCfg['garbage_auto_dump'];
 Process::$context['hosting_free_space_mb'] = 
 	isset($config['hosting_free_space_mb']) ? $config['hosting_free_space_mb'] : 1024;

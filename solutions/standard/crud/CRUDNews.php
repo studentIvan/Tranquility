@@ -8,6 +8,14 @@ class CRUDNews extends CRUDObjectInterface
     protected $menuCreate = 'создать еще одну новость';
     protected $tableName = 'news';
     protected $orderByField = 'created_at';
+	
+	protected $RBACPolicy = array(
+		'create' => 'any',
+		'read' => 'any',
+		'update' => 'any',
+		'delete' => 'any',
+	);
+	
     protected $fields = array(
         'id' => array(
             'default' => 'null',
@@ -21,11 +29,11 @@ class CRUDNews extends CRUDObjectInterface
         ),
         'content' => array(
             'type' => 'text',
-			'description' => 'Содержание',
+			'description' => 'Контент',
         ),
         'tags' => array(
             'type' => 'string',
-			'description' => 'Ключевые слова',
+			'description' => 'Теги',
         ),
         'created_at' => array(
             'default' => 'now',
@@ -34,8 +42,9 @@ class CRUDNews extends CRUDObjectInterface
             'display' => true,
         ),
         'posted_by' => array(
-            'type' => 'select',
+            'type' => 'integer',
 			'description' => 'Автор',
+			'default' => array('Session', 'getUID'),
             'modify' => '<a href="#" class="tooltipped" data-toggle="tooltip" title="Автор новости">@$1</a>',
             'from' => array(
                 'table' => 'users',

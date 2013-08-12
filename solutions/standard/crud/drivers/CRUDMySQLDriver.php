@@ -176,4 +176,134 @@ class CRUDMySQLDriver extends CRUDDriverInterface
 
         return $result;
     }
+	
+	/**
+	 * @param array $postedData
+     * @return bool
+     */
+    public function create($postedData) 
+	{
+		$table = $this->getCRUDObject()->getTableName();
+		$fields = $this->getCRUDObject()->getFields();
+		
+		$insertedFields = $insertedFieldsStatic = $insertedValues = array();
+		
+		foreach ($postedData as $key => $value) 
+		{
+			if ($value === false and $fields[$key]['default']) 
+			{
+				if (strtolower($fields[$key]['default']) !== 'null') 
+				{
+					if (strtolower($fields[$key]['default']) == 'now') 
+					{
+						switch (strtolower($fields[$key]['type'])) {
+							case 'date':
+								$insertedFieldsStatic[$key] = "CURRENT_DATE";
+							break;
+							case 'datetime':
+								$insertedFieldsStatic[$key] = "NOW()";
+							break;
+						}
+					}
+					else 
+					{
+						switch (strtolower($fields[$key]['type'])) {
+							case 'integer':
+							case 'number':
+							case 'select':
+							case 'string':
+							case 'text':
+								$insertedFieldsStatic[$key] = "'{$fields[$key]['default']}'";
+							break;
+						}
+					}
+				}
+			}
+			elseif ($value)
+			{
+				$fType = strtolower($fields[$key]['type']);
+				
+				if ($fType == 'password') {
+					/*\***** !DO PASSWORD! *****\*/
+					$value = Security::getDigest($value);
+				}
+				
+				$insertedFields[] = $key;
+				$insertedValues[":$key"] = ($fType == 'integer' or $fType == 'number') ? 
+					array($value, PDO::PARAM_INT) : array($value, PDO::PARAM_STR);
+			}
+		}
+		
+		$insertedFieldsResult = join(',', $insertedFields);
+		if (count($insertedFieldsStatic) > 0) $insertedFieldsResult .= ',' . join(',', array_keys($insertedFieldsStatic));
+		$insertedValuesResult = join(',', array_keys($insertedValues));
+		if (count($insertedFieldsStatic) > 0) $insertedValuesResult .= ',' . join(',', array_values($insertedFieldsStatic));
+		$statement = Database::getInstance()->prepare("INSERT INTO $table ($insertedFieldsResult) VALUES ($insertedValuesResult)");
+		foreach ($insertedValues as $valueKey => $valueData)
+			$statement->bindParam($valueKey, $valueData[0], $valueData[1]);
+		return $statement->execute();
+	}
+	
+	/**
+	 * @param string $unique
+	 * @param array $postedData
+     * @return bool
+     */
+    public function update($unique, $postedData) 
+	{
+		$table = $this->getCRUDObject()->getTableName();
+		$fields = $this->getCRUDObject()->getFields();
+		$diffField = $this->getCRUDObject()->getDiffField();
+		
+		$updatedFields = $updatedValues = $updatedResult = array();
+		
+		foreach ($postedData as $key => $value) 
+		{
+			if ($value !== false) 
+			{
+				$fType = strtolower($fields[$key]['type']);
+				
+				if ($fType == 'password') {
+					/*\***** !DO PASSWORD! *****\*/
+					$value = Security::getDigest($value);
+				}
+				
+				$updatedFields[] = $key;
+				$updatedValues[":$key"] = ($fType == 'integer' or $fType == 'number') ? 
+					array($value, PDO::PARAM_INT) : array($value, PDO::PARAM_STR);
+			}
+		}
+		
+		for ($i = 0, $size = count($updatedFields); $i < $size; ++$i) {
+			$updatedResult[] = "{$updatedFields[$i]} =:{$updatedFields[$i]}";
+		}
+		
+		$updatedResult = (count($updatedResult) > 1) ? join(',', $updatedResult) : $updatedResult[0];
+		$statement = Database::getInstance()->prepare("UPDATE $table SET $updatedResult WHERE $diffField=:unique");
+		$statement->bindParam(':unique', $unique, 
+			in_array($fields[$diffField]['type'], array('integer', 'number')) ? PDO::PARAM_INT : PDO::PARAM_STR);
+		foreach ($updatedValues as $valueKey => $valueData)
+			$statement->bindParam($valueKey, $valueData[0], $valueData[1]);
+		return $statement->execute();
+	}
+	
+	/**
+     * @param mixed $unique
+	 * @return bool
+     */
+    public function delete($unique)
+    {
+		$table = $this->getCRUDObject()->getTableName();
+		$diffField = $this->getCRUDObject()->getDiffField();
+		
+		if (is_array($unique)) {
+            return Database::getInstance()
+                ->prepare("DELETE FROM $table WHERE $diffField IN (?)")
+                ->execute($unique);
+        } else {
+            return Database::getInstance()
+                ->prepare("DELETE FROM $table WHERE $diffField=?")
+                ->execute(array($unique));
+        }
+	}
 }

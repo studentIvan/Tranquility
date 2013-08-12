@@ -13,7 +13,7 @@ class CRUDRoles extends CRUDObjectInterface
         ),
         'title' => array(
             'type' => 'string',
-			'description' => 'Наименование',
+			'description' => 'Название',
             'display' => true,
         ),
         'info' => array(

@@ -1,6 +1,6 @@
-{% extends mobile ? 'skeleton.mobile.html.twig' : 'skeleton.html.twig' %}
+{% extends 'skeleton.html.twig' %}
 {% block body %}
-<div class="well">
+<div class="well alert alert-warning">
     <h2>404 Not found</h2>
     <p>Requested path <b>{{ uri }}</b> has not found on this server.</p>
 </div>

@@ -31,6 +31,11 @@
 {% endif %}
 {% endblock %}
 {% block container %}
+<span id="top-of-container">
+{% if flash_error %}
+	{% include 'admin/alert.danger.html.twig' %}
+{% endif %}
+</span>
 {% if container.type == 'text' %}
             {{ container.text }}
         {% elseif container.type == 'page' %}
@@ -102,7 +107,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-          <button type="button" class="btn btn-primary">Сохранить</button>
+          <button type="button" class="btn btn-primary" onclick="$('#create-form').submit()">Сохранить</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
@@ -120,8 +125,8 @@
           <div class="progress progress-striped active"><div class="progress-bar" style="width: 100%"></div></div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-          <button type="button" class="btn btn-primary">Сохранить изменения</button>
+          <button type="button" class="btn btn-primary" onclick="$('#edit-form').submit()"><i class="icon-check icon-white"></i>&nbsp;Сохранить изменения</button>
+		  <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->

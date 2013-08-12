@@ -1,0 +1,9 @@
+<div class="alert alert-danger">
+	<button type="button" class="close" data-dismiss="alert">&times;</button>
+	<strong>Ошибка!</strong> 
+	{% if exception_code == 23000 %}
+		Эта таблица зависима от внешнего ключа - указанная связь невозможна.
+	{% else %}
+		{{ flash_error }}
+	{% endif %}
+</div>

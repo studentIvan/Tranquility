@@ -39,4 +39,23 @@ abstract class CRUDDriverInterface
      * @return array
      */
     public function getListing($offset = 0, $limit = 30) {}
+	
+	/**
+	 * @param array $postedData
+     * @return bool
+     */
+    public function create($postedData) {}
+	
+	/**
+	 * @param string $unique
+	 * @param array $postedData
+     * @return bool
+     */
+    public function update($unique, $postedData) {}
+	
+	/**
+     * @param mixed $unique
+	 * @return bool
+     */
+    public function delete($unique) {}
 }

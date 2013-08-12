@@ -86,7 +86,7 @@
             </button>
 
             {% if not mobile %}
-				<a class="navbar-brand" style="max-width: none;" href="{{ panel_base_uri }}/">{{ page_title }}</a>
+				<a id="title-brand" class="navbar-brand" style="max-width: none;" href="{{ panel_base_uri }}/">{{ page_title }}</a>
 			{% endif %}
 
             <div class="nav-collapse collapse navbar-responsive-collapse">
@@ -130,8 +130,8 @@
     <div class="col-lg-2" style="min-width: 250px">
         <ul class="nav nav-pills nav-stacked">
             {% for e in admin_menu_elements %}
-                <li class="{% if admin_part == e.uri %}active{% endif %} left-menu-element"><a
-                            href="{{ panel_base_uri }}/{{ e.uri }}">
+                <li class="{% if admin_part == e.uri %}base-active active{% endif %} left-menu-element"><a
+                            href="{{ panel_base_uri }}/{{ e.uri }}" data-history="{{ e.name }} :: управление">
                         <i class="{{ e.icon }}"></i>&nbsp;
                         {{ e.name }}
 						{% if e.count %}<span class="badge pull-right">{{ e.count }}</span>{% endif %}
@@ -149,6 +149,7 @@
 <script src="{{ resource.jquery_js }}"></script>
 <script src="{{ resource.ldt_js }}"></script>
 <script src="{{ resource.bootstrap_js }}"></script>
+{% if not mobile %}<script src="{{ resource.batman_hand_js }}"></script>{% endif %}
 {% include "admin/admin.js.html.twig" with container %}
 </body>
 </html>

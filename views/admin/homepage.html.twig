@@ -97,11 +97,9 @@
 	</div>
 </div>
 <div class="panel">
-	<h4>Конфигурация системы</h4>
 	<ul class="list-group">
 	  <li class="list-group-item"><i class="icon-cog"></i>&nbsp;Режим разработчика: {% if debug %}<a class="tooltipped" style="cursor: help; color: darkred; border-bottom: 1px dotted darkred" data-toggle="tooltip" title="В режиме разработчика система оптимизируется для разработки: отключается кеширование, на экране отображается подробная информация об ошибках. Рекомендуется отключить эту опцию в файле config.php для нормальной и безопасной работы вашего сайта.">включен</a>{% else %}выключен{% endif %}</li>
 	  <li class="list-group-item"><i class="icon-cog"></i>&nbsp;Время жизни сессии: {{ (session_lifetime_hours ~ " час")|plural("", "а", "ов") }}</li>
-	  <li class="list-group-item"><i class="icon-cog"></i>&nbsp;Реферреры хранятся в базе: {{ (session_referrers ~ " д")|plural("ень", "ня", "ней") }}</li>
 	  <li class="list-group-item"><i class="icon-cog"></i>&nbsp;Чистка мусора: {% if session_garbage_auto_dump %}<a class="tooltipped" style="cursor: help; color: darkred; border-bottom: 1px dotted darkred" data-toggle="tooltip" title="Автоматическая чистка мусора создаёт дополнительную нагрузку на сайт, рекомендуется только для разработки и отладки">автоматически</a>{% else %}вручную или CRON{% endif %}</li>
 	</ul>
 </div>

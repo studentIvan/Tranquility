@@ -24,8 +24,19 @@ abstract class CRUDObjectInterface
     protected $orderByField = 'id';
     protected $fields = array();
     protected $driver = false;
-    protected $elementsPerPage = 6;
+    protected $elementsPerPage = 5;
     protected $onlyDisplay = false;
+	
+	/**
+     * Who can work with it?
+     * @var array
+     */
+    protected $RBACPolicy = array(
+		'create' => array(1),
+		'read' => array(1),
+		'update' => array(1),
+		'delete' => array(1),
+	);
 
     /**
      *
@@ -50,6 +61,10 @@ abstract class CRUDObjectInterface
             $field['modify'] = isset($field['modify']) ? $field['modify'] : false;
             $field['function'] = isset($field['function']) ? $field['function'] : false;
             $field['count_of'] = isset($field['count_of']) ? $field['count_of'] : false;
+			
+			if (is_array($field['default'])) {
+				$field['default'] = call_user_func($field['default']);
+			}
 			
 			if ($field['from'] and $field['type'] == 'select') {
 				$field['options'] = $this->getSelectOptions($field['from']['table'], $field['from']['field'], $field['from']['as']);
@@ -112,6 +127,15 @@ abstract class CRUDObjectInterface
     {
         return $this->menuCreate;
     }
+	
+	/**
+	 * @param string $action
+	 * @return bool
+	 */
+	public function checkRBACPolicy($action = 'read')
+	{
+		return ($this->RBACPolicy[$action] == 'any' or in_array(Session::getRole(), $this->RBACPolicy[$action]));
+	}
 
     /**
      * @return string
@@ -150,12 +174,12 @@ abstract class CRUDObjectInterface
      */
     public function getInfo()
     {
-        return array(
+        return ($this->checkRBACPolicy()) ? array(
             'name' => $this->getMenuName(),
             'uri' => $this->getMenuURI(),
             'icon' => $this->getMenuIconClass(),
             'count' => $this->getCount(),
-        );
+        ) : false;
     }
 
     /**
@@ -165,6 +189,40 @@ abstract class CRUDObjectInterface
     {
         return $this->getDriver()->getCount();
     }
+	
+	/**
+	 * @param array $postedData
+     * @return bool
+     */
+    public function create($postedData)
+    {
+		if (!$this->checkRBACPolicy('create'))
+			throw new ForbiddenException();
+        return $this->getDriver()->create($postedData);
+    }
+	
+	/**
+	 * @param string $unique
+	 * @param array $postedData
+     * @return bool
+     */
+    public function update($unique, $postedData)
+    {
+		if (!$this->checkRBACPolicy('update'))
+			throw new ForbiddenException();
+        return $this->getDriver()->update($unique, $postedData);
+    }
+	
+	/**
+     * @param mixed $unique
+	 * @return bool
+     */
+    public function delete($unique) 
+	{
+		if (!$this->checkRBACPolicy('delete'))
+			throw new ForbiddenException();
+		return $this->getDriver()->delete($unique);
+	}
 	
 	/**
      * @return string
@@ -189,6 +247,7 @@ abstract class CRUDObjectInterface
      */
     public function getListing($offset = 0, $limit = 30)
     {
+		if (!$this->checkRBACPolicy()) throw new ForbiddenException();
         return $this->getDriver()->getListing($offset, $limit);
     }
 	
@@ -198,6 +257,7 @@ abstract class CRUDObjectInterface
      */
     public function readElement($unique)
     {
+		if (!$this->checkRBACPolicy()) throw new ForbiddenException();
         return $this->getDriver()->readElement($unique);
     }
 
