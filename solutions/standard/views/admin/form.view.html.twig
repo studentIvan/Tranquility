@@ -9,10 +9,14 @@
 					{% if field_data.description %}{{ field_data.description }}{% else %}{{ field_name }}{% endif %}
 				</h4>
 				<p class="list-group-item-text{% if field_data.type == 'datetime' %} field-datetime{% endif %}">
-					{% if field_data.values %}
-						{{ field_data.values[read_data[field_name]] }}
+					{% if field_data.type == 'password' %}
+						<span style="color: gray">**************</span>
 					{% else %}
-						{{ read_data[field_name]|raw }}
+						{% if field_data.values %}
+							{{ field_data.values[read_data[field_name]] }}
+						{% else %}
+							{{ read_data[field_name]|raw }}
+						{% endif %}
 					{% endif %}
 				</p>
 			</li>

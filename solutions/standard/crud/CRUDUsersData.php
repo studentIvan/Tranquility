@@ -14,6 +14,7 @@ class CRUDUsersData extends CRUDObjectInterface
         ),
         'login' => array(
             'type' => 'infinity',
+			'description' => 'Логин',
             'modify' => '<a href="#" class="tooltipped" data-toggle="tooltip" title="Владелец профиля">@$1</a>',
             'from' => array(
                 'table' => 'users',

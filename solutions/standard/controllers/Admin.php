@@ -176,6 +176,8 @@ class Admin
         Process::$context['page_title'] = 'Tranquility Admin';
         Process::$context['panel_base_uri'] = self::$configuration['base_uri'];
         Process::$context['filter_text'] = isset($_GET['filter']) ? $_GET['filter'] : false;
+        Process::$context['filter_date'] = isset($_GET['filter_date']) ? $_GET['filter_date'] : false;
+        Process::$context['filter_less_or_more'] = isset($_GET['filter_less_or_more']) ? $_GET['filter_less_or_more'] : false;
         if (!isset(Process::$context['current_user'])) {
             try {
                 Process::$context['current_user'] = array(
@@ -337,6 +339,7 @@ class Admin
 						$container['data'] = $m->getListing($pagination['offset'], $perPage);
 						$container['create_new_message'] = $m->getCreateString();
 						$container['only_display'] = $m->isOnlyDisplay();
+						$container['filter_options'] = $m->getFilterOptions();
 						foreach ($container['fields'] as $f => $d) {
 							if ($d['function']) {
 								foreach ($container['data'] as &$e) {

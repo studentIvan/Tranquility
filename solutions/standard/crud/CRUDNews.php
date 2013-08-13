@@ -16,6 +16,12 @@ class CRUDNews extends CRUDObjectInterface
 		'delete' => 'any',
 	);
 	
+	protected $filterOptions = array(
+		'filter_string' => true,
+		'filter_date' => true,
+		'filter_less_or_more' => false,
+	);
+	
     protected $fields = array(
         'id' => array(
             'default' => 'null',

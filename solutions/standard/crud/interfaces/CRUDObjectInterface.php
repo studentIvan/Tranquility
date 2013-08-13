@@ -37,6 +37,16 @@ abstract class CRUDObjectInterface
 		'update' => array(1),
 		'delete' => array(1),
 	);
+	
+	/**
+     * Do you wanna filter?
+     * @var array
+     */
+	protected $filterOptions = array(
+		'filter_string' => false,
+		'filter_date' => false,
+		'filter_less_or_more' => false,
+	);
 
     /**
      *
@@ -238,6 +248,14 @@ abstract class CRUDObjectInterface
     public function getOrderByField()
     {
         return $this->orderByField;
+    }
+	
+	/**
+     * @return array
+     */
+    public function getFilterOptions()
+    {
+        return $this->filterOptions;
     }
 
     /**
