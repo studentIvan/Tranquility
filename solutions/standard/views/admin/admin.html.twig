@@ -47,6 +47,13 @@
 			  <strong>Внимание!</strong> Нет элементов для отображения - вероятно таблица пустая.
 			</div>
 			{% endif %}
+			<form>
+				<table style="width: 100%; margin-bottom: 5px;"><tr>
+					<td><input type="search" class="form-control" name="filter" 
+						placeholder="Введите текст для фильтрации данных"{% if filter_text %} value="{{ filter_text }}"{% endif %}></td>
+					<td style="width: 12%; padding-left: 4px;"><button type="submit" class="btn btn-info"><i class="icon-filter icon-white"></i>&nbsp;Применить фильтр</button></td>
+				</tr></table>
+			</form>
             <table class="table table-hover table-expand">
             {% for e in container.data %}
                 <tr id="elements-row-{{ e[container.diff_field] }}" data-unique="{{ e[container.diff_field] }}" 

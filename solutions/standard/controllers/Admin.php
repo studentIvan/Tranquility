@@ -175,6 +175,7 @@ class Admin
 		Process::$context['site_title'] = Process::$context['page_title'];
         Process::$context['page_title'] = 'Tranquility Admin';
         Process::$context['panel_base_uri'] = self::$configuration['base_uri'];
+        Process::$context['filter_text'] = isset($_GET['filter']) ? $_GET['filter'] : false;
         if (!isset(Process::$context['current_user'])) {
             try {
                 Process::$context['current_user'] = array(

@@ -268,9 +268,17 @@ class CRUDMySQLDriver extends CRUDDriverInterface
 					$value = Security::getDigest($value);
 				}
 				
-				$updatedFields[] = $key;
-				$updatedValues[":$key"] = ($fType == 'integer' or $fType == 'number') ? 
-					array($value, PDO::PARAM_INT) : array($value, PDO::PARAM_STR);
+				if (($fType == 'date' or $fType == 'datetime') and empty($value)) 
+				{
+					$updatedFields[] = $key;
+					$updatedValues[":$key"] = array(null, PDO::PARAM_NULL);
+				} 
+				else 
+				{
+					$updatedFields[] = $key;
+					$updatedValues[":$key"] = ($fType == 'integer' or $fType == 'number') ? 
+						array($value, PDO::PARAM_INT) : array($value, PDO::PARAM_STR);
+				}
 			}
 		}
 		

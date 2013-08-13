@@ -1,3 +1,6 @@
+{% if flash_error %}
+	{% include 'admin/alert.danger.html.twig' %}
+{% endif %}
 <ul class="list-group">
 	{% for field_name, field_data in fields %}
 		{% if read_data[field_name] %}
