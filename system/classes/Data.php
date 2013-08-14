@@ -69,10 +69,10 @@ class Data
      */
     public static function lowerRusToLat($text)
     {
-        $rus = array('а','б','в','г','д','е','ё','ж','з','и','й','к','л','м','н',
-            'о','п','р','с','т','у','ф','х','ц','ч','ш','щ','ъ','ы','ь','э','ю','я');
-        $lat = array('a','b','v','g','d','e','yo','zh','z','i','j','k','l','m','n',
-            'o','p','r','s','t','u','f','h','c','ch','sh','shh','','y','','e','yu','ya');
+        $rus = array('а', 'б', 'в', 'г', 'д', 'е', 'ё', 'ж', 'з', 'и', 'й', 'к', 'л', 'м', 'н',
+            'о', 'п', 'р', 'с', 'т', 'у', 'ф', 'х', 'ц', 'ч', 'ш', 'щ', 'ъ', 'ы', 'ь', 'э', 'ю', 'я');
+        $lat = array('a', 'b', 'v', 'g', 'd', 'e', 'yo', 'zh', 'z', 'i', 'j', 'k', 'l', 'm', 'n',
+            'o', 'p', 'r', 's', 't', 'u', 'f', 'h', 'c', 'ch', 'sh', 'shh', '', 'y', '', 'e', 'yu', 'ya');
         return str_replace($rus, $lat, $text);
     }
 
@@ -107,34 +107,31 @@ class Data
                 'offset' => $start,
             );
     }
-	
-	/**
+
+    /**
      * @static
      * @param string $dirName
      * @return int
      */
-	public static function getDirSize($dirName) 
-	{
-		$dirSize = 0;
-		if (!is_dir($dirName)) return $dirSize;
-		
-		if ($dh = opendir($dirName)) 
-		{
-			while (($file = readdir($dh)) !== false) 
-			{
-				if ($file !='.' && $file != '..')
-				{
-					if (is_file($dirName.'/'.$file)) {
-						$dirSize += filesize($dirName.'/'.$file);
-					}
-					
-					if (is_dir($dirName.'/'.$file)) {
-						$dirSize += self::getDirSize($dirName.'/'.$file);
-					}
-				}
-			}
-		}
-		closedir($dh);
-		return $dirSize;    
-	}
+    public static function getDirSize($dirName)
+    {
+        $dirSize = 0;
+        if (!is_dir($dirName)) return $dirSize;
+
+        if ($dh = opendir($dirName)) {
+            while (($file = readdir($dh)) !== false) {
+                if ($file != '.' && $file != '..') {
+                    if (is_file($dirName . '/' . $file)) {
+                        $dirSize += filesize($dirName . '/' . $file);
+                    }
+
+                    if (is_dir($dirName . '/' . $file)) {
+                        $dirSize += self::getDirSize($dirName . '/' . $file);
+                    }
+                }
+            }
+        }
+        closedir($dh);
+        return $dirSize;
+    }
 }

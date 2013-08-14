@@ -4,26 +4,8 @@ $pdo = Database::getInstance();
 
 try {
     $pdo->query("TRUNCATE TABLE referrers");
-}
-catch (Exception $e) {
-}
-
-try {
     $pdo->query("TRUNCATE TABLE visitors");
-}
-catch (Exception $e) {
-}
-
-try {
     $pdo->query("TRUNCATE TABLE sessions");
-}
-catch (Exception $e) {
-}
-
-try {
     $pdo->query("TRUNCATE TABLE captcha");
+} catch (Exception $e) {
 }
-catch (Exception $e) {
-}
-
-

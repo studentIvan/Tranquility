@@ -16,27 +16,34 @@ define('DEVELOPER_MODE', isset($config['developer_mode']) ? $config['developer_m
 #endregion
 
 #region Exceptions
-class AuthException extends Exception {
+class AuthException extends Exception
+{
 
 }
 
-class SessionException extends Exception {
+class SessionException extends Exception
+{
 
 }
 
-class NotFoundException extends Exception {
-    public function __construct($message = '') {
+class NotFoundException extends Exception
+{
+    public function __construct($message = '')
+    {
         parent::__construct($message, 404);
     }
 }
 
-class ForbiddenException extends Exception {
-    public function __construct($message = '') {
+class ForbiddenException extends Exception
+{
+    public function __construct($message = '')
+    {
         parent::__construct($message, 403);
     }
 }
 
-function exception_error_handler($errno, $errstr, $errfile, $errline) {
+function exception_error_handler($errno, $errstr, $errfile, $errline)
+{
     throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
 }
 
@@ -51,16 +58,13 @@ require_once $__DIR__ . '/classes/Session.php';
 require_once $__DIR__ . '/classes/Services.php';
 require_once $__DIR__ . '/classes/Data.php';
 
-try
-{
+try {
     $pdoConfig = DEVELOPER_MODE ? $config['pdo_developer_mode'] : $config['pdo_production_mode'];
     Database::setConfiguration($pdoConfig['dsn'], $pdoConfig['username'], $pdoConfig['password']);
     Security::setSecret($config['security_token']);
     Session::setConfiguration($config['session']);
     $config['pdo'] = $config['security_token'] = null;
-}
-catch (Exception $e)
-{
+} catch (Exception $e) {
     echo 'Fatal error';
     exit;
 }
@@ -91,8 +95,7 @@ class Process
      */
     public static function getTwigInstance()
     {
-        if (is_null(self::$twig))
-        {
+        if (is_null(self::$twig)) {
             $__DIR__ = dirname(__FILE__);
             include_once $__DIR__ . '/../vendor/Twig/Autoloader.php';
 
@@ -122,8 +125,7 @@ class Process
      */
     public static function callRoute($route, $matches)
     {
-        if (substr($route, 0, 1) == '!')
-        {
+        if (substr($route, 0, 1) == '!') {
             $route = ucfirst(substr($route, 1));
             $split = explode(':', $route);
 
@@ -142,9 +144,7 @@ class Process
             }
 
             call_user_func(array($class, $method), $matches);
-        }
-        else
-        {
+        } else {
             $twig = self::getTwigInstance();
             echo $twig->render("$route.html.twig", self::$context);
         }
@@ -181,11 +181,13 @@ class Process
      * @static
      * @param string $location
      */
-    public static function redirect($location) {
+    public static function redirect($location)
+    {
         header("Location: $location");
         exit;
     }
 }
+
 #endregion
 
 #region Initial routes
@@ -197,7 +199,7 @@ if (isset($config['solutions'])) {
     Process::$solutions = $config['solutions'];
     foreach (Process::$solutions as $_solution) {
         if (file_exists("$__DIR__/../solutions/$_solution/__init__.php")) {
-            require_once  "$__DIR__/../solutions/$_solution/__init__.php";
+            require_once "$__DIR__/../solutions/$_solution/__init__.php";
         }
         if (file_exists("$__DIR__/../solutions/$_solution/routes.php")) {
             Process::$routes += require "$__DIR__/../solutions/$_solution/routes.php";
@@ -206,8 +208,7 @@ if (isset($config['solutions'])) {
 }
 #endregion
 
-if (isset($_SERVER['REQUEST_URI']))
-{
+if (isset($_SERVER['REQUEST_URI'])) {
     #region Application
     require_once $__DIR__ . '/../__init__.php';
     #endregion
@@ -230,13 +231,10 @@ if (isset($_SERVER['REQUEST_URI']))
         Process::$context['uri'] = substr(Process::$context['uri'], 0, $pos);
     }
 
-    try
-    {
+    try {
         if (isset($_GET['e']) and $_GET['e'] == 403) throw new ForbiddenException();
-        foreach (Process::$routes as $rule => $route)
-        {
-            if (preg_match('/^' . str_replace('/', '\/', $rule) . '$/', Process::$context['uri'], $matches))
-            {
+        foreach (Process::$routes as $rule => $route) {
+            if (preg_match('/^' . str_replace('/', '\/', $rule) . '$/', Process::$context['uri'], $matches)) {
                 if (is_array($route)) {
                     foreach ($route as $subroute) Process::callRoute($subroute, $matches);
                 } else {
@@ -247,24 +245,18 @@ if (isset($_SERVER['REQUEST_URI']))
 
         if (Process::$state == 0)
             throw new NotFoundException();
-    }
-    catch (Exception $e)
-    {
+    } catch (Exception $e) {
         $twig = Process::getTwigInstance();
         if ($e->getCode() == 404) {
             header("HTTP/1.0 404 Not Found");
             Process::$context['page_title'] = '404 Not Found';
             $twig->display('404.html.twig', Process::$context);
-        }
-        elseif ($e->getCode() == 403) {
+        } elseif ($e->getCode() == 403) {
             header("HTTP/1.0 403 Forbidden");
             Process::$context['page_title'] = '403 Forbidden';
             $twig->display('403.html.twig', Process::$context);
-        }
-        else
-        {
-            if (DEVELOPER_MODE)
-            {
+        } else {
+            if (DEVELOPER_MODE) {
                 /*$exceptMessage = (strlen($e->getMessage()) > 70) ?
                     '...' . substr($e->getMessage(), -70, 70) : $e->getMessage();*/
 
@@ -274,9 +266,7 @@ if (isset($_SERVER['REQUEST_URI']))
                     'message' => $e->getMessage(),
                     'trace' => $e->getTraceAsString(),
                 );
-            }
-            else
-            {
+            } else {
                 Process::$context['exception'] = array(
                     'file' => false,
                     'line' => false,

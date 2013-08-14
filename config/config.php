@@ -96,16 +96,16 @@ return array(
      * Default site title
      */
     'default_site_title' => 'Tranquility site',
-	
-	/*
-	 * Free space on your hosting in mb
-	 */
-	'hosting_free_space_mb' => 100,
-	
-	/**
-	 * Visitors clear INTERVAL configuration
-	 */
-	'save_visitors_for' => '1 YEAR',
+
+    /*
+     * Free space on your hosting in mb
+     */
+    'hosting_free_space_mb' => 100,
+
+    /**
+     * Visitors clear INTERVAL configuration
+     */
+    'save_visitors_for' => '1 YEAR',
 
     /**
      * Session configuration
@@ -116,7 +116,7 @@ return array(
         'lifetime_hours' => 1,
         'referrers' => 4, // store referers N days, or false for offstore
         'garbage_auto_dump' => true, // Call dumpGarbage() every EVEN minute
-                                     // Recommended: false (but it need cronjob configuration)
+        // Recommended: false (but it need cronjob configuration)
     ),
 
     /**

@@ -27,88 +27,87 @@ abstract class CRUDObjectInterface
     private $filter = false;
     protected $elementsPerPage = 5;
     protected $onlyDisplay = false;
-	
-	/**
+
+    /**
      * Who can work with it?
      * @var array
      */
     protected $RBACPolicy = array(
-		'create' => array(1),
-		'read' => array(1),
-		'update' => array(1),
-		'delete' => array(1),
-	);
-	
-	/**
+        'create' => array(1),
+        'read' => array(1),
+        'update' => array(1),
+        'delete' => array(1),
+    );
+
+    /**
      * Do you wanna filter?
      * @var array
      */
-	protected $filterOptions = array(
-		'filter_string' => false,
-		'filter_date' => false,
-		'filter_less_or_more' => false,
-	);
+    protected $filterOptions = array(
+        'filter_string' => false,
+        'filter_date' => false,
+        'filter_less_or_more' => false,
+    );
 
     /**
      *
      */
     public function __construct($driver = 'MySQL')
-    {		
-		$driver = "CRUD{$driver}Driver";
-		
-		if (!class_exists($driver)) 
-			include_once dirname(__FILE__) . "/../drivers/{$driver}.php";
-			
-		$this->driver = new $driver($this);
-		
-		if (($this->driver instanceof CRUDDriverInterface) === false)
-			throw new Exception('CRUD driver interface error');
-	
-        foreach ($this->fields as &$field) 
-		{
+    {
+        $driver = "CRUD{$driver}Driver";
+
+        if (!class_exists($driver))
+            include_once dirname(__FILE__) . "/../drivers/{$driver}.php";
+
+        $this->driver = new $driver($this);
+
+        if (($this->driver instanceof CRUDDriverInterface) === false)
+            throw new Exception('CRUD driver interface error');
+
+        foreach ($this->fields as &$field) {
             $field['default'] = isset($field['default']) ? $field['default'] : false;
             $field['display'] = isset($field['display']) ? $field['display'] : false;
             $field['from'] = isset($field['from']) ? $field['from'] : false;
             $field['modify'] = isset($field['modify']) ? $field['modify'] : false;
             $field['function'] = isset($field['function']) ? $field['function'] : false;
             $field['count_of'] = isset($field['count_of']) ? $field['count_of'] : false;
-			
-			if (is_array($field['default'])) {
-				$field['default'] = call_user_func($field['default']);
-			}
-			
-			if ($field['from'] and $field['type'] == 'select') {
-				$field['options'] = $this->getSelectOptions($field['from']['table'], $field['from']['field'], $field['from']['as']);
-			}
-			
-			if (isset($field['values']) and $field['type'] == 'select') {
-				$field['options'] = array();
-				foreach ($field['values'] as $key => $value) {
-					$field['options'][] = array('name' => $value, 'value' => $key);
-				}
-			}
+
+            if (is_array($field['default'])) {
+                $field['default'] = call_user_func($field['default']);
+            }
+
+            if ($field['from'] and $field['type'] == 'select') {
+                $field['options'] = $this->getSelectOptions($field['from']['table'], $field['from']['field'], $field['from']['as']);
+            }
+
+            if (isset($field['values']) and $field['type'] == 'select') {
+                $field['options'] = array();
+                foreach ($field['values'] as $key => $value) {
+                    $field['options'][] = array('name' => $value, 'value' => $key);
+                }
+            }
         }
     }
-	
-	/**
-	 * @return CRUDDriverInterface
-	 */
-	protected function getDriver()
-	{
-		if (!$this->driver) throw new Exception('CRUD driver not exists');
-		return $this->driver;
-	}
-	
-	/**
-	 * @param string $table
-	 * @param string $valueField
-	 * @param string $descriptionField
+
+    /**
+     * @return CRUDDriverInterface
+     */
+    protected function getDriver()
+    {
+        if (!$this->driver) throw new Exception('CRUD driver not exists');
+        return $this->driver;
+    }
+
+    /**
+     * @param string $table
+     * @param string $valueField
+     * @param string $descriptionField
      * @return array
      */
-	protected function getSelectOptions($table, $valueField, $descriptionField) 
-	{
+    protected function getSelectOptions($table, $valueField, $descriptionField)
+    {
         return $this->getDriver()->getSelectOptions($table, $valueField, $descriptionField);
-	}
+    }
 
     /**
      * @return array
@@ -138,15 +137,15 @@ abstract class CRUDObjectInterface
     {
         return $this->menuCreate;
     }
-	
-	/**
-	 * @param string $action
-	 * @return bool
-	 */
-	public function checkRBACPolicy($action = 'read')
-	{
-		return ($this->RBACPolicy[$action] == 'any' or in_array(Session::getRole(), $this->RBACPolicy[$action]));
-	}
+
+    /**
+     * @param string $action
+     * @return bool
+     */
+    public function checkRBACPolicy($action = 'read')
+    {
+        return ($this->RBACPolicy[$action] == 'any' or in_array(Session::getRole(), $this->RBACPolicy[$action]));
+    }
 
     /**
      * @return string
@@ -155,30 +154,30 @@ abstract class CRUDObjectInterface
     {
         return strtolower(get_called_class());
     }
-	
-	/**
+
+    /**
      * @param array $filter
      */
-	public function setFilter($filter)
-	{
-		if (empty($filter['text']))
-			$filter['text'] = false;
-		if ($filter['lm'] and !$filter['text'])
-			$filter['lm'] = false;
-		if ($filter['lm'] and $filter['text'] and $filter['lm'] !== 'contain') {
-			$filter['lm'] = array('operator' => $filter['lm'], 'operand' => $filter['text']);
-			$filter['text'] = false;
-		}
-		$this->filter = $filter;
-	}
-	
-	/**
+    public function setFilter($filter)
+    {
+        if (empty($filter['text']))
+            $filter['text'] = false;
+        if ($filter['lm'] and !$filter['text'])
+            $filter['lm'] = false;
+        if ($filter['lm'] and $filter['text'] and $filter['lm'] !== 'contain') {
+            $filter['lm'] = array('operator' => $filter['lm'], 'operand' => $filter['text']);
+            $filter['text'] = false;
+        }
+        $this->filter = $filter;
+    }
+
+    /**
      * @return array|bool
      */
-	public function getFilter()
-	{
-		return $this->filter;
-	}
+    public function getFilter()
+    {
+        return $this->filter;
+    }
 
     /**
      * @return int
@@ -224,58 +223,58 @@ abstract class CRUDObjectInterface
     {
         return $this->getDriver()->getCount();
     }
-	
-	/**
-	 * @param array $postedData
+
+    /**
+     * @param array $postedData
      * @return bool
      */
     public function create($postedData)
     {
-		if (!$this->checkRBACPolicy('create'))
-			throw new ForbiddenException();
+        if (!$this->checkRBACPolicy('create'))
+            throw new ForbiddenException();
         return $this->getDriver()->create($postedData);
     }
-	
-	/**
-	 * @param string $unique
-	 * @param array $postedData
+
+    /**
+     * @param string $unique
+     * @param array $postedData
      * @return bool
      */
     public function update($unique, $postedData)
     {
-		if (!$this->checkRBACPolicy('update'))
-			throw new ForbiddenException();
+        if (!$this->checkRBACPolicy('update'))
+            throw new ForbiddenException();
         return $this->getDriver()->update($unique, $postedData);
     }
-	
-	/**
+
+    /**
      * @param mixed $unique
-	 * @return bool
+     * @return bool
      */
-    public function delete($unique) 
-	{
-		if (!$this->checkRBACPolicy('delete'))
-			throw new ForbiddenException();
-		return $this->getDriver()->delete($unique);
-	}
-	
-	/**
+    public function delete($unique)
+    {
+        if (!$this->checkRBACPolicy('delete'))
+            throw new ForbiddenException();
+        return $this->getDriver()->delete($unique);
+    }
+
+    /**
      * @return string
      */
     public function getTableName()
     {
         return $this->tableName;
     }
-	
-	/**
+
+    /**
      * @return string
      */
     public function getOrderByField()
     {
         return $this->orderByField;
     }
-	
-	/**
+
+    /**
      * @return array
      */
     public function getFilterOptions()
@@ -290,17 +289,17 @@ abstract class CRUDObjectInterface
      */
     public function getListing($offset = 0, $limit = 30)
     {
-		if (!$this->checkRBACPolicy()) throw new ForbiddenException();
+        if (!$this->checkRBACPolicy()) throw new ForbiddenException();
         return $this->getDriver()->getListing($offset, $limit);
     }
-	
-	/**
+
+    /**
      * @param mixed $unique
      * @return array
      */
     public function readElement($unique)
     {
-		if (!$this->checkRBACPolicy()) throw new ForbiddenException();
+        if (!$this->checkRBACPolicy()) throw new ForbiddenException();
         return $this->getDriver()->readElement($unique);
     }
 
