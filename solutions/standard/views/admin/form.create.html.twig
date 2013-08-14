@@ -1,64 +1,68 @@
-<form id="create-form" class="form-horizontal" action="{{ panel_base_uri }}/{{ admin_part }}/?csrf_token={{ csrf_token }}" method="POST">
-  <fieldset>
-	{% if container.type == 'form' %}
-		<legend style="text-align: center;">
-			{{ container.create_new_message }}
-		</legend>
-		<div style="height: 7px; width: 10px;"></div>
-	{% endif %}
-	{% for field, field_data in container.fields %}
-		{% if not field_data.default and field_data.type != 'calculated' and field_data.type != 'infinity' %}
-			<div class="form-group">
-				  <label for="field-{{ field }}" class="col-lg-2 control-label">
-					{% if not field_data.description %}
-						{{ field }}
-					{% else %}
-						{{ field_data.description }}
-					{% endif %}
-				  </label>
-				  <div class="col-lg-10">
-					{% if field_data.type == 'text' %}
-						<textarea name="pf-{{ field }}" class="form-control"
-							id="field-{{ field }}"></textarea>
-					{% elseif field_data.type == 'select' %}
-						<select name="pf-{{ field }}" class="form-control"
-							id="field-{{ field }}">
-						{% for option in field_data.options %}
-						<option value="{{ option.value }}">{{ option.name }}</option>
-						{% endfor %}
-						</select>
-					{% elseif field_data.type == 'password' %}
-						<input type="password" name="pf-{{ field }}" class="form-control" 
-							id="field-{{ field }}">
-					{% elseif field_data.type == 'email' %}
-						<input type="email" name="pf-{{ field }}" class="form-control" 
-							id="field-{{ field }}" placeholder="user@example.com" autocapitalize="off" autocorrect="off">
-					{% elseif field_data.type == 'integer' %}
-						<input type="number" name="pf-{{ field }}" class="form-control" 
-							id="field-{{ field }}">
-					{% elseif field_data.type == 'date' %}
-						<input type="date" name="pf-{{ field }}" class="form-control" 
-							id="field-{{ field }}">
-					{% elseif field_data.type == 'datetime' %}
-						<input type="datetime" name="pf-{{ field }}" class="form-control" 
-							id="field-{{ field }}">
-					{% elseif field_data.type == 'url' or field_data.type == 'uri' or field_data.type == 'image_uri' %}
-						<input type="url" name="pf-{{ field }}" class="form-control" 
-							id="field-{{ field }}">
-					{% else %}
-						<input type="text" name="pf-{{ field }}" class="form-control" 
-							id="field-{{ field }}">
-					{% endif %}
-				  </div>
-			</div>
-		{% endif %}
-	{% endfor %}
-	{% if container.type == 'form' %}
-		<div class="col-lg-2">&nbsp;</div>
-		<div class="col-lg-10">
-			<button type="submit" class="btn btn-success"><i class="icon-download-alt icon-white"></i>&nbsp;Сохранить</button>
-		</div>
-	{% endif %}
-  </fieldset>
-  <input type="hidden" name="post-action-create" value="1">
+<form id="create-form" class="form-horizontal"
+      action="{{ panel_base_uri }}/{{ admin_part }}/?csrf_token={{ csrf_token }}" method="POST">
+    <fieldset>
+        {% if container.type == 'form' %}
+            <legend style="text-align: center;">
+                {{ container.create_new_message }}
+            </legend>
+            <div style="height: 7px; width: 10px;"></div>
+        {% endif %}
+        {% for field, field_data in container.fields %}
+            {% if not field_data.default and field_data.type != 'calculated' and field_data.type != 'infinity' %}
+                <div class="form-group">
+                    <label for="field-{{ field }}" class="col-lg-2 control-label">
+                        {% if not field_data.description %}
+                            {{ field }}
+                        {% else %}
+                            {{ field_data.description }}
+                        {% endif %}
+                    </label>
+
+                    <div class="col-lg-10">
+                        {% if field_data.type == 'text' %}
+                            <textarea name="pf-{{ field }}" class="form-control"
+                                      id="field-{{ field }}"></textarea>
+                        {% elseif field_data.type == 'select' %}
+                            <select name="pf-{{ field }}" class="form-control"
+                                    id="field-{{ field }}">
+                                {% for option in field_data.options %}
+                                    <option value="{{ option.value }}">{{ option.name }}</option>
+                                {% endfor %}
+                            </select>
+                        {% elseif field_data.type == 'password' %}
+                            <input type="password" name="pf-{{ field }}" class="form-control"
+                                   id="field-{{ field }}">
+                        {% elseif field_data.type == 'email' %}
+                            <input type="email" name="pf-{{ field }}" class="form-control"
+                                   id="field-{{ field }}" placeholder="user@example.com" autocapitalize="off"
+                                   autocorrect="off">
+                        {% elseif field_data.type == 'integer' %}
+                            <input type="number" name="pf-{{ field }}" class="form-control"
+                                   id="field-{{ field }}">
+                        {% elseif field_data.type == 'date' %}
+                            <input type="date" name="pf-{{ field }}" class="form-control"
+                                   id="field-{{ field }}">
+                        {% elseif field_data.type == 'datetime' %}
+                            <input type="datetime" name="pf-{{ field }}" class="form-control"
+                                   id="field-{{ field }}">
+                        {% elseif field_data.type == 'url' or field_data.type == 'uri' or field_data.type == 'image_uri' %}
+                            <input type="url" name="pf-{{ field }}" class="form-control"
+                                   id="field-{{ field }}">
+                        {% else %}
+                            <input type="text" name="pf-{{ field }}" class="form-control"
+                                   id="field-{{ field }}">
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+        {% if container.type == 'form' %}
+            <div class="col-lg-2">&nbsp;</div>
+            <div class="col-lg-10">
+                <button type="submit" class="btn btn-success"><i class="icon-download-alt icon-white"></i>&nbsp;Сохранить
+                </button>
+            </div>
+        {% endif %}
+    </fieldset>
+    <input type="hidden" name="post-action-create" value="1">
 </form>

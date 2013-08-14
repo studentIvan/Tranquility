@@ -1,107 +1,117 @@
 <h3>Dashboard</h3>
 <hr>
 <div>
-	<div class="stats-div" data-content="{% include 'admin/stats.visitors.popover.html.twig' with visit_stats %}">
-		<table class="table-stats">
-			  <tr>
-				  <td>
-					{% if visit_stats.today.diff_percent > 0 %}
-						<div><img src="/img/admin/good.png"></div>
-						<div class="pretty-good">
-							+{{ visit_stats.today.diff_percent }}%
-						</div>
-					{% elseif visit_stats.today.diff_percent == 0 %}
-						<div><img src="/img/admin/neutral.png"></div>
-						<div class="pretty-neutral">
-							+0%
-						</div>
-					{% elseif visit_stats.today.diff_percent < 0 %}
-						<div><img src="/img/admin/bad.png"></div>
-						<div class="pretty-bad">
-							{{ visit_stats.today.diff_percent }}%
-						</div>
-					{% endif %}
-				  </td>
-				  <td>
-					<div><strong>{{ visit_stats.today.visitors }}</strong></div>
-					<div>Посетители</div>
-				  </td>
-			  </tr>
-		  </table>
-	</div>
-	
-	<div class="stats-div" data-content="{% include 'admin/stats.users.popover.html.twig' with users_stats %}">
-		<table class="table-stats">
-			  <tr>
-				  <td>
-					{% if users_stats.growth > 0 %}
-						<div><img src="/img/admin/good.png"></div>
-						<div class="pretty-good">
-							+{{ users_stats.growth }}%
-						</div>
-					{% elseif users_stats.growth == 0 %}
-						<div><img src="/img/admin/neutral.png"></div>
-						<div class="pretty-neutral">
-							+0%
-						</div>
-					{% elseif users_stats.growth < 0 %}
-						<div><img src="/img/admin/bad.png"></div>
-						<div class="pretty-bad">
-							{{ users_stats.growth }}%
-						</div>
-					{% endif %}
-				  </td>
-				  <td>
-					<div><strong>{{ users_stats.total }}</strong></div>
-					<div>Пользователи</div>
-				  </td>
-			  </tr>
-		  </table>
-	</div>
-	
-	{#<div class="stats-div" data-content="">
-		<table class="table-stats">
-			  <tr>
-				  <td>
-					{% if comments_stats.growth > 0 %}
-						<div><img src="/img/admin/good.png"></div>
-						<div class="pretty-good">
-							+{{ comments_stats.growth }}%
-						</div>
-					{% elseif comments_stats.growth == 0 %}
-						<div><img src="/img/admin/neutral.png"></div>
-						<div class="pretty-neutral">
-							+0%
-						</div>
-					{% elseif comments_stats.growth < 0 %}
-						<div><img src="/img/admin/bad.png"></div>
-						<div class="pretty-bad">
-							{{ comments_stats.growth }}%
-						</div>
-					{% endif %}
-				  </td>
-				  <td>
-					<div><strong>0</strong></div>
-					<div>Комментарии</div>
-				  </td>
-			  </tr>
-		  </table>
-	</div>#}
+    <div class="stats-div" data-content="{% include 'admin/stats.visitors.popover.html.twig' with visit_stats %}">
+        <table class="table-stats">
+            <tr>
+                <td>
+                    {% if visit_stats.today.diff_percent > 0 %}
+                        <div><img src="/img/admin/good.png"></div>
+                        <div class="pretty-good">
+                            +{{ visit_stats.today.diff_percent }}%
+                        </div>
+                    {% elseif visit_stats.today.diff_percent == 0 %}
+                        <div><img src="/img/admin/neutral.png"></div>
+                        <div class="pretty-neutral">
+                            +0%
+                        </div>
+                    {% elseif visit_stats.today.diff_percent < 0 %}
+                        <div><img src="/img/admin/bad.png"></div>
+                        <div class="pretty-bad">
+                            {{ visit_stats.today.diff_percent }}%
+                        </div>
+                    {% endif %}
+                </td>
+                <td>
+                    <div><strong>{{ visit_stats.today.visitors }}</strong></div>
+                    <div>Посетители</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="stats-div" data-content="{% include 'admin/stats.users.popover.html.twig' with users_stats %}">
+        <table class="table-stats">
+            <tr>
+                <td>
+                    {% if users_stats.growth > 0 %}
+                        <div><img src="/img/admin/good.png"></div>
+                        <div class="pretty-good">
+                            +{{ users_stats.growth }}%
+                        </div>
+                    {% elseif users_stats.growth == 0 %}
+                        <div><img src="/img/admin/neutral.png"></div>
+                        <div class="pretty-neutral">
+                            +0%
+                        </div>
+                    {% elseif users_stats.growth < 0 %}
+                        <div><img src="/img/admin/bad.png"></div>
+                        <div class="pretty-bad">
+                            {{ users_stats.growth }}%
+                        </div>
+                    {% endif %}
+                </td>
+                <td>
+                    <div><strong>{{ users_stats.total }}</strong></div>
+                    <div>Пользователи</div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    {#<div class="stats-div" data-content="">
+        <table class="table-stats">
+              <tr>
+                  <td>
+                    {% if comments_stats.growth > 0 %}
+                        <div><img src="/img/admin/good.png"></div>
+                        <div class="pretty-good">
+                            +{{ comments_stats.growth }}%
+                        </div>
+                    {% elseif comments_stats.growth == 0 %}
+                        <div><img src="/img/admin/neutral.png"></div>
+                        <div class="pretty-neutral">
+                            +0%
+                        </div>
+                    {% elseif comments_stats.growth < 0 %}
+                        <div><img src="/img/admin/bad.png"></div>
+                        <div class="pretty-bad">
+                            {{ comments_stats.growth }}%
+                        </div>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div><strong>0</strong></div>
+                    <div>Комментарии</div>
+                  </td>
+              </tr>
+          </table>
+    </div>#}
 </div>
 <br>
 <div class="panel">
-	<h4>Общий размер сайта</h4>
-	<small>{{ total_space_info }}</small>
-	<div class="progress progress-striped">
-		<div class="progress-bar {% if total_space_percent > 80 %}progress-bar-danger{% elseif total_space_percent > 60 %}progress-bar-warning{% elseif total_space_percent < 10 %}progress-bar-success{% endif %}" style="width: {% if total_space_percent %}{{ total_space_percent }}{% else %}100{% endif %}%;"></div>
-	</div>
+    <h4>Общий размер сайта</h4>
+    <small>{{ total_space_info }}</small>
+    <div class="progress progress-striped">
+        <div class="progress-bar {% if total_space_percent > 80 %}progress-bar-danger{% elseif total_space_percent > 60 %}progress-bar-warning{% elseif total_space_percent < 10 %}progress-bar-success{% endif %}"
+             style="width: {% if total_space_percent %}{{ total_space_percent }}{% else %}100{% endif %}%;"></div>
+    </div>
 </div>
 <div class="panel">
-	<ul class="list-group">
-	  <li class="list-group-item"><i class="icon-cog"></i>&nbsp;Режим разработчика: {% if debug %}<a class="tooltipped" style="cursor: help; color: darkred; border-bottom: 1px dotted darkred" data-toggle="tooltip" title="В режиме разработчика система оптимизируется для разработки: отключается кеширование, на экране отображается подробная информация об ошибках. Рекомендуется отключить эту опцию в файле config.php для нормальной и безопасной работы вашего сайта.">включен</a>{% else %}выключен{% endif %}</li>
-	  <li class="list-group-item"><i class="icon-cog"></i>&nbsp;Время жизни сессии: {{ (session_lifetime_hours ~ " час")|plural("", "а", "ов") }}</li>
-	  <li class="list-group-item"><i class="icon-cog"></i>&nbsp;Чистка мусора: {% if session_garbage_auto_dump %}<a class="tooltipped" style="cursor: help; color: darkred; border-bottom: 1px dotted darkred" data-toggle="tooltip" title="Автоматическая чистка мусора создаёт дополнительную нагрузку на сайт, рекомендуется только для разработки и отладки">автоматически</a>{% else %}вручную или CRON{% endif %}</li>
-	</ul>
+    <ul class="list-group">
+        <li class="list-group-item"><i class="icon-cog"></i>&nbsp;Режим разработчика: {% if debug %}<a
+                    class="tooltipped" style="cursor: help; color: darkred; border-bottom: 1px dotted darkred"
+                    data-toggle="tooltip"
+                    title="В режиме разработчика система оптимизируется для разработки: отключается кеширование, на экране отображается подробная информация об ошибках. Рекомендуется отключить эту опцию в файле config.php для нормальной и безопасной работы вашего сайта.">включен</a>{% else %}выключен{% endif %}
+        </li>
+        <li class="list-group-item"><i class="icon-cog"></i>&nbsp;Время жизни
+            сессии: {{ (session_lifetime_hours ~ " час")|plural("", "а", "ов") }}</li>
+        <li class="list-group-item"><i class="icon-cog"></i>&nbsp;Чистка мусора: {% if session_garbage_auto_dump %}<a
+                    class="tooltipped" style="cursor: help; color: darkred; border-bottom: 1px dotted darkred"
+                    data-toggle="tooltip"
+                    title="Автоматическая чистка мусора создаёт дополнительную нагрузку на сайт, рекомендуется только для разработки и отладки">автоматически</a>{% else %}вручную или CRON{% endif %}
+        </li>
+    </ul>
 </div>
 <!--<p>
 <a href="/" target="_blank" class="btn btn-primary">

@@ -22,7 +22,8 @@ class TwigEx extends Twig_Extension
      * @param string $title
      * @return mixed
      */
-    public function tolink($title) {
+    public function tolink($title)
+    {
         return Data::titleToLink($title);
     }
 

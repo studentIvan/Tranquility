@@ -8,7 +8,7 @@ class CRUDSessions extends CRUDObjectInterface
     protected $diffField = 'token';
     protected $orderByField = 'uptime';
     protected $onlyDisplay = true;
-	
+
     protected $fields = array(
         'token' => array(
             CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
@@ -57,8 +57,8 @@ class CRUDSessions extends CRUDObjectInterface
         )
     );
 
-    public function statusField($key) 
-	{
+    public function statusField($key)
+    {
         if (Session::getToken() == $key['token']) {
             return '<i class="icon-eye-close"></i>
             <div style="position: absolute; top: 25px;

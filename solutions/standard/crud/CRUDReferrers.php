@@ -7,7 +7,7 @@ class CRUDReferrers extends CRUDObjectInterface
     protected $menuIcon = 'icon-globe';
     protected $diffField = 'url_hash';
     protected $orderByField = 'rating';
-	
+
     protected $fields = array(
         'flag' => array(
             CRUDField::PARAM_TYPE => CRUDField::TYPE_CALCULATED,
@@ -30,7 +30,8 @@ class CRUDReferrers extends CRUDObjectInterface
         ),
     );
 
-    public function flagField($key) {
+    public function flagField($key)
+    {
         $host = parse_url($key['url'], PHP_URL_HOST);
         return '<img src="http://favicon.yandex.net/favicon/' . $host . '">';
     }

@@ -7,11 +7,11 @@ class Admin
 
     public static function control($matches)
     {
-		/**
+        /**
          * Loading configuration
          */
         self::$configuration = Process::$context['cms']['admin_cfg'];
-	
+
         if (!in_array(Session::getRole(), self::$configuration['access_roles'])) {
             Process::$context['bot_secure'] = array(
                 'input_login' => Security::getUniqueDigestForUserIP('input_login'),
@@ -33,7 +33,7 @@ class Admin
                     if (!in_array(Session::getRole(), self::$configuration['access_roles'])) {
                         throw new AuthException('role error');
                     } else {
-						afterSessionStartedCallback();
+                        afterSessionStartedCallback();
                         self::load($matches);
                     }
                 } catch (Exception $e) {
@@ -110,73 +110,68 @@ class Admin
                 throw new Exception("CRUD $p is not instance of CRUDObjectInterface");
 
             self::$models[] = $p;
-			$menuInfo = $p->getInfo();
-            if ($menuInfo !== false) 
-				Process::$context['admin_menu_elements'][] = $menuInfo;
+            $menuInfo = $p->getInfo();
+            if ($menuInfo !== false)
+                Process::$context['admin_menu_elements'][] = $menuInfo;
         }
-		
-		if ($partition === 'ajax') 
-		{
-            if (self::$checkCSRFToken and $selectedAction = Data::input('a')) 
-			{
-				/**
-				 * @var $selectedPartitionModel CRUDObjectInterface
-				 */
-				$selectedPartitionModel = null;
-				list($selectedElement, $selectedPartition) = Data::inputsList('e', 'p');
-				
-				foreach (self::$models as $m)
-					if ($m->getMenuURI() === $selectedPartition) 
-						$selectedPartitionModel = $m;
-						
-				if (is_null($selectedPartitionModel))
-					throw new ForbiddenException();
-				
-                switch ($selectedAction) 
-				{
+
+        if ($partition === 'ajax') {
+            if (self::$checkCSRFToken and $selectedAction = Data::input('a')) {
+                /**
+                 * @var $selectedPartitionModel CRUDObjectInterface
+                 */
+                $selectedPartitionModel = null;
+                list($selectedElement, $selectedPartition) = Data::inputsList('e', 'p');
+
+                foreach (self::$models as $m)
+                    if ($m->getMenuURI() === $selectedPartition)
+                        $selectedPartitionModel = $m;
+
+                if (is_null($selectedPartitionModel))
+                    throw new ForbiddenException();
+
+                switch ($selectedAction) {
                     case 'delete':
-						try {
-							$selectedPartitionModel->delete($selectedElement);
-							echo 'ok';
-						} catch(Exception $e) {
-							Process::$context['flash_error'] = $e->getMessage();
-							Process::getTwigInstance()->display('admin/alert.danger.html.twig', Process::$context);
-						}
+                        try {
+                            $selectedPartitionModel->delete($selectedElement);
+                            echo 'ok';
+                        } catch (Exception $e) {
+                            Process::$context['flash_error'] = $e->getMessage();
+                            Process::getTwigInstance()->display('admin/alert.danger.html.twig', Process::$context);
+                        }
                         break;
-						
-					case 'edit-form':
-						Process::$context['panel_base_uri'] = self::$configuration['base_uri'];
-						Process::$context['admin_part'] = $selectedPartition;
-						$returnPage = isset($_GET['rp']) ? preg_replace('/[^a-z0-9_]/', '', $_GET['rp']) : false;
-						if ($returnPage) Process::$context['return_page'] = $returnPage;
-						Process::$context['fields'] = $selectedPartitionModel->getFields();
-						Process::$context['diff_field'] = $selectedPartitionModel->getDiffField();
-						Process::$context['read_data'] = $selectedPartitionModel->readElement($selectedElement);
-						Process::getTwigInstance()->display('admin/form.edit.html.twig', Process::$context);
+
+                    case 'edit-form':
+                        Process::$context['panel_base_uri'] = self::$configuration['base_uri'];
+                        Process::$context['admin_part'] = $selectedPartition;
+                        $returnPage = isset($_GET['rp']) ? preg_replace('/[^a-z0-9_]/', '', $_GET['rp']) : false;
+                        if ($returnPage) Process::$context['return_page'] = $returnPage;
+                        Process::$context['fields'] = $selectedPartitionModel->getFields();
+                        Process::$context['diff_field'] = $selectedPartitionModel->getDiffField();
+                        Process::$context['read_data'] = $selectedPartitionModel->readElement($selectedElement);
+                        Process::getTwigInstance()->display('admin/form.edit.html.twig', Process::$context);
                         break;
-						
-					case 'view':
-						Process::$context['fields'] = $selectedPartitionModel->getFields();
-						Process::$context['read_data'] = $selectedPartitionModel->readElement($selectedElement);
-						Process::getTwigInstance()->display('admin/form.view.html.twig', Process::$context);
+
+                    case 'view':
+                        Process::$context['fields'] = $selectedPartitionModel->getFields();
+                        Process::$context['read_data'] = $selectedPartitionModel->readElement($selectedElement);
+                        Process::getTwigInstance()->display('admin/form.view.html.twig', Process::$context);
                         break;
-						
-					default:
-						throw new NotFoundException();
+
+                    default:
+                        throw new NotFoundException();
                 }
-				
+
                 exit;
-            } 
-			else 
-			{
+            } else {
                 throw new ForbiddenException();
             }
         }
 
-		Process::$context['site_title'] = Process::$context['page_title'];
+        Process::$context['site_title'] = Process::$context['page_title'];
         Process::$context['page_title'] = 'Tranquility Admin';
         Process::$context['panel_base_uri'] = self::$configuration['base_uri'];
-        
+
         if (!isset(Process::$context['current_user'])) {
             try {
                 Process::$context['current_user'] = array(
@@ -190,10 +185,10 @@ class Admin
         }
 
         Process::$context['container'] = self::getContainer($partition, $action);
-        Process::$context['query_string'] = (isset($_SERVER['QUERY_STRING']) 
-			and !empty($_SERVER['QUERY_STRING'])) ? '?' . $_SERVER['QUERY_STRING'] : false;
-		$template = (Process::$context['container']['type'] == 'form') 
-			? 'admin/form.html.twig' : 'admin/admin.html.twig';
+        Process::$context['query_string'] = (isset($_SERVER['QUERY_STRING'])
+            and !empty($_SERVER['QUERY_STRING'])) ? '?' . $_SERVER['QUERY_STRING'] : false;
+        $template = (Process::$context['container']['type'] == 'form')
+            ? 'admin/form.html.twig' : 'admin/admin.html.twig';
         Process::getTwigInstance()->display($template, Process::$context);
     }
 
@@ -204,202 +199,179 @@ class Admin
             'page' => 'homepage'
         );
 
-        if ($partition)
-        {
-			if ($action == 'create' || $action == 'edit' || $action == 'view' || $action == 'delete') 
-			{
-				foreach (self::$models as $m)
-				{
-					/**
-					 * @var $m CRUDObjectInterface
-					 */
-					if ($m->getMenuURI() === $partition)
-					{
-						$container['create_new_message'] = $m->getCreateString();
-						if ($container['create_new_message'])
-						{
-							$container['type'] = 'form';
-							$container['diff_field'] = $m->getDiffField();
-							$container['fields'] = $m->getFields();
-							$unique = Data::uriVar('e');
-							
-							if ($action == 'view')
-							{
-								if (Data::input('post-action-edit') and self::$checkCSRFToken) 
-								{
-									$postedData = array();
-									
-									foreach(array_keys($container['fields']) as $fieldName) 
-										$postedData[$fieldName] = Data::input("pf-$fieldName");
-										
-									try 
-									{
-										if (!$m->update($unique, $postedData))
-											throw new Exception('edit error');
-										if ($returnPage = Data::input('return-page'))
-											Process::redirect($returnPage);
-									}
-									catch(Exception $e) 
-									{
-										Process::$context['exception_code'] = $e->getCode();
-										Process::$context['flash_error'] = $e->getMessage();
-									}
-								}
-							
-								try {
-									Process::$context['read_data'] = $m->readElement($unique);
-									if (!Process::$context['read_data'])
-										throw new NotFoundException();
-									Process::$context['page_title'] = $m->getMenuName() . ' :: чтение';
-								} catch (Exception $e) {
-									throw new NotFoundException();
-								}
-							}
-							elseif ($action == 'edit')
-							{
-								try {
-									Process::$context['read_data'] = $m->readElement($unique);
-									Process::$context['diff_field'] = $m->getDiffField();
-									if (!Process::$context['read_data'])
-										throw new NotFoundException();
-									Process::$context['page_title'] = $m->getMenuName() . ' :: редактирование';
-								} catch (Exception $e) {
-									throw new NotFoundException();
-								}
-							}
-							elseif ($action == 'delete')
-							{
-								if (!self::$checkCSRFToken)
-									throw new ForbiddenException();
-								try {
-									$m->delete($unique);
-									Process::redirect(Process::$context['panel_base_uri'] . '/' . $m->getMenuURI());
-								} catch (Exception $e) {
-									throw new NotFoundException();
-								}
-							}
-							else
-							{
-								Process::$context['page_title'] = 
-									$m->getMenuName() . ' :: ' . (($action == 'create') ? $container['create_new_message'] : 'изменить');
-							}
-						}
-						else
-						{
-							throw new ForbiddenException();
-						}
-					}
-				}
-			} 
-			else 
-			{
-				$partWasFinded = false;
-				foreach (self::$models as $m)
-				{
-					/**
-					 * @var $m CRUDObjectInterface
-					 */
-					if ($m->getMenuURI() === $partition)
-					{
-						$container['fields'] = $m->getFields();
-						$partWasFinded = true;
-						$container['filter'] = array();
-						
-						if (self::$checkCSRFToken) {
-							$container['filter']['text'] = Data::uriVar('ft');
-							$container['filter']['date'] = Data::uriVar('fd');
-							$container['filter']['lm'] = Data::uriVar('fx');
-						} else {
-							$container['filter']['text'] = false;
-							$container['filter']['date'] = false;
-							$container['filter']['lm'] = false;
-						}
-						
-						#region POST::CREATE
-						if (Data::input('post-action-create') and self::$checkCSRFToken) {
-							$postedData = array();
-							foreach(array_keys($container['fields']) as $fieldName) {
-								$postedData[$fieldName] = Data::input("pf-$fieldName");
-							}
-							try {
-								if (!$m->create($postedData))
-									throw new Exception('create error');
-								foreach (Process::$context['admin_menu_elements'] as &$element) {
-									if ($element['uri'] == $partition)
-										$element['count']++;
-								}
-							} catch(Exception $e) {
-								Process::$context['exception_code'] = $e->getCode();
-								Process::$context['flash_error'] = $e->getMessage();
-							}
-						}
-						#endregion
-					
-						if ($action and preg_match('/page_(\d+)/', $action, $matches)) {
-							$page = $matches[1]*1;
-						} else {
-							$page = 1;
-						}
-						
-						if 
-						(
-							$container['filter']['text'] 
-							or $container['filter']['date'] 
-							or ($container['filter']['lm'] 
-							and $container['filter']['text'])
-						) 
-						{
-							$m->setFilter($container['filter']);
-						}
+        if ($partition) {
+            if ($action == 'create' || $action == 'edit' || $action == 'view' || $action == 'delete') {
+                foreach (self::$models as $m) {
+                    /**
+                     * @var $m CRUDObjectInterface
+                     */
+                    if ($m->getMenuURI() === $partition) {
+                        $container['create_new_message'] = $m->getCreateString();
+                        if ($container['create_new_message']) {
+                            $container['type'] = 'form';
+                            $container['diff_field'] = $m->getDiffField();
+                            $container['fields'] = $m->getFields();
+                            $unique = Data::uriVar('e');
 
-						$count = $m->getCount();
-						$perPage = $m->getElementsPerPageNum();
-						$pagination = Data::paginate($count, $perPage, $page);
-						Process::$context['page_title'] = $m->getMenuName() . ' :: управление';
-						$container['type'] = 'listing';
-						$container['count'] = ($count > $perPage) ? $perPage : $count;
-						$container['all_count'] = $count;
-						$container['diff_field'] = $m->getDiffField();
-						$container['fields_displayable'] = $m->getDisplayable();
-						$container['data'] = $m->getListing($pagination['offset'], $perPage);
-						$container['create_new_message'] = $m->getCreateString();
-						$container['only_display'] = $m->isOnlyDisplay();
-						$container['filter_options'] = $m->getFilterOptions();
-						foreach ($container['fields'] as $f => $d) {
-							if ($d['function']) {
-								foreach ($container['data'] as &$e) {
-									$function = $d['function'];
-									if (function_exists($function)) {
-										$e[$f] = $function($e[$f]);
-									}
-								}
-							}
-							if ($d['modify']) {
-								foreach ($container['data'] as &$e) {
-									$e[$f] = !empty($e[$f]) ? str_replace('$1', $e[$f], $d['modify']) : '';
-								}
-							}
-						}
-						Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
-					}
-				}
-				if (!$partWasFinded) {
-					throw new NotFoundException();
-				}
-			}
+                            if ($action == 'view') {
+                                if (Data::input('post-action-edit') and self::$checkCSRFToken) {
+                                    $postedData = array();
+
+                                    foreach (array_keys($container['fields']) as $fieldName)
+                                        $postedData[$fieldName] = Data::input("pf-$fieldName");
+
+                                    try {
+                                        if (!$m->update($unique, $postedData))
+                                            throw new Exception('edit error');
+                                        if ($returnPage = Data::input('return-page'))
+                                            Process::redirect($returnPage);
+                                    } catch (Exception $e) {
+                                        Process::$context['exception_code'] = $e->getCode();
+                                        Process::$context['flash_error'] = $e->getMessage();
+                                    }
+                                }
+
+                                try {
+                                    Process::$context['read_data'] = $m->readElement($unique);
+                                    if (!Process::$context['read_data'])
+                                        throw new NotFoundException();
+                                    Process::$context['page_title'] = $m->getMenuName() . ' :: чтение';
+                                } catch (Exception $e) {
+                                    throw new NotFoundException();
+                                }
+                            } elseif ($action == 'edit') {
+                                try {
+                                    Process::$context['read_data'] = $m->readElement($unique);
+                                    Process::$context['diff_field'] = $m->getDiffField();
+                                    if (!Process::$context['read_data'])
+                                        throw new NotFoundException();
+                                    Process::$context['page_title'] = $m->getMenuName() . ' :: редактирование';
+                                } catch (Exception $e) {
+                                    throw new NotFoundException();
+                                }
+                            } elseif ($action == 'delete') {
+                                if (!self::$checkCSRFToken)
+                                    throw new ForbiddenException();
+                                try {
+                                    $m->delete($unique);
+                                    Process::redirect(Process::$context['panel_base_uri'] . '/' . $m->getMenuURI());
+                                } catch (Exception $e) {
+                                    throw new NotFoundException();
+                                }
+                            } else {
+                                Process::$context['page_title'] =
+                                    $m->getMenuName() . ' :: ' . (($action == 'create') ? $container['create_new_message'] : 'изменить');
+                            }
+                        } else {
+                            throw new ForbiddenException();
+                        }
+                    }
+                }
+            } else {
+                $partWasFinded = false;
+                foreach (self::$models as $m) {
+                    /**
+                     * @var $m CRUDObjectInterface
+                     */
+                    if ($m->getMenuURI() === $partition) {
+                        $container['fields'] = $m->getFields();
+                        $partWasFinded = true;
+                        $container['filter'] = array();
+
+                        if (self::$checkCSRFToken) {
+                            $container['filter']['text'] = Data::uriVar('ft');
+                            $container['filter']['date'] = Data::uriVar('fd');
+                            $container['filter']['lm'] = Data::uriVar('fx');
+                        } else {
+                            $container['filter']['text'] = false;
+                            $container['filter']['date'] = false;
+                            $container['filter']['lm'] = false;
+                        }
+
+                        #region POST::CREATE
+                        if (Data::input('post-action-create') and self::$checkCSRFToken) {
+                            $postedData = array();
+                            foreach (array_keys($container['fields']) as $fieldName) {
+                                $postedData[$fieldName] = Data::input("pf-$fieldName");
+                            }
+                            try {
+                                if (!$m->create($postedData))
+                                    throw new Exception('create error');
+                                foreach (Process::$context['admin_menu_elements'] as &$element) {
+                                    if ($element['uri'] == $partition)
+                                        $element['count']++;
+                                }
+                            } catch (Exception $e) {
+                                Process::$context['exception_code'] = $e->getCode();
+                                Process::$context['flash_error'] = $e->getMessage();
+                            }
+                        }
+                        #endregion
+
+                        if ($action and preg_match('/page_(\d+)/', $action, $matches)) {
+                            $page = $matches[1] * 1;
+                        } else {
+                            $page = 1;
+                        }
+
+                        if
+                        (
+                            $container['filter']['text']
+                            or $container['filter']['date']
+                            or ($container['filter']['lm']
+                                and $container['filter']['text'])
+                        ) {
+                            $m->setFilter($container['filter']);
+                        }
+
+                        $count = $m->getCount();
+                        $perPage = $m->getElementsPerPageNum();
+                        $pagination = Data::paginate($count, $perPage, $page);
+                        Process::$context['page_title'] = $m->getMenuName() . ' :: управление';
+                        $container['type'] = 'listing';
+                        $container['count'] = ($count > $perPage) ? $perPage : $count;
+                        $container['all_count'] = $count;
+                        $container['diff_field'] = $m->getDiffField();
+                        $container['fields_displayable'] = $m->getDisplayable();
+                        $container['data'] = $m->getListing($pagination['offset'], $perPage);
+                        $container['create_new_message'] = $m->getCreateString();
+                        $container['only_display'] = $m->isOnlyDisplay();
+                        $container['filter_options'] = $m->getFilterOptions();
+                        foreach ($container['fields'] as $f => $d) {
+                            if ($d['function']) {
+                                foreach ($container['data'] as &$e) {
+                                    $function = $d['function'];
+                                    if (function_exists($function)) {
+                                        $e[$f] = $function($e[$f]);
+                                    }
+                                }
+                            }
+                            if ($d['modify']) {
+                                foreach ($container['data'] as &$e) {
+                                    $e[$f] = !empty($e[$f]) ? str_replace('$1', $e[$f], $d['modify']) : '';
+                                }
+                            }
+                        }
+                        Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
+                    }
+                }
+                if (!$partWasFinded) {
+                    throw new NotFoundException();
+                }
+            }
         } else {
-			try {
-				/** Dashboard homepage */
-				$totalSpace = round((Data::getDirSize(dirname(__FILE__) . '/../../../'))/1024/1024, 2);
-				$freeSpace = Process::$context['hosting_free_space_mb'];
-				Process::$context['total_space_info'] = $totalSpace . ' мб из ' . $freeSpace . ' мб';
-				Process::$context['total_space_percent'] = ($totalSpace/$freeSpace)*100;
-				Process::$context['visit_stats'] = Stats::getVisitors();
-				Process::$context['users_stats'] = Stats::getUsers();
-			} catch (Exception $e) {
-				Process::$context['total_space_info'] = 'не удалось получить размер сайта';
-			}
-		}
+            try {
+                /** Dashboard homepage */
+                $totalSpace = round((Data::getDirSize(dirname(__FILE__) . '/../../../')) / 1024 / 1024, 2);
+                $freeSpace = Process::$context['hosting_free_space_mb'];
+                Process::$context['total_space_info'] = $totalSpace . ' мб из ' . $freeSpace . ' мб';
+                Process::$context['total_space_percent'] = ($totalSpace / $freeSpace) * 100;
+                Process::$context['visit_stats'] = Stats::getVisitors();
+                Process::$context['users_stats'] = Stats::getUsers();
+            } catch (Exception $e) {
+                Process::$context['total_space_info'] = 'не удалось получить размер сайта';
+            }
+        }
 
         return $container;
     }

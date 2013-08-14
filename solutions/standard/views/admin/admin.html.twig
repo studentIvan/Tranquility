@@ -1,100 +1,135 @@
 {% extends 'admin/skeleton.admin.html.twig' %}
 {% block fixedb %}
-{% if container.count or container.count == 0 %}
-    <div class="navbar navbar-fixed-bottom navbar-inverse" style="padding-left: 10px; padding-right: 10px;">
-        {% if not mobile and container.count != 0 %}
-		<div class="pull-left">
-            <p class="navbar-text">
-                Отображено
+    {% if container.count or container.count == 0 %}
+        <nav class="navbar navbar-fixed-bottom navbar-inverse" role="navigation"
+             style="padding-left: 10px; padding-right: 10px;">
+            {% if not mobile and container.count != 0 %}
+                <p class="navbar-text pull-left">
+                    Отображено
                 <span id="display-info-total" style="font-weight: bold;">
                 {{ (container.count ~ "</span> элемент")|plural("", "а", "ов")|raw }} на странице
                     (всего <span id="display-info-all" style="font-weight: bold;">{{ container.all_count }}</span>)
-            </p>
-        </div>
-		{% endif %}
-        <div {% if not mobile %}class="pull-right"{% endif %}>
-            {% if container.create_new_message %}
-            <button {% if not mobile %}data-toggle="modal" data-target="#modalCreate"{% else %}
-			onclick="window.location.href='{{ panel_base_uri }}/{{ admin_part }}/create'"
-			{% endif %} class="btn btn-default navbar-btn">
-                <i class="icon-plus"></i>&nbsp;<span id="addmsg">{{ container.create_new_message }}</span>
-            </button>
+                </p>
             {% endif %}
-            {% if not mobile %}
-			<button class="btn btn-default navbar-btn"
-                    onclick="$('#updt').html('обновление...');$(this).addClass('disabled');window.location.reload();">
-                <i class="icon-refresh"></i>&nbsp;<span id="updt">обновить страницу</span>
-            </button>
-			{% endif %}
-        </div>
-    </div>
-{% endif %}
+            <div class="navbar-right">
+                {% if container.create_new_message %}
+                    <button {% if not mobile %}data-toggle="modal" data-target="#modalCreate"{% else %}
+                        onclick="window.location.href='{{ panel_base_uri }}/{{ admin_part }}/create'"
+                            {% endif %} class="btn btn-default navbar-btn">
+                        <i class="icon-plus"></i>&nbsp;<span id="addmsg">{{ container.create_new_message }}</span>
+                    </button>
+                {% endif %}
+                {% if not mobile %}
+                    <button class="btn btn-default navbar-btn"
+                            onclick="$('#updt').html('обновление...');$(this).addClass('disabled');window.location.reload();">
+                        <i class="icon-refresh"></i>&nbsp;<span id="updt">обновить страницу</span>
+                    </button>
+                {% endif %}
+            </div>
+        </nav>
+    {% endif %}
 {% endblock %}
 {% block container %}
-<span id="top-of-container">
+    <span id="top-of-container">
 {% if flash_error %}
-	{% include 'admin/alert.danger.html.twig' %}
+    {% include 'admin/alert.danger.html.twig' %}
 {% endif %}
 </span>
-{% if container.type == 'text' %}
-            {{ container.text }}
-        {% elseif container.type == 'page' %}
-            {% include 'admin/'~container.page~'.html.twig' %}
-        {% elseif container.type == 'listing' %}
-			{% if container.data|length == 0 %}
-			<div class="alert alert-info">
-			  <button type="button" class="close" data-dismiss="alert">&times;</button>
-			  Нет элементов для отображения.
-			</div>
-			{% endif %}
-			{% if container.filter_options.filter_string or container.filter_options.filter_date or container.filter_options.filter_less_or_more %}
-			<form>
-				<table style="width: 100%; margin-bottom: 8px;"><tr>
-					{% if container.filter_options.filter_less_or_more and container.filter_options.filter_string %}
-					<td style="width: 15%;">
-						<select class="form-control" name="fx">
-						  <option value="contain"{% if container.filter.lm == 'contain' %} selected="selected"{% endif %}>Содержит:</option>
-						  <option value="more_than"{% if container.filter.lm == 'more_than' %} selected="selected"{% endif %}>Больше чем:</option>
-						  <option value="less_than"{% if container.filter.lm == 'less_than' %} selected="selected"{% endif %}>Меньше чем:</option>
-						</select>
-					</td>
-					{% endif %}
-					{% if container.filter_options.filter_string %}
-					<td><input type="search" class="form-control" name="ft" 
-						placeholder="Введите текст для фильтрации данных"{% if container.filter.text %} value="{{ container.filter.text }}"{% endif %}></td>
-					{% endif %}
-					{% if container.filter_options.filter_date %}
-					<td {% if container.filter_options.filter_string %}style="width: 20%;"{% endif %}>
-						<select class="form-control" name="fd">
-						  <option value="all"{% if container.filter.date == 'all' %} selected="selected"{% endif %}>За всё время</option>
-						  <option value="today"{% if container.filter.date == 'today' %} selected="selected"{% endif %}>Сегодня</option>
-						  <option value="yesterday"{% if container.filter.date == 'yesterday' %} selected="selected"{% endif %}>Вчера</option>
-						  <option value="this_week"{% if container.filter.date == 'this_week' %} selected="selected"{% endif %}>За неделю</option>
-						  <option value="last_week"{% if container.filter.date == 'last_week' %} selected="selected"{% endif %}>На прошлой неделе</option>
-						  <option value="this_month"{% if container.filter.date == 'this_month' %} selected="selected"{% endif %}>За этот месяц</option>
-						  <option value="last_month"{% if container.filter.date == 'last_month' %} selected="selected"{% endif %}>За прошлый месяц</option>
-						  <option value="for_two_months"{% if container.filter.date == 'for_two_months' %} selected="selected"{% endif %}>За два месяца</option>
-						  <option value="for_four_months"{% if container.filter.date == 'for_four_months' %} selected="selected"{% endif %}>За четыре месяца</option>
-						  <option value="for_half_year"{% if container.filter.date == 'for_half_year' %} selected="selected"{% endif %}>За полгода</option>
-						  <option value="this_year"{% if container.filter.date == 'this_year' %} selected="selected"{% endif %}>За этот год</option>
-						  <option value="last_year"{% if container.filter.date == 'last_year' %} selected="selected"{% endif %}>За прошлый год</option>
-						</select>
-					</td>
-					{% endif %}
-					<td style="width: 12%; padding-left: 4px;"><button type="submit" class="btn btn-info"><i class="icon-filter icon-white"></i>&nbsp;Фильтровать</button></td>
-				</tr></table>
-				<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-			</form>
-			{% endif %}
-            <table class="table table-hover table-expand">
+    {% if container.type == 'text' %}
+        {{ container.text }}
+    {% elseif container.type == 'page' %}
+        {% include 'admin/'~container.page~'.html.twig' %}
+    {% elseif container.type == 'listing' %}
+        {% if container.data|length == 0 %}
+            <div class="alert alert-info">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                Нет элементов для отображения.
+            </div>
+        {% endif %}
+        {% if container.filter_options.filter_string or container.filter_options.filter_date or container.filter_options.filter_less_or_more %}
+            <form>
+                <table style="width: 100%; margin-bottom: 8px;">
+                    <tr>
+                        {% if container.filter_options.filter_less_or_more and container.filter_options.filter_string %}
+                            <td style="width: 15%;">
+                                <select class="form-control" name="fx">
+                                    <option value="contain"{% if container.filter.lm == 'contain' %} selected="selected"{% endif %}>
+                                        Содержит:
+                                    </option>
+                                    <option value="more_than"{% if container.filter.lm == 'more_than' %} selected="selected"{% endif %}>
+                                        Больше чем:
+                                    </option>
+                                    <option value="less_than"{% if container.filter.lm == 'less_than' %} selected="selected"{% endif %}>
+                                        Меньше чем:
+                                    </option>
+                                </select>
+                            </td>
+                        {% endif %}
+                        {% if container.filter_options.filter_string %}
+                            <td><input type="search" class="form-control" name="ft"
+                                       placeholder="Введите текст для фильтрации данных"{% if container.filter.text %} value="{{ container.filter.text }}"{% endif %}>
+                            </td>
+                        {% endif %}
+                        {% if container.filter_options.filter_date %}
+                            <td {% if container.filter_options.filter_string %}style="width: 20%;"{% endif %}>
+                                <select class="form-control" name="fd">
+                                    <option value="all"{% if container.filter.date == 'all' %} selected="selected"{% endif %}>
+                                        За всё время
+                                    </option>
+                                    <option value="today"{% if container.filter.date == 'today' %} selected="selected"{% endif %}>
+                                        Сегодня
+                                    </option>
+                                    <option value="yesterday"{% if container.filter.date == 'yesterday' %} selected="selected"{% endif %}>
+                                        Вчера
+                                    </option>
+                                    <option value="this_week"{% if container.filter.date == 'this_week' %} selected="selected"{% endif %}>
+                                        За неделю
+                                    </option>
+                                    <option value="last_week"{% if container.filter.date == 'last_week' %} selected="selected"{% endif %}>
+                                        На прошлой неделе
+                                    </option>
+                                    <option value="this_month"{% if container.filter.date == 'this_month' %} selected="selected"{% endif %}>
+                                        За этот месяц
+                                    </option>
+                                    <option value="last_month"{% if container.filter.date == 'last_month' %} selected="selected"{% endif %}>
+                                        За прошлый месяц
+                                    </option>
+                                    <option value="for_two_months"{% if container.filter.date == 'for_two_months' %} selected="selected"{% endif %}>
+                                        За два месяца
+                                    </option>
+                                    <option value="for_four_months"{% if container.filter.date == 'for_four_months' %} selected="selected"{% endif %}>
+                                        За четыре месяца
+                                    </option>
+                                    <option value="for_half_year"{% if container.filter.date == 'for_half_year' %} selected="selected"{% endif %}>
+                                        За полгода
+                                    </option>
+                                    <option value="this_year"{% if container.filter.date == 'this_year' %} selected="selected"{% endif %}>
+                                        За этот год
+                                    </option>
+                                    <option value="last_year"{% if container.filter.date == 'last_year' %} selected="selected"{% endif %}>
+                                        За прошлый год
+                                    </option>
+                                </select>
+                            </td>
+                        {% endif %}
+                        <td style="width: 12%; padding-left: 4px;">
+                            <button type="submit" class="btn btn-info"><i class="icon-filter icon-white"></i>&nbsp;Фильтровать
+                            </button>
+                        </td>
+                    </tr>
+                </table>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+            </form>
+        {% endif %}
+        <table class="table table-hover table-expand">
             {% for e in container.data %}
-                <tr id="elements-row-{{ e[container.diff_field] }}" data-unique="{{ e[container.diff_field] }}" 
-				{% if mobile and not container.only_display %}
-				onclick="window.location.href='{{ panel_base_uri }}/{{ admin_part }}/view?e={{ e[container.diff_field] }}'"
-				{% endif %}>
-                {% for h in container.fields_displayable %}
-                    <td>
-                        <div style="position: relative;">
+                <tr id="elements-row-{{ e[container.diff_field] }}" data-unique="{{ e[container.diff_field] }}"
+                        {% if mobile and not container.only_display %}
+                    onclick="window.location.href='{{ panel_base_uri }}/{{ admin_part }}/view?e={{ e[container.diff_field] }}'"
+                        {% endif %}>
+                    {% for h in container.fields_displayable %}
+                        <td>
+                            <div style="position: relative;">
                             <span class="field-{{ container.fields[h].type }}">
                                 {% if container.fields[h].values[e[h]] %}
                                     {{ container.fields[h].values[e[h]] }}
@@ -102,83 +137,96 @@
                                     {{ e[h]|raw }}
                                 {% endif %}
                             </span>
-                        </div>
-                    </td>
-                {% endfor %}
+                            </div>
+                        </td>
+                    {% endfor %}
                 </tr>
             {% endfor %}
-            </table>
-            {% if pagination %}
-                <ul class="pagination">
-                    {% if pagination.current_id != 1 %}
-                        <li><a href="{{ panel_base_uri }}/{{ admin_part }}{{ query_string }}">1</a></li>{% endif %}
-                    {% if pagination.prev_id and pagination.prev_id != 1 %}
+        </table>
+        {% if pagination %}
+            <ul class="pagination">
+                {% if pagination.current_id != 1 %}
+                    <li><a href="{{ panel_base_uri }}/{{ admin_part }}{{ query_string }}">1</a></li>{% endif %}
+                {% if pagination.prev_id and pagination.prev_id != 1 %}
+                    <li>
+                    <a href="{{ panel_base_uri }}/{{ admin_part }}/page_{{ pagination.prev_id }}{{ query_string }}">{{ pagination.prev_id }}</a>
+                    </li>{% endif %}
+                <li class="active"><a href="#">{{ pagination.current_id }}</a></li>
+                {% if pagination.next_id %}
+                    <li>
+                        <a href="{{ panel_base_uri }}/{{ admin_part }}/page_{{ pagination.next_id }}{{ query_string }}">{{ pagination.next_id }}</a>
+                    </li>
+                    {% if pagination.total_pages > pagination.next_id %}
                         <li>
-                        <a href="{{ panel_base_uri }}/{{ admin_part }}/page_{{ pagination.prev_id }}{{ query_string }}">{{ pagination.prev_id }}</a>
-                        </li>{% endif %}
-                    <li class="active"><a href="#">{{ pagination.current_id }}</a></li>
-                    {% if pagination.next_id %}
-                        <li>
-                            <a href="{{ panel_base_uri }}/{{ admin_part }}/page_{{ pagination.next_id }}{{ query_string }}">{{ pagination.next_id }}</a>
+                            <a href="{{ panel_base_uri }}/{{ admin_part }}/page_{{ pagination.total_pages }}{{ query_string }}">{{ pagination.total_pages }}</a>
                         </li>
-                        {% if pagination.total_pages > pagination.next_id %}
-                            <li>
-                                <a href="{{ panel_base_uri }}/{{ admin_part }}/page_{{ pagination.total_pages }}{{ query_string }}">{{ pagination.total_pages }}</a>
-                            </li>
-                        {% endif %}
                     {% endif %}
-                </ul>
-            {% endif %}
-        {% else %}
+                {% endif %}
+            </ul>
         {% endif %}
+    {% else %}
+    {% endif %}
 {% endblock %}
 {% block modal %}
-{% if container.create_new_message %}<!-- Modal -->
-  <div class="modal fade" id="modalCreate">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">{{ container.create_new_message }}</h4>
-        </div>
-        <div class="modal-body">
-          {% include "admin/form.create.html.twig" with container %}
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-          <button type="button" class="btn btn-primary" onclick="$('#create-form').submit()">Сохранить</button>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+    {% if container.create_new_message %}<!-- Modal -->
+        <div class="modal fade" id="modalCreate">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">{{ container.create_new_message }}</h4>
+                    </div>
+                    <div class="modal-body">
+                        {% include "admin/form.create.html.twig" with container %}
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                        <button type="button" class="btn btn-primary" onclick="$('#create-form').submit()">Сохранить
+                        </button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div><!-- /.modal -->
 
-<!-- Modal -->
-  <div class="modal fade" id="modalEdit">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-          <h4 class="modal-title">Редактирование</h4>
-        </div>
-        <div class="modal-body" id="modalEditBody">
-          <div class="progress progress-striped active"><div class="progress-bar" style="width: 100%"></div></div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" onclick="$('#edit-form').submit()"><i class="icon-check icon-white"></i>&nbsp;Сохранить изменения</button>
-		  <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
-        </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->{% endif %}
+        <!-- Modal -->
+        <div class="modal fade" id="modalEdit">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Редактирование</h4>
+                    </div>
+                    <div class="modal-body" id="modalEditBody">
+                        <div class="progress progress-striped active">
+                            <div class="progress-bar" style="width: 100%"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="$('#edit-form').submit()"><i
+                                    class="icon-check icon-white"></i>&nbsp;Сохранить изменения
+                        </button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
+                    </div>
+                </div>
+                <!-- /.modal-content -->
+            </div>
+            <!-- /.modal-dialog -->
+        </div><!-- /.modal -->{% endif %}
 
-<!-- Modal -->
-  <div class="modal fade" id="modalView">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-body" id="modalViewBody">
-          <div class="progress progress-striped active"><div class="progress-bar" style="width: 100%"></div></div>
+    <!-- Modal -->
+    <div class="modal fade" id="modalView">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body" id="modalViewBody">
+                    <div class="progress progress-striped active">
+                        <div class="progress-bar" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
         </div>
-      </div><!-- /.modal-content -->
-    </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+        <!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 {% endblock %}

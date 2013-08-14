@@ -7,8 +7,8 @@ require_once $__DIR__ . '/../system/__init__.php';
 
 if (isset($_SERVER['REMOTE_ADDR']) and
     $_SERVER['REMOTE_ADDR'] != '127.0.0.1' and
-        $_SERVER['REMOTE_ADDR'] != '::1')
-{
+    $_SERVER['REMOTE_ADDR'] != '::1'
+) {
     echo 'access denied';
     exit;
 }
@@ -22,18 +22,17 @@ try {
         Database::getInstance()
             ->query("DELETE FROM referrers WHERE timepoint < ( NOW() - INTERVAL $refd DAY )");
     }
-	
-	if (isset($config['save_visitors_for']) and $config['save_visitors_for']) {
+
+    if (isset($config['save_visitors_for']) and $config['save_visitors_for']) {
         $interval = $config['save_visitors_for'];
         Database::getInstance()
             ->query("DELETE FROM visitors WHERE day < DATE( NOW() - INTERVAL $interval )");
     }
-	
-	Database::getInstance()
+
+    Database::getInstance()
         ->query("TRUNCATE TABLE captcha");
-	
-	Database::getInstance()
+
+    Database::getInstance()
         ->query("OPTIMIZE TABLE sessions");
-}
-catch (Exception $e) {
+} catch (Exception $e) {
 }

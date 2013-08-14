@@ -26,14 +26,14 @@ class Session
             throw new SessionException('Session already started');
 
         if (isset(self::$options['garbage_auto_dump']) and
-            self::$options['garbage_auto_dump'] and (intval(date('i'))%2 == 0)) {
+            self::$options['garbage_auto_dump'] and (intval(date('i')) % 2 == 0)
+        ) {
             self::dumpGarbage();
         }
 
         list($token, $uid, $pass, $signature) = Cookies::get(array('t', 'u', 'p', 's'));
 
-        if ($token and $signature == Security::getDigest(array($token, $uid, $pass)))
-        {
+        if ($token and $signature == Security::getDigest(array($token, $uid, $pass))) {
             $pdo = Database::getInstance();
             $pdo->query("UPDATE sessions SET uptime=NOW() WHERE token='$token'");
             $result = $pdo->query("SELECT role FROM sessions WHERE token='$token'");
@@ -44,9 +44,7 @@ class Session
                 self::$uid = intval($uid);
                 self::$role = intval($result->fetchColumn());
             }
-        }
-        else
-        {
+        } else {
             self::create();
         }
 
@@ -78,17 +76,13 @@ class Session
         $ip = $_SERVER['REMOTE_ADDR'];
         $agent = substr(htmlspecialchars(trim($_SERVER['HTTP_USER_AGENT']), ENT_QUOTES), 0, 110);
 
-        if (self::isBot($agent))
-        {
+        if (self::isBot($agent)) {
             $token = (is_null($token)) ? Security::getDigest(array($ip, $agent)) : $token;
             $role = self::$options['bot_role'];
 
-            if (Database::count("sessions WHERE token='$token'") !== 0)
-            {
+            if (Database::count("sessions WHERE token='$token'") !== 0) {
                 $pdo->query("UPDATE sessions SET uptime=NOW() WHERE token='$token'");
-            }
-            else
-            {
+            } else {
                 $sql = 'INSERT INTO sessions (token, uid, role, ip, useragent, uptime)
                   VALUES (:token, 0, :role, INET_ATON(:ip), :agent, NOW())';
 
@@ -103,9 +97,7 @@ class Session
             }
 
             self::$role = $role;
-        }
-        else
-        {
+        } else {
             if (Database::count("sessions WHERE ip=INET_ATON('$ip')") > 10)
                 throw new SessionException('Too many connections', 403);
 
@@ -151,8 +143,8 @@ class Session
         if (isset(self::$options['referrers']) and self::$options['referrers']
             and isset($_SERVER['HTTP_REFERER']) and !empty($_SERVER['HTTP_REFERER'])
             and filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL)
-            and (parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) != $_SERVER['HTTP_HOST']))
-        {
+            and (parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) != $_SERVER['HTTP_HOST'])
+        ) {
             $ref = substr(str_replace(array('<', '>'), '', $_SERVER['HTTP_REFERER']), 0, 200);
             $statement = $pdo->prepare('INSERT INTO referrers (url_hash, timepoint, token, url) VALUES (MD5(:url), NOW(), :token, :url)');
             $statement->bindParam(':token', $token, PDO::PARAM_STR);
@@ -171,15 +163,13 @@ class Session
         $bots = array('yandex', 'yadirect', 'google', 'rambler', 'yahoo', 'msn', 'alexa', 'archiver', 'dotnet');
         $block = array('xrumer', 'xpymep', 'xspider');
 
-        foreach ($block as $b)
-        {
+        foreach ($block as $b) {
             if (stripos($agent, $b) !== false) {
                 throw new Exception('fucking bot', 403);
             }
         }
 
-        foreach ($bots as $bot)
-        {
+        foreach ($bots as $bot) {
             if (stripos($agent, $bot) !== false) {
                 return true;
             }
@@ -189,11 +179,13 @@ class Session
     }
 
 
-    public static function setStorageData($key, $value) {
+    public static function setStorageData($key, $value)
+    {
 
     }
 
-    public static function getStorageData($key) {
+    public static function getStorageData($key)
+    {
 
     }
 
@@ -202,9 +194,10 @@ class Session
      * @param string $key
      * @param mixed $value
      */
-    public static function setSecureCookieData($key, $value) {
-        Cookies::set('k_' . $key, base64_encode( strval($value) .
-            Security::getDigest(array($key, $value)) ));
+    public static function setSecureCookieData($key, $value)
+    {
+        Cookies::set('k_' . $key, base64_encode(strval($value) .
+        Security::getDigest(array($key, $value))));
     }
 
     /**
@@ -224,8 +217,8 @@ class Session
             echo Security::getDigest(array($key, $value));
             echo '<hr>';
 
-            return ( $control !== Security::getDigest(
-                array($key, $value)) ) ? false : $value;
+            return ($control !== Security::getDigest(
+                    array($key, $value))) ? false : $value;
         } else {
             return false;
         }
@@ -239,8 +232,7 @@ class Session
     {
         $returns = array();
 
-        foreach ($_COOKIE as $key => $value)
-        {
+        foreach ($_COOKIE as $key => $value) {
             if (0 === strpos($key, 'k_')) {
                 $k = substr($key, 2);
                 $returns[$k] = self::getSecureCookieData($k);
@@ -291,8 +283,7 @@ class Session
         if ($authenticate and !self::authenticateByLogin($login, $password))
             throw new AuthException('Authenticate failed');
 
-        if (self::$started)
-        {
+        if (self::$started) {
             $token = self::$token;
             $pdo = Database::getInstance();
             $user = $pdo->query("SELECT id, role FROM users WHERE login='$login'")->fetch(PDO::FETCH_OBJ);
@@ -311,9 +302,7 @@ class Session
 
                 null, (($temporary) ? 0 : false)
             );
-        }
-        else
-        {
+        } else {
             throw new SessionException('Session not started');
         }
     }
