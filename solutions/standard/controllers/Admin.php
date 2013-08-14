@@ -85,6 +85,7 @@ class Admin
             'name' => 'Главная', 'uri' => '', 'icon' => 'icon-home',
         ));
 
+        include_once $thisDir . '/../crud/factoring/CRUDField.php';
         include_once $thisDir . '/../crud/interfaces/CRUDDriverInterface.php';
         include_once $thisDir . '/../crud/interfaces/CRUDObjectInterface.php';
         foreach (self::$configuration['registered_crud'] as $crud) {
@@ -175,9 +176,7 @@ class Admin
 		Process::$context['site_title'] = Process::$context['page_title'];
         Process::$context['page_title'] = 'Tranquility Admin';
         Process::$context['panel_base_uri'] = self::$configuration['base_uri'];
-        Process::$context['filter_text'] = isset($_GET['filter']) ? $_GET['filter'] : false;
-        Process::$context['filter_date'] = isset($_GET['filter_date']) ? $_GET['filter_date'] : false;
-        Process::$context['filter_less_or_more'] = isset($_GET['filter_less_or_more']) ? $_GET['filter_less_or_more'] : false;
+        
         if (!isset(Process::$context['current_user'])) {
             try {
                 Process::$context['current_user'] = array(
@@ -191,6 +190,8 @@ class Admin
         }
 
         Process::$context['container'] = self::getContainer($partition, $action);
+        Process::$context['query_string'] = (isset($_SERVER['QUERY_STRING']) 
+			and !empty($_SERVER['QUERY_STRING'])) ? '?' . $_SERVER['QUERY_STRING'] : false;
 		$template = (Process::$context['container']['type'] == 'form') 
 			? 'admin/form.html.twig' : 'admin/admin.html.twig';
         Process::getTwigInstance()->display($template, Process::$context);
@@ -220,7 +221,7 @@ class Admin
 							$container['type'] = 'form';
 							$container['diff_field'] = $m->getDiffField();
 							$container['fields'] = $m->getFields();
-							$unique = isset($_GET['e']) ? $_GET['e'] : false;
+							$unique = Data::uriVar('e');
 							
 							if ($action == 'view')
 							{
@@ -292,6 +293,7 @@ class Admin
 			} 
 			else 
 			{
+				$partWasFinded = false;
 				foreach (self::$models as $m)
 				{
 					/**
@@ -300,6 +302,18 @@ class Admin
 					if ($m->getMenuURI() === $partition)
 					{
 						$container['fields'] = $m->getFields();
+						$partWasFinded = true;
+						$container['filter'] = array();
+						
+						if (self::$checkCSRFToken) {
+							$container['filter']['text'] = Data::uriVar('ft');
+							$container['filter']['date'] = Data::uriVar('fd');
+							$container['filter']['lm'] = Data::uriVar('fx');
+						} else {
+							$container['filter']['text'] = false;
+							$container['filter']['date'] = false;
+							$container['filter']['lm'] = false;
+						}
 						
 						#region POST::CREATE
 						if (Data::input('post-action-create') and self::$checkCSRFToken) {
@@ -325,6 +339,17 @@ class Admin
 							$page = $matches[1]*1;
 						} else {
 							$page = 1;
+						}
+						
+						if 
+						(
+							$container['filter']['text'] 
+							or $container['filter']['date'] 
+							or ($container['filter']['lm'] 
+							and $container['filter']['text'])
+						) 
+						{
+							$m->setFilter($container['filter']);
 						}
 
 						$count = $m->getCount();
@@ -357,6 +382,9 @@ class Admin
 						}
 						Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
 					}
+				}
+				if (!$partWasFinded) {
+					throw new NotFoundException();
 				}
 			}
         } else {

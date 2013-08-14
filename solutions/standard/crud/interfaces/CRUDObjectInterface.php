@@ -23,7 +23,8 @@ abstract class CRUDObjectInterface
     protected $diffField = 'id';
     protected $orderByField = 'id';
     protected $fields = array();
-    protected $driver = false;
+    private $driver = false;
+    private $filter = false;
     protected $elementsPerPage = 5;
     protected $onlyDisplay = false;
 	
@@ -154,6 +155,30 @@ abstract class CRUDObjectInterface
     {
         return strtolower(get_called_class());
     }
+	
+	/**
+     * @param array $filter
+     */
+	public function setFilter($filter)
+	{
+		if (empty($filter['text']))
+			$filter['text'] = false;
+		if ($filter['lm'] and !$filter['text'])
+			$filter['lm'] = false;
+		if ($filter['lm'] and $filter['text'] and $filter['lm'] !== 'contain') {
+			$filter['lm'] = array('operator' => $filter['lm'], 'operand' => $filter['text']);
+			$filter['text'] = false;
+		}
+		$this->filter = $filter;
+	}
+	
+	/**
+     * @return array|bool
+     */
+	public function getFilter()
+	{
+		return $this->filter;
+	}
 
     /**
      * @return int

@@ -25,7 +25,105 @@ class CRUDMySQLDriver extends CRUDDriverInterface
      */
     public function getCount()
     {
-        return Database::count($this->getCRUDObject()->getTableName());
+		if (!$filter = $this->getCRUDObject()->getFilter()) {
+			return Database::count($this->getCRUDObject()->getTableName());
+		} else {
+			$filterString = '';
+			$table = $this->getCRUDObject()->getTableName();
+			$allFields = $this->getCRUDObject()->getFields();
+			
+			foreach ($allFields as $f => $d) 
+			{
+				if ($d['display'] == true) 
+				{
+					switch ($d['type']) 
+					{
+						case 'string':
+						case 'text':
+							$filterContain = preg_replace('![^a-zа-яё0-9\040]!iu', '', $filter['text']);
+							$filterString = ($filterString) ? "$filterString OR " : " WHERE ";
+							$filterString .= "$f LIKE '%$filterContain%' ";
+							break;
+						case 'integer':
+						case 'decimal':
+						case 'number':
+							if ($filter['lm'] and isset($filter['lm']['operator']) and isset($filter['lm']['operand'])) 
+							{
+								switch ($filter['lm']['operator']) {
+									case 'more_than':
+										$filterContain = floatval($filter['lm']['operand']);
+										$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+										$filterString .= "$f > '$filterContain' ";
+										break;
+									case 'less_than':
+										$filterContain = floatval($filter['lm']['operand']);
+										$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+										$filterString .= "$f < '$filterContain' ";
+										break;
+								}
+							}
+							break;
+						case 'date':
+						case 'datetime':
+							if ($filter['date']) 
+							{
+								switch ($filter['date']) 
+								{
+									case 'all':
+										break;
+									case 'today':
+										$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+										$filterString .= "DATE($f)=DATE(NOW()) ";
+										break;
+									case 'yesterday':
+										$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+										$filterString .= "DATE($f)=DATE(NOW() - INTERVAL 1 DAY) ";
+										break;
+									case 'this_week':
+										$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+										$filterString .= "DATE($f)>=DATE(NOW() - INTERVAL 1 WEEK) ";
+										break;
+									case 'last_week':
+										$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+										$filterString .= "DATE($f)<DATE(NOW() - INTERVAL 1 WEEK) AND DATE($f)>=DATE(NOW() - INTERVAL 2 WEEK) ";
+										break;
+									case 'this_month':
+										$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+										$filterString .= "DATE($f)>=DATE(NOW() - INTERVAL 1 MONTH) ";
+										break;
+									case 'last_month':
+										$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+										$filterString .= "DATE($f)<DATE(NOW() - INTERVAL 1 MONTH) AND DATE($f)>=DATE(NOW() - INTERVAL 2 MONTH) ";
+										break;
+									case 'for_two_months':
+										$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+										$filterString .= "DATE($f)>=DATE(NOW() - INTERVAL 2 MONTH) ";
+										break;
+									case 'for_four_months':
+										$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+										$filterString .= "DATE($f)>=DATE(NOW() - INTERVAL 4 MONTH) ";
+										break;
+									case 'for_half_year':
+										$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+										$filterString .= "DATE($f)>=DATE(NOW() - INTERVAL 6 MONTH) ";
+										break;
+									case 'this_year':
+										$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+										$filterString .= "DATE($f)>=DATE(NOW() - INTERVAL 1 YEAR) ";
+										break;
+									case 'last_year':
+										$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+										$filterString .= "DATE($f)<DATE(NOW() - INTERVAL 1 YEAR) AND DATE($f)>=DATE(NOW() - INTERVAL 2 YEAR) ";
+										break;
+								}
+							}
+							break;
+					}
+				}
+			}
+			
+			return Database::getSingleResult("SELECT COUNT(*) FROM $table $filterString");
+		}
     }
 	
 	/**
@@ -79,19 +177,42 @@ class CRUDMySQLDriver extends CRUDDriverInterface
      */
     public function getListing($offset = 0, $limit = 30)
     {
-        $tmpFields = array_unique(
-            array_merge(
-				array($this->getCRUDObject()->getDiffField()), 
-				$this->getCRUDObject()->getDisplayable()
-			)
-        );
+		$displayable = $this->getCRUDObject()->getDisplayable();
+        $tmpFields = array_unique(array_merge(array($this->getCRUDObject()->getDiffField()), $displayable));
         $allFields = $this->getCRUDObject()->getFields();
         $foreignIndex = 'b';
         $orderFilter = false;
         $foreignIndexes = array();
-        $joinString = $groupBy = '';
+        $joinString = $filterString = $groupBy = '';
 		$tableName = $this->getCRUDObject()->getTableName();
 		$orderByField = $this->getCRUDObject()->getOrderByField();
+		
+		if ($filter = $this->getCRUDObject()->getFilter()) 
+		{
+			foreach ($allFields as $f => $d) {
+				$allFields[$f]['use_in_text_filter'] = false;
+				$allFields[$f]['use_in_date_filter'] = false;
+				$allFields[$f]['use_in_lm_filter'] = false;
+				if ($d['display'] == true) {
+					switch ($d['type']) {
+						case 'date':
+						case 'datetime':
+							$allFields[$f]['use_in_date_filter'] = ($filter['date']);
+							break;
+						case 'string':
+						case 'text':
+							$allFields[$f]['use_in_text_filter'] = ($filter['text']);
+							break;
+						case 'integer':
+						case 'decimal':
+						case 'number':
+							$allFields[$f]['use_in_lm_filter'] = ($filter['lm']);
+							break;
+					}
+				}
+			}
+		}
+		
         foreach ($allFields as $f => $d) {
             if (in_array($f, $tmpFields)) {
                 if ($d['type'] == 'calculated') {
@@ -101,6 +222,7 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                         }
                     }
                 }
+				
                 if ($d['from']) {
                     foreach ($tmpFields as &$ff) {
                         if ($ff == $f) {
@@ -130,6 +252,88 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                         }
                     }
                 }
+				
+				if ($filter and $d['use_in_text_filter']) {
+					$filterContain = preg_replace('![^a-zа-яё0-9\040]!iu', '', $filter['text']);
+					$filterString = ($filterString) ? "$filterString OR " : " WHERE ";
+					$index = (!$d['from']) ? 'a.' : '';
+					$filterString .= "{$index}{$f} LIKE '%$filterContain%' ";
+				} elseif ($filter and $d['use_in_lm_filter'] and isset($filter['lm']['operator']) and isset($filter['lm']['operand'])) {
+					switch ($filter['lm']['operator']) {
+						case 'more_than':
+							$filterContain = floatval($filter['lm']['operand']);
+							$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+							$index = (!$d['from']) ? 'a.' : '';
+							$filterString .= "{$index}{$f} > '$filterContain' ";
+							break;
+						case 'less_than':
+							$filterContain = floatval($filter['lm']['operand']);
+							$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+							$index = (!$d['from']) ? 'a.' : '';
+							$filterString .= "{$index}{$f} < '$filterContain' ";
+							break;
+					}
+				} elseif ($filter and $d['use_in_date_filter']) {
+					switch ($filter['date']) {
+						case 'all':
+							break;
+						case 'today':
+							$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+							$index = (!$d['from']) ? 'a.' : '';
+							$filterString .= "DATE({$index}{$f})=DATE(NOW()) ";
+							break;
+						case 'yesterday':
+							$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+							$index = (!$d['from']) ? 'a.' : '';
+							$filterString .= "DATE({$index}{$f})=DATE(NOW() - INTERVAL 1 DAY) ";
+							break;
+						case 'this_week':
+							$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+							$index = (!$d['from']) ? 'a.' : '';
+							$filterString .= "DATE({$index}{$f})>=DATE(NOW() - INTERVAL 1 WEEK) ";
+							break;
+						case 'last_week':
+							$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+							$index = (!$d['from']) ? 'a.' : '';
+							$filterString .= "DATE({$index}{$f})<DATE(NOW() - INTERVAL 1 WEEK) AND DATE({$index}{$f})>=DATE(NOW() - INTERVAL 2 WEEK) ";
+							break;
+						case 'this_month':
+							$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+							$index = (!$d['from']) ? 'a.' : '';
+							$filterString .= "DATE({$index}{$f})>=DATE(NOW() - INTERVAL 1 MONTH) ";
+							break;
+						case 'last_month':
+							$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+							$index = (!$d['from']) ? 'a.' : '';
+							$filterString .= "DATE({$index}{$f})<DATE(NOW() - INTERVAL 1 MONTH) AND DATE({$index}{$f})>=DATE(NOW() - INTERVAL 2 MONTH) ";
+							break;
+						case 'for_two_months':
+							$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+							$index = (!$d['from']) ? 'a.' : '';
+							$filterString .= "DATE({$index}{$f})>=DATE(NOW() - INTERVAL 2 MONTH) ";
+							break;
+						case 'for_four_months':
+							$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+							$index = (!$d['from']) ? 'a.' : '';
+							$filterString .= "DATE({$index}{$f})>=DATE(NOW() - INTERVAL 4 MONTH) ";
+							break;
+						case 'for_half_year':
+							$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+							$index = (!$d['from']) ? 'a.' : '';
+							$filterString .= "DATE({$index}{$f})>=DATE(NOW() - INTERVAL 6 MONTH) ";
+							break;
+						case 'this_year':
+							$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+							$index = (!$d['from']) ? 'a.' : '';
+							$filterString .= "DATE({$index}{$f})>=DATE(NOW() - INTERVAL 1 YEAR) ";
+							break;
+						case 'last_year':
+							$filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+							$index = (!$d['from']) ? 'a.' : '';
+							$filterString .= "DATE({$index}{$f})<DATE(NOW() - INTERVAL 1 YEAR) AND DATE({$index}{$f})>=DATE(NOW() - INTERVAL 2 YEAR) ";
+							break;
+					}
+				}
             }
         }
 
@@ -151,11 +355,13 @@ class CRUDMySQLDriver extends CRUDDriverInterface
         $orderBy = $orderFilter ? str_replace("a.$orderByField", $orderByField, $orderBy) : $orderBy;
         $statement = Database::getInstance()->prepare("
             SELECT $requiredFields
-            FROM $tableName AS a $joinString
+            FROM $tableName AS a 
+			$joinString
+			$filterString
             $groupBy $orderBy LIMIT :limit OFFSET :offset
         ");
 
-        //echo $statement->queryString;
+        //Process::$context['flash_error'] = $statement->queryString;
         $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
         $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
         $statement->execute();
@@ -226,10 +432,12 @@ class CRUDMySQLDriver extends CRUDDriverInterface
 				if ($fType == 'password') {
 					/*\***** !DO PASSWORD! *****\*/
 					$value = Security::getDigest($value);
+				} elseif ($fType == 'decimal') {
+					$value = str_replace(',', '.', $value);
 				}
 				
 				$insertedFields[] = $key;
-				$insertedValues[":$key"] = ($fType == 'integer' or $fType == 'number') ? 
+				$insertedValues[":$key"] = ($fType == 'integer' or $fType == 'number' or $fType == 'decimal') ? 
 					array($value, PDO::PARAM_INT) : array($value, PDO::PARAM_STR);
 			}
 		}

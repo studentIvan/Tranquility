@@ -7,25 +7,26 @@ class CRUDReferrers extends CRUDObjectInterface
     protected $menuIcon = 'icon-globe';
     protected $diffField = 'url_hash';
     protected $orderByField = 'rating';
+	
     protected $fields = array(
         'flag' => array(
-            'type' => 'calculated',
-            'function' => 'flagField',
-            'display' => true,
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_CALCULATED,
+            CRUDField::PARAM_DISPLAY_FUNCTION => 'flagField',
+            CRUDField::PARAM_DISPLAY => true,
         ),
         'url_hash' => array(
-            'type' => 'string',
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
         ),
         'url' => array(
-            'type' => 'string',
-            'modify' => 'переходы по ссылке: <a href="http://anonym.to/?$1" target="_blank">$1</a>',
-            'display' => true,
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
+            CRUDField::PARAM_MODIFY => 'переходы по ссылке: <a href="http://anonym.to/?$1" target="_blank">$1</a>',
+            CRUDField::PARAM_DISPLAY => true,
         ),
         'rating' => array(
-            'type' => 'integer',
-            'modify' => '$1 раз',
-            'count_of' => 'url',
-            'display' => true,
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_INTEGER,
+            CRUDField::PARAM_MODIFY => '$1 раз',
+            CRUDField::PARAM_IS_COUNT_OF_FIELD => 'url',
+            CRUDField::PARAM_DISPLAY => true,
         ),
     );
 

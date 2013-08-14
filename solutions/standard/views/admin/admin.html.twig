@@ -1,8 +1,8 @@
 {% extends 'admin/skeleton.admin.html.twig' %}
 {% block fixedb %}
-{% if container.count %}
+{% if container.count or container.count == 0 %}
     <div class="navbar navbar-fixed-bottom navbar-inverse">
-        {% if not mobile %}
+        {% if not mobile and container.count != 0 %}
 		<div class="pull-left">
             <p class="navbar-text">
                 Отображено
@@ -42,9 +42,9 @@
             {% include 'admin/'~container.page~'.html.twig' %}
         {% elseif container.type == 'listing' %}
 			{% if container.data|length == 0 %}
-			<div class="alert">
+			<div class="alert alert-info">
 			  <button type="button" class="close" data-dismiss="alert">&times;</button>
-			  <strong>Внимание!</strong> Нет элементов для отображения - вероятно таблица пустая.
+			  Нет элементов для отображения.
 			</div>
 			{% endif %}
 			{% if container.filter_options.filter_string or container.filter_options.filter_date or container.filter_options.filter_less_or_more %}
@@ -52,37 +52,38 @@
 				<table style="width: 100%; margin-bottom: 8px;"><tr>
 					{% if container.filter_options.filter_less_or_more and container.filter_options.filter_string %}
 					<td style="width: 15%;">
-						<select class="form-control" name="filter_less_or_more">
-						  <option value="contain"{% if filter_less_or_more == 'contain' %} selected="selected"{% endif %}>Содержит:</option>
-						  <option value="more_than"{% if filter_less_or_more == 'more_than' %} selected="selected"{% endif %}>Больше чем:</option>
-						  <option value="less_than"{% if filter_less_or_more == 'less_than' %} selected="selected"{% endif %}>Меньше чем:</option>
+						<select class="form-control" name="fx">
+						  <option value="contain"{% if container.filter.lm == 'contain' %} selected="selected"{% endif %}>Содержит:</option>
+						  <option value="more_than"{% if container.filter.lm == 'more_than' %} selected="selected"{% endif %}>Больше чем:</option>
+						  <option value="less_than"{% if container.filter.lm == 'less_than' %} selected="selected"{% endif %}>Меньше чем:</option>
 						</select>
 					</td>
 					{% endif %}
 					{% if container.filter_options.filter_string %}
-					<td><input type="search" class="form-control" name="filter" 
-						placeholder="Введите текст для фильтрации данных"{% if filter_text %} value="{{ filter_text }}"{% endif %}></td>
+					<td><input type="search" class="form-control" name="ft" 
+						placeholder="Введите текст для фильтрации данных"{% if container.filter.text %} value="{{ container.filter.text }}"{% endif %}></td>
 					{% endif %}
 					{% if container.filter_options.filter_date %}
 					<td {% if container.filter_options.filter_string %}style="width: 20%;"{% endif %}>
-						<select class="form-control" name="filter_date">
-						  <option value="all"{% if filter_date == 'all' %} selected="selected"{% endif %}>За всё время</option>
-						  <option value="today"{% if filter_date == 'today' %} selected="selected"{% endif %}>Сегодня</option>
-						  <option value="yesterday"{% if filter_date == 'yesterday' %} selected="selected"{% endif %}>Вчера</option>
-						  <option value="this_week"{% if filter_date == 'this_week' %} selected="selected"{% endif %}>За неделю</option>
-						  <option value="last_week"{% if filter_date == 'last_week' %} selected="selected"{% endif %}>На прошлой неделе</option>
-						  <option value="this_month"{% if filter_date == 'this_month' %} selected="selected"{% endif %}>За этот месяц</option>
-						  <option value="last_month"{% if filter_date == 'last_month' %} selected="selected"{% endif %}>За прошлый месяц</option>
-						  <option value="for_two_months"{% if filter_date == 'for_two_months' %} selected="selected"{% endif %}>За два месяца</option>
-						  <option value="for_four_months"{% if filter_date == 'for_four_months' %} selected="selected"{% endif %}>За четыре месяца</option>
-						  <option value="for_half_year"{% if filter_date == 'for_half_year' %} selected="selected"{% endif %}>За полгода</option>
-						  <option value="this_year"{% if filter_date == 'this_year' %} selected="selected"{% endif %}>За этот год</option>
-						  <option value="last_year"{% if filter_date == 'last_year' %} selected="selected"{% endif %}>За прошлый год</option>
+						<select class="form-control" name="fd">
+						  <option value="all"{% if container.filter.date == 'all' %} selected="selected"{% endif %}>За всё время</option>
+						  <option value="today"{% if container.filter.date == 'today' %} selected="selected"{% endif %}>Сегодня</option>
+						  <option value="yesterday"{% if container.filter.date == 'yesterday' %} selected="selected"{% endif %}>Вчера</option>
+						  <option value="this_week"{% if container.filter.date == 'this_week' %} selected="selected"{% endif %}>За неделю</option>
+						  <option value="last_week"{% if container.filter.date == 'last_week' %} selected="selected"{% endif %}>На прошлой неделе</option>
+						  <option value="this_month"{% if container.filter.date == 'this_month' %} selected="selected"{% endif %}>За этот месяц</option>
+						  <option value="last_month"{% if container.filter.date == 'last_month' %} selected="selected"{% endif %}>За прошлый месяц</option>
+						  <option value="for_two_months"{% if container.filter.date == 'for_two_months' %} selected="selected"{% endif %}>За два месяца</option>
+						  <option value="for_four_months"{% if container.filter.date == 'for_four_months' %} selected="selected"{% endif %}>За четыре месяца</option>
+						  <option value="for_half_year"{% if container.filter.date == 'for_half_year' %} selected="selected"{% endif %}>За полгода</option>
+						  <option value="this_year"{% if container.filter.date == 'this_year' %} selected="selected"{% endif %}>За этот год</option>
+						  <option value="last_year"{% if container.filter.date == 'last_year' %} selected="selected"{% endif %}>За прошлый год</option>
 						</select>
 					</td>
 					{% endif %}
 					<td style="width: 12%; padding-left: 4px;"><button type="submit" class="btn btn-info"><i class="icon-filter icon-white"></i>&nbsp;Фильтровать</button></td>
 				</tr></table>
+				<input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 			</form>
 			{% endif %}
             <table class="table table-hover table-expand">
@@ -110,19 +111,19 @@
             {% if pagination %}
                 <ul class="pagination">
                     {% if pagination.current_id != 1 %}
-                        <li><a href="{{ panel_base_uri }}/{{ admin_part }}">1</a></li>{% endif %}
+                        <li><a href="{{ panel_base_uri }}/{{ admin_part }}{{ query_string }}">1</a></li>{% endif %}
                     {% if pagination.prev_id and pagination.prev_id != 1 %}
                         <li>
-                        <a href="{{ panel_base_uri }}/{{ admin_part }}/page_{{ pagination.prev_id }}">{{ pagination.prev_id }}</a>
+                        <a href="{{ panel_base_uri }}/{{ admin_part }}/page_{{ pagination.prev_id }}{{ query_string }}">{{ pagination.prev_id }}</a>
                         </li>{% endif %}
                     <li class="active"><a href="#">{{ pagination.current_id }}</a></li>
                     {% if pagination.next_id %}
                         <li>
-                            <a href="{{ panel_base_uri }}/{{ admin_part }}/page_{{ pagination.next_id }}">{{ pagination.next_id }}</a>
+                            <a href="{{ panel_base_uri }}/{{ admin_part }}/page_{{ pagination.next_id }}{{ query_string }}">{{ pagination.next_id }}</a>
                         </li>
                         {% if pagination.total_pages > pagination.next_id %}
                             <li>
-                                <a href="{{ panel_base_uri }}/{{ admin_part }}/page_{{ pagination.total_pages }}">{{ pagination.total_pages }}</a>
+                                <a href="{{ panel_base_uri }}/{{ admin_part }}/page_{{ pagination.total_pages }}{{ query_string }}">{{ pagination.total_pages }}</a>
                             </li>
                         {% endif %}
                     {% endif %}

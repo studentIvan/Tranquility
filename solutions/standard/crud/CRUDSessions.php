@@ -8,57 +8,57 @@ class CRUDSessions extends CRUDObjectInterface
     protected $diffField = 'token';
     protected $orderByField = 'uptime';
     protected $onlyDisplay = true;
+	
     protected $fields = array(
         'token' => array(
-            'type' => 'string',
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
         ),
         'status' => array(
-            'type' => 'calculated',
-            'function' => 'statusField',
-            'display' => true,
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_CALCULATED,
+            CRUDField::PARAM_DISPLAY_FUNCTION => 'statusField',
+            CRUDField::PARAM_DISPLAY => true,
         ),
         'role' => array(
-            'type' => 'select',
-            'from' => array(
-                'table' => 'roles',
-                'field' => 'id',
-                'as' => 'title',
-                'join' => 'left',
-                'group' => 'r',
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_SELECT,
+            CRUDField::PARAM_ONE_TO_MANY_SETTINGS => array(
+                CRUDField::PARAM_ONE_TO_MANY_JOIN_TABLE => 'roles',
+                CRUDField::PARAM_ONE_TO_MANY_JOIN_CONDITION_JOIN_TABLE_FIELD => 'id',
+                CRUDField::PARAM_ONE_TO_MANY_TARGET_JOIN_TABLE_FIELD => 'title',
+                CRUDField::PARAM_ONE_TO_MANY_JOIN_TYPE => CRUDField::JOIN_TYPE_LEFT,
+                CRUDField::PARAM_ONE_TO_MANY_JOIN_GROUP => 'r',
             ),
-            'display' => true,
+            CRUDField::PARAM_DISPLAY => true,
         ),
         'ip' => array(
-            'type' => 'integer',
-            'function' => 'long2ip',
-            'modify' => '<a href="http://ip-whois.net/ip_geo.php?ip=$1" target="_blank">$1</a>',
-            'display' => true,
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_INTEGER,
+            CRUDField::PARAM_DISPLAY_FUNCTION => 'long2ip',
+            CRUDField::PARAM_MODIFY => '<a href="http://ip-whois.net/ip_geo.php?ip=$1" target="_blank">$1</a>',
+            CRUDField::PARAM_DISPLAY => true,
         ),
         'useragent' => array(
-            'type' => 'string',
-            'display' => true,
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
+            CRUDField::PARAM_DISPLAY => true,
         ),
         'uid' => array(
-            'type' => 'select',
-            'modify' => '<a href="#" class="tooltipped" data-toggle="tooltip" title="Этот пользователь авторизован">@$1</a>',
-            'from' => array(
-                'table' => 'users',
-                'field' => 'id',
-                'as' => 'login',
-                'join' => 'left',
-                'group' => 'u',
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_SELECT,
+            CRUDField::PARAM_MODIFY => '<a href="#" class="tooltipped" data-toggle="tooltip" title="Этот пользователь авторизован">@$1</a>',
+            CRUDField::PARAM_ONE_TO_MANY_SETTINGS => array(
+                CRUDField::PARAM_ONE_TO_MANY_JOIN_TABLE => 'users',
+                CRUDField::PARAM_ONE_TO_MANY_JOIN_CONDITION_JOIN_TABLE_FIELD => 'id',
+                CRUDField::PARAM_ONE_TO_MANY_TARGET_JOIN_TABLE_FIELD => 'login',
+                CRUDField::PARAM_ONE_TO_MANY_JOIN_TYPE => CRUDField::JOIN_TYPE_LEFT,
+                CRUDField::PARAM_ONE_TO_MANY_JOIN_GROUP => 'u',
             ),
-            'display' => true,
+            CRUDField::PARAM_DISPLAY => true,
         ),
         'uptime' => array(
-            'type' => 'datetime',
-            'display' => true,
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_DATETIME,
+            CRUDField::PARAM_DISPLAY => true,
         )
     );
 
     public function statusField($key) 
 	{
-        $sOpts = Session::getOptions();
         if (Session::getToken() == $key['token']) {
             return '<i class="icon-eye-close"></i>
             <div style="position: absolute; top: 25px;

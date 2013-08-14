@@ -5,21 +5,22 @@ class CRUDRoles extends CRUDObjectInterface
     protected $menuCreate = 'новая роль';
     protected $tableName = 'roles';
     protected $menuIcon = 'icon-briefcase';
+	
     protected $fields = array(
         'id' => array(
-            'default' => 'null',
-			'description' => 'ID роли',
-            'type' => 'integer',
+            CRUDField::PARAM_DEFAULT => CRUDField::DEFAULT_NULL,
+			CRUDField::PARAM_DESCRIPTION => 'ID роли',
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_INTEGER,
         ),
         'title' => array(
-            'type' => 'string',
-			'description' => 'Название',
-            'display' => true,
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
+			CRUDField::PARAM_DESCRIPTION => 'Название',
+            CRUDField::PARAM_DISPLAY => true,
         ),
         'info' => array(
-            'type' => 'calculated',
-            'function' => 'roleTypeField',
-            'display' => true,
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_CALCULATED,
+            CRUDField::PARAM_DISPLAY_FUNCTION => 'roleTypeField',
+            CRUDField::PARAM_DISPLAY => true,
         ),
     );
 

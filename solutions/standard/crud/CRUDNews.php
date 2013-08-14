@@ -24,40 +24,40 @@ class CRUDNews extends CRUDObjectInterface
 	
     protected $fields = array(
         'id' => array(
-            'default' => 'null',
-			'description' => 'ID новости',
-            'type' => 'integer',
+            CRUDField::PARAM_DEFAULT => CRUDField::DEFAULT_NULL,
+			CRUDField::PARAM_DESCRIPTION => 'ID новости',
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_INTEGER,
         ),
         'title' => array(
-            'type' => 'string',
-            'description' => 'Заголовок',
-            'display' => true,
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
+            CRUDField::PARAM_DESCRIPTION => 'Заголовок',
+            CRUDField::PARAM_DISPLAY => true,
         ),
         'content' => array(
-            'type' => 'text',
-			'description' => 'Контент',
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_TEXT,
+			CRUDField::PARAM_DESCRIPTION => 'Контент',
         ),
         'tags' => array(
-            'type' => 'string',
-			'description' => 'Теги',
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
+			CRUDField::PARAM_DESCRIPTION => 'Теги',
         ),
         'created_at' => array(
-            'default' => 'now',
-			'description' => 'Время создания',
-            'type' => 'datetime',
-            'display' => true,
+            CRUDField::PARAM_DEFAULT => CRUDField::DEFAULT_NOW,
+			CRUDField::PARAM_DESCRIPTION => 'Время создания',
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_DATETIME,
+            CRUDField::PARAM_DISPLAY => true,
         ),
         'posted_by' => array(
-            'type' => 'integer',
-			'description' => 'Автор',
-			'default' => array('Session', 'getUID'),
-            'modify' => '<a href="#" class="tooltipped" data-toggle="tooltip" title="Автор новости">@$1</a>',
-            'from' => array(
-                'table' => 'users',
-                'field' => 'id',
-                'as' => 'login',
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_INTEGER,
+			CRUDField::PARAM_DESCRIPTION => 'Автор',
+			CRUDField::PARAM_DEFAULT => array('Session', 'getUID'),
+            CRUDField::PARAM_MODIFY => '<a href="#" class="tooltipped" data-toggle="tooltip" title="Автор новости">@$1</a>',
+            CRUDField::PARAM_ONE_TO_MANY_SETTINGS => array(
+                CRUDField::PARAM_ONE_TO_MANY_JOIN_TABLE => 'users',
+                CRUDField::PARAM_ONE_TO_MANY_JOIN_CONDITION_JOIN_TABLE_FIELD => 'id',
+                CRUDField::PARAM_ONE_TO_MANY_TARGET_JOIN_TABLE_FIELD => 'login',
             ),
-            'display' => true,
+            CRUDField::PARAM_DISPLAY => true,
         ),
     );
 }

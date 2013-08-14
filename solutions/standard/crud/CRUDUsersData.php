@@ -7,60 +7,61 @@ class CRUDUsersData extends CRUDObjectInterface
     protected $menuIcon = 'icon-file';
     protected $diffField = 'user_id';
     protected $orderByField = 'user_id';
+	
     protected $fields = array(
         'user_id' => array(
-            'type' => 'integer',
-			'description' => 'User ID',
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_INTEGER,
+			CRUDField::PARAM_DESCRIPTION => 'User ID',
         ),
         'login' => array(
-            'type' => 'infinity',
-			'description' => 'Логин',
-            'modify' => '<a href="#" class="tooltipped" data-toggle="tooltip" title="Владелец профиля">@$1</a>',
-            'from' => array(
-                'table' => 'users',
-                'field' => 'id',
-                'as' => 'login',
-                'on' => 'user_id',
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_INFINITY,
+			CRUDField::PARAM_DESCRIPTION => 'Логин',
+            CRUDField::PARAM_MODIFY => '<a href="#" class="tooltipped" data-toggle="tooltip" title="Владелец профиля">@$1</a>',
+            CRUDField::PARAM_ONE_TO_MANY_SETTINGS => array(
+                CRUDField::PARAM_ONE_TO_MANY_JOIN_TABLE => 'users',
+                CRUDField::PARAM_ONE_TO_MANY_JOIN_CONDITION_JOIN_TABLE_FIELD => 'id',
+                CRUDField::PARAM_ONE_TO_MANY_TARGET_JOIN_TABLE_FIELD => 'login',
+                CRUDField::PARAM_ONE_TO_MANY_JOIN_CONDITION_THIS_TABLE_FIELD => 'user_id',
             ),
-            'display' => true,
+            CRUDField::PARAM_DISPLAY => true,
         ),
         'nickname' => array(
-            'type' => 'string',
-			'description' => 'Ник',
-            'display' => true,
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
+			CRUDField::PARAM_DESCRIPTION => 'Ник',
+            CRUDField::PARAM_DISPLAY => true,
         ),
         'full_name' => array(
-            'type' => 'string',
-			'description' => 'ФИО',
-            'display' => true,
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
+			CRUDField::PARAM_DESCRIPTION => 'ФИО',
+            CRUDField::PARAM_DISPLAY => true,
         ),
         'email' => array(
-            'type' => 'email',
-			'description' => 'Email',
-			'display' => true,
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_EMAIL,
+			CRUDField::PARAM_DESCRIPTION => 'Email',
+			CRUDField::PARAM_DISPLAY => true,
         ),
         'photo' => array(
-            'type' => 'image_uri',
-            'modify' => '<img src="$1" alt="" height="40" />',
-			'description' => 'Аватар (uri)',
-			'display' => true,
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
+            CRUDField::PARAM_MODIFY => '<img src="$1" alt="" height="40" />',
+			CRUDField::PARAM_DESCRIPTION => 'Аватар (uri)',
+			CRUDField::PARAM_DISPLAY => true,
         ),
         'gender' => array(
-            'type' => 'select',
-			'description' => 'Пол',
-            'values' => array(
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_SELECT,
+			CRUDField::PARAM_DESCRIPTION => 'Пол',
+            CRUDField::PARAM_STATIC_VALUES => array(
                 'm' => 'парень',
                 'w' => 'девушка',
             ),
-            'display' => true,
+            CRUDField::PARAM_DISPLAY => true,
         ),
         'birthday' => array(
-            'type' => 'date',
-			'description' => 'Дата рождения',
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_DATE,
+			CRUDField::PARAM_DESCRIPTION => 'Дата рождения',
         ),
         'non_indexed_data' => array(
-            'type' => 'text',
-            'default' => 'null',
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_TEXT,
+            CRUDField::PARAM_DEFAULT => CRUDField::DEFAULT_NULL,
         ),
     );
 }

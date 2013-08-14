@@ -101,6 +101,11 @@ return array(
 	 * Free space on your hosting in mb
 	 */
 	'hosting_free_space_mb' => 100,
+	
+	/**
+	 * Visitors clear INTERVAL configuration
+	 */
+	'save_visitors_for' => '1 YEAR',
 
     /**
      * Session configuration
