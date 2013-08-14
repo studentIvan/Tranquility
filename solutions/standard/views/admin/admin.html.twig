@@ -1,7 +1,7 @@
 {% extends 'admin/skeleton.admin.html.twig' %}
 {% block fixedb %}
 {% if container.count or container.count == 0 %}
-    <div class="navbar navbar-fixed-bottom navbar-inverse">
+    <div class="navbar navbar-fixed-bottom navbar-inverse" style="padding-left: 10px; padding-right: 10px;">
         {% if not mobile and container.count != 0 %}
 		<div class="pull-left">
             <p class="navbar-text">
@@ -17,13 +17,13 @@
             <button {% if not mobile %}data-toggle="modal" data-target="#modalCreate"{% else %}
 			onclick="window.location.href='{{ panel_base_uri }}/{{ admin_part }}/create'"
 			{% endif %} class="btn btn-default navbar-btn">
-                <i class="icon-plus icon-white"></i>&nbsp;<span id="addmsg">{{ container.create_new_message }}</span>
+                <i class="icon-plus"></i>&nbsp;<span id="addmsg">{{ container.create_new_message }}</span>
             </button>
             {% endif %}
             {% if not mobile %}
 			<button class="btn btn-default navbar-btn"
                     onclick="$('#updt').html('обновление...');$(this).addClass('disabled');window.location.reload();">
-                <i class="icon-refresh icon-white"></i>&nbsp;<span id="updt">обновить страницу</span>
+                <i class="icon-refresh"></i>&nbsp;<span id="updt">обновить страницу</span>
             </button>
 			{% endif %}
         </div>
