@@ -6,11 +6,13 @@ class Installer
         if (($secretToken = Data::uriVar('secure'))
             and ($siteName = Data::uriVar('site'))
             and ($mysqlHost = Data::uriVar('mysqlhost'))
-            and ($mysqlLogin = Data::uriVar('mysqllogin'))
-            and ($mysqlAuth = Data::uriVar('root')))
+            and ($mysqlLogin = Data::uriVar('mysqllogin')))
         {
             $mysqlPassword = Data::uriVar('mysqlpassword');
             $mysqlPassword = $mysqlPassword ? $mysqlPassword : '';
+            $mysqlAuth = ($mysqlPassword != '') ?
+                "-u{$mysqlLogin} -p{$mysqlPassword}" : "-u{$mysqlLogin}";
+
             Process::$context['setup'] = true;
 
             if (!is_writable('../config/config.php')) {

@@ -1,76 +1,88 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <title>Tranquility :: Installer</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="{{ resource.jquery_mobile_css }}">
-    <script type="text/javascript" src="{{ resource.jquery_js }}"></script>
-    <script type="text/javascript" src="{{ resource.jquery_mobile_js }}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap -->
+    <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
+    <link href="/css/icons.css" rel="stylesheet" media="screen">
 </head>
 <body>
-<div data-role="page">
-    <div data-role="header" data-position="fixed">
-        <h1>Установка системы</h1>
-    </div><!-- /header -->
-    <div data-role="content">
-        {% if not setup %}
-            <form action="/install" method="GET">
-                <div data-role="fieldcontain">
-                    <fieldset data-role="controlgroup">
-                        <label for="sited">Название сайта</label>
-                        <input type="text" id="sited" name="site" required="required" />
+<nav class="navbar" role="navigation">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Tranquility :: Installer</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse navbar-ex1-collapse">
+
+    </div>
+    <!-- /.navbar-collapse -->
+</nav>
+<div class="container">
+    <div class="panel">
+        <div class="panel-body">
+            {% if not setup %}
+                <form role="form">
+                    <fieldset>
+                        <legend>Setup Configuration</legend>
+                        <div class="form-group">
+                            <label for="sited">Site title</label>
+                            <input type="text" class="form-control" id="sited" name="site" required="required"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="secd">A random set of letters and numbers:</label>
+                            <input type="text" class="form-control" id="secd" name="secure" required="required"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="mysqlhostd">MySQL host:</label>
+                            <input type="text" class="form-control" id="mysqlhostd" name="mysqlhost" required="required"
+                                   value="localhost"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="mysqllogind">MySQL user login:</label>
+                            <input type="text" class="form-control" id="mysqllogind" name="mysqllogin"
+                                   required="required" value="root"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="mysqlpasswordd">MySQL user password:</label>
+                            <input type="text" class="form-control" id="mysqlpasswordd" name="mysqlpassword" value=""/>
+                        </div>
+                        <button type="submit" class="btn btn-default">
+                            <i class="icon-fire"></i>&nbsp;RUN INSTALLER
+                        </button>
                     </fieldset>
-                </div>
-                <div data-role="fieldcontain">
-                    <fieldset data-role="controlgroup">
-                        <label for="secd">Хаотический набор букв и цифр:</label>
-                        <input type="text" id="secd" name="secure" required="required" />
-                    </fieldset>
-                </div>
-                <div data-role="fieldcontain">
-                    <fieldset data-role="controlgroup">
-                        <label for="mysqlhostd">Хост MySQL:</label>
-                        <input type="text" id="mysqlhostd" name="mysqlhost" required="required" value="localhost" />
-                    </fieldset>
-                </div>
-                <div data-role="fieldcontain">
-                    <fieldset data-role="controlgroup">
-                        <label for="mysqllogind">Логин MySQL пользователя:</label>
-                        <input type="text" id="mysqllogind" name="mysqllogin" required="required" value="root" />
-                    </fieldset>
-                </div>
-                <div data-role="fieldcontain">
-                    <fieldset data-role="controlgroup">
-                        <label for="mysqlpasswordd">Пароль MySQL пользователя:</label>
-                        <input type="text" id="mysqlpasswordd" name="mysqlpassword" value="" />
-                    </fieldset>
-                </div>
-                <div data-role="fieldcontain">
-                    <fieldset data-role="controlgroup">
-                        <label for="rootd">Авторизация MySQL client:</label>
-                        <input type="text" id="rootd" name="root" required="required" value="-uroot" />
-                    </fieldset>
-                </div>
-                <div>
-                    <button data-role="submit">Установить</button>
-                </div>
-            </form>
-        {% else %}
-            <h2>Результат установки</h2>
-            {% if ress %}<ol data-role="listview" data-inset="true" data-theme="a">
-                {% for res in ress %}
-                <li>{{ res }}</li>
-                {% endfor %}
-            </ol>
+                </form>
+            {% else %}
+                <h2>Результат установки</h2>
+                {% if ress %}
+                    <ul class="list-group">
+                    {% for res in ress %}
+                        <li class="list-group-item">{{ res }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endif %}
+                {% if errs %}
+                    <ul class="list-group">
+                    {% for err in errs %}
+                        <li class="list-group-item">{{ err }}</li>
+                    {% endfor %}
+                    </ul>{% endif %}
             {% endif %}
-            {% if errs%}<ol data-role="listview" data-inset="true" data-theme="e">
-                {% for err in errs %}
-                <li>{{ err }}</li>
-                {% endfor %}
-            </ol>{% endif %}
-        {% endif %}
+        </div>
     </div>
 </div>
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="/js/jquery.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="/js/bootstrap.min.js"></script>
 </body>
 </html>
