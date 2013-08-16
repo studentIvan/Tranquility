@@ -128,5 +128,6 @@ return array(
             'limit_per_page' => 2,
         ),
         'email_confirm' => false,
+        'visitors' => false,
     ),
 );

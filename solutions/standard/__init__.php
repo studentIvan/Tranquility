@@ -22,9 +22,11 @@ if (isset($config['cms'])) {
     }
 
     require_once $__DIRADM__ . '/datamappers/Stats.php';
+    if (isset($config['cms']['visitors']) and $config['cms']['visitors']) {
+        if (isset($_SERVER['REMOTE_ADDR']))
+            Stats::registerVisit();
+    }
 
-    if (isset($_SERVER['REMOTE_ADDR']))
-        Stats::registerVisit();
 
     $config['cms']['admin_cfg'] = require_once $__DIRADM__ . '/../../config/admin.config.php';
 }
