@@ -1,47 +1,35 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset='utf-8'>
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>Tranquility - PHP Content Management Framework</title>
-    <link rel="stylesheet" href="stylesheets/styles.css">
-    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/respond.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
     <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="stylesheets/ie.css">
-    <![endif]-->
-    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
+    <title>Tranquility by studentIvan</title>
   </head>
+
   <body>
+    <header>
+      <div class="inner">
+        <h1>Tranquility</h1>
+        <h2>PHP Content Management Framework</h2>
+        <a href="https://github.com/studentIvan/Tranquility" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
 
-      <div id="header">
-        <nav>
-          <li class="fork"><a href="https://github.com/studentIvan/Tranquility">Fork On GitHub</a></li>
-          <li class="downloads"><a href="https://github.com/studentIvan/Tranquility/zipball/master">ZIP</a></li>
-          <li class="downloads"><a href="https://github.com/studentIvan/Tranquility/tarball/master">TAR</a></li>
-          <li class="title">DOWNLOADS</li>
-        </nav>
-      </div><!-- end header -->
-
-    <div class="wrapper">
-
-      <section>
-        <div id="title">
-          <h1><img src="https://github-camo.global.ssl.fastly.net/085c620f05e2c93f7ed6b999e6d06777ba35c616/687474703a2f2f686162726173746f726167652e6f72672f73746f72616765322f6365662f3835332f3364372f63656638353333643735626230663866303134323832613761336338313636382e706e67"></h1>
-          <p>Php 5.2 content management framework (BSD licensed)</p>
-          <hr>
-          <span class="credits left">Project maintained by <a href="http://vk.com/student_ivan">Maslov Ivan</a></span>
-          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
-        </div>
-
-        <h2>Tranquility CMF</h2>
-
-<h3>Features</h3>
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h3>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h3>
 
 <ul>
 <li>Easy to install and use</li>
@@ -49,34 +37,61 @@
 <li>Web/PDA automatic difference</li>
 <li>Solutions difference</li>
 <li>BSD license</li>
-</ul><h3>Composition</h3>
+</ul><h3>
+<a name="composition" class="anchor" href="#composition"><span class="octicon octicon-link"></span></a>Composition</h3>
 
 <ul>
+<li>Bootstrap 3 RC2 + jQuery 2</li>
 <li>Twig template engine + plural ends extension</li>
 <li>Uri-match routing + basic application architecture</li>
 <li>Many global singletons (oh god, why?)</li>
-<li>TinyMCE visual editor (disabled for news by default)</li>
-<li>JQuery mobile + power admin panel</li>
 <li>LocalizedDate.JS</li>
-</ul><h3>Requirements</h3>
+</ul><h3>
+<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h3>
 
 <ul>
 <li>php 5.2.4</li>
 <li>pdo mysql</li>
-<li>mbstrings (recommended)</li>
-</ul><h2>Quick start</h2>
+<li>mb_ (optional)</li>
+</ul><h3>
+<a name="production-install" class="anchor" href="#production-install"><span class="octicon octicon-link"></span></a>Production install</h3>
+
+<ul>
+<li>Turn off developer mode in config/config.php</li>
+</ul><h3>
+<a name="example-apache-configuration" class="anchor" href="#example-apache-configuration"><span class="octicon octicon-link"></span></a>Example apache configuration</h3>
+
+<div class="highlight"><pre><span class="nt">&lt;VirtualHost</span> <span class="s">*</span><span class="nt">&gt;</span>
+    <span class="nb">ServerName</span> turbo.local
+    <span class="nb">DocumentRoot</span> <span class="s2">"/path/to/tranquility/webroot"</span>
+
+    <span class="nt">&lt;Directory</span> <span class="s">/path/to/tranquility/webroot</span><span class="nt">&gt;</span>
+        <span class="nb">DirectoryIndex</span> index.php index.html
+        <span class="nb">AllowOverride</span> <span class="k">All</span>
+        <span class="nb">Order</span> allow,deny
+        <span class="nb">Allow</span> from <span class="k">all</span>
+    <span class="nt">&lt;/Directory&gt;</span>
+<span class="nt">&lt;/VirtualHost&gt;</span>
+</pre></div>
+
+<h3>
+<a name="cheap-hosting-webroot-placement" class="anchor" href="#cheap-hosting-webroot-placement"><span class="octicon octicon-link"></span></a>Cheap hosting webroot placement</h3>
+
+<p>You can rename webroot so as you like. For example: htdocs (as default hosting directory) or www</p>
+
+<h2>
+<a name="quick-start" class="anchor" href="#quick-start"><span class="octicon octicon-link"></span></a>Quick start</h2>
 
 <p>Hi developer. Im told you some basic information about Tranquility. Whats that Tranquility? Tranquility its a content management framework, for increase your php site development speed. You may use ready solutions and make custom. Solutions are portable so as Symfony bundles. Okay, now study framework architecture:</p>
 
-<h3>Framework architecture</h3>
+<h3>
+<a name="framework-architecture" class="anchor" href="#framework-architecture"><span class="octicon octicon-link"></span></a>Framework architecture</h3>
 
 <ul>
 <li>
 <strong>config</strong> - project configuration directory. Main configuration file config.php and router configuration like routes.php are places here.</li>
 <li>
 <strong>controllers</strong> - project controllers directory. Controller its simple php class whis public static methods, callable by router.</li>
-<li>
-<strong>datamappers</strong> - database helpers directory. Data Mapper can contain some helpfull methods, e.g. create, read, update, delete, listing...</li>
 <li>
 <strong>solutions</strong> - (DRY development) ready usefull solutions for something. Its may be admin panel, blog, internet shop and more more more... Dont repeat yourself!</li>
 <li>
@@ -89,70 +104,53 @@
 <strong>views</strong> - twig templates are placed here.</li>
 <li>
 <strong>webroot</strong> - site root (/). index.php, js, css, images and robots.txt are placed here.</li>
-</ul>
-
-<h3>Development installation</h3>
-<p>Go to http://yourdomain.com/install and fill the form. After, click &quot;Install&quot; and see your configuration files.</p>
-
-<h3>Solutions</h3>
+</ul><h3>
+<a name="solutions" class="anchor" href="#solutions"><span class="octicon octicon-link"></span></a>Solutions</h3>
 
 <p>Solution its a subproject, ready for use. Solution architecture resembles a framework architecture. May be include <strong>controllers</strong>, <strong>models</strong> and <strong>views</strong> directories (MVC), and as well as some scripts: <code>__init__.php</code> and <code>routes.php</code>.</p>
 
-<h3>Routing</h3>
+<h3>
+<a name="routing" class="anchor" href="#routing"><span class="octicon octicon-link"></span></a>Routing</h3>
 
 <p>Consider <strong>config/routes.php</strong> script. It is a simple associative array with keys (regular expressions routes) and values (targets). Key example: <code>/hello/(\S+)/?</code>. Value it is a string or array of strings. If you want call view, just write view name, without extension (e.g. hello for views/hello.html.twig). For controller call - write first letter as exclamation mark (!). Variants: <code>!controller:method</code>, <code>!solution:controller:method</code>. Write sample:</p>
 
-<div class="highlight">
-<pre><span class="cp">&lt;?php</span>
+<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
 <span class="sd">/** file: config/routes.php */</span>
 <span class="k">return</span> <span class="k">array</span><span class="p">(</span>
     <span class="s1">'/hello/world'</span> <span class="o">=&gt;</span> <span class="s1">'hello'</span><span class="p">,</span>
 <span class="p">);</span>
-</pre>
-</div>
+</pre></div>
 
-
-<hr><div class="highlight">
-<pre><span class="c">&lt;!-- file: views/hello.html.twig --&gt;</span>
+<hr><div class="highlight"><pre><span class="c">&lt;!-- file: views/hello.html.twig --&gt;</span>
 Hello <span class="nt">&lt;b&gt;</span>developer<span class="nt">&lt;/b&gt;</span>
-</pre>
-</div>
-
+</pre></div>
 
 <p>Now, go to <strong>/hello/world</strong> and see "Hello developer". Сomplicate it:</p>
 
-<div class="highlight">
-<pre><span class="cp">&lt;?php</span>
+<div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
 <span class="sd">/** file: config/routes.php */</span>
 <span class="k">return</span> <span class="k">array</span><span class="p">(</span>
     <span class="s1">'/hello/(\S+)'</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="s1">'!hello:demo'</span><span class="p">,</span> <span class="s1">'hello'</span><span class="p">),</span>
 <span class="p">);</span>
-</pre>
-</div>
+</pre></div>
 
-
-<hr><div class="highlight">
-<pre><span class="cp">&lt;?php</span>
+<hr><div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
 <span class="sd">/** file: controllers/Hello.php */</span>
 <span class="k">class</span> <span class="nc">Hello</span> <span class="p">{</span>
     <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">demo</span><span class="p">(</span><span class="nv">$matches</span><span class="p">)</span> <span class="p">{</span>
         <span class="nx">Process</span><span class="o">::</span><span class="nv">$context</span><span class="p">[</span><span class="s1">'name'</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$matches</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</pre>
-</div>
+</pre></div>
 
-
-<hr><div class="highlight">
-<pre><span class="c">&lt;!-- file: views/hello.html.twig --&gt;</span>
+<hr><div class="highlight"><pre><span class="c">&lt;!-- file: views/hello.html.twig --&gt;</span>
 Hello <span class="nt">&lt;b&gt;</span>{{ name }}<span class="nt">&lt;/b&gt;</span>
-</pre>
-</div>
-
+</pre></div>
 
 <p>After, go to <code>/hello/world</code> and see "Hello world". Fuck yea =)</p>
 
-<h3>Process class</h3>
+<h3>
+<a name="process-class" class="anchor" href="#process-class"><span class="octicon octicon-link"></span></a>Process class</h3>
 
 <p>Process it is a global control class with static variables and methods. The main of them:</p>
 
@@ -161,8 +159,7 @@ Hello <span class="nt">&lt;b&gt;</span>{{ name }}<span class="nt">&lt;/b&gt;</sp
 <code>Process::$context</code> - associative array, which contains twig template variables.</li>
 <li>
 <code>Process::getTwigInstance()</code> - simple singleton method, which returns Twig_Environment, for manually work with templates.</li>
-</ul><div class="highlight">
-<pre><span class="cp">&lt;?php</span>
+</ul><div class="highlight"><pre><span class="o">&lt;?</span><span class="nx">php</span>
 <span class="sd">/** file: controllers/Hello.php */</span>
 <span class="k">class</span> <span class="nc">Hello</span> <span class="p">{</span>
     <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">demo</span><span class="p">()</span> <span class="p">{</span>
@@ -170,22 +167,17 @@ Hello <span class="nt">&lt;b&gt;</span>{{ name }}<span class="nt">&lt;/b&gt;</sp
         <span class="nb">print_r</span><span class="p">(</span><span class="nx">Process</span><span class="o">::</span><span class="nv">$context</span><span class="p">);</span>
     <span class="p">}</span>
 <span class="p">}</span>
-</pre>
-</div>
-
+</pre></div>
 
 <p>After run this code you will see:</p>
 
-<div class="highlight">
-<pre><span class="x">array (</span>
-<span class="x">    mobile =&gt; false,</span>
-<span class="x">    resource =&gt; array(...),</span>
-<span class="x">    uri =&gt; /hello/world,</span>
-<span class="x">    cms =&gt; array(...),</span>
-<span class="x">)</span>
-</pre>
-</div>
-
+<div class="highlight"><pre><span class="k">array</span> <span class="p">(</span>
+    <span class="nx">mobile</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">,</span>
+    <span class="nx">resource</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="o">...</span><span class="p">),</span>
+    <span class="nx">uri</span> <span class="o">=&gt;</span> <span class="o">/</span><span class="nx">hello</span><span class="o">/</span><span class="nx">world</span><span class="p">,</span>
+    <span class="nx">cms</span> <span class="o">=&gt;</span> <span class="k">array</span><span class="p">(</span><span class="o">...</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
 
 <hr><ul>
 <li>
@@ -196,11 +188,13 @@ Hello <span class="nt">&lt;b&gt;</span>{{ name }}<span class="nt">&lt;/b&gt;</sp
 <code>Process::$context['uri']</code> - current uri (string), without QUERY_STRING.</li>
 <li>
 <code>Process::$context['cms']</code> - array from config.php, <strong>cms</strong> directive (for standard solution).</li>
-</ul><h3>Standard solution</h3>
+</ul><h3>
+<a name="standard-solution" class="anchor" href="#standard-solution"><span class="octicon octicon-link"></span></a>Standard solution</h3>
 
 <p>"Standard" solution includes admin panel and news feed. Go to <code>/admin/</code> uri and enter login: <strong>Admin</strong>, password: <strong>123456</strong>. You will see news manager, users editor, roles editor, session monitor and cron stress runner.</p>
 
-<h3>Some configuration directives</h3>
+<h3>
+<a name="configuration-directives" class="anchor" href="#configuration-directives"><span class="octicon octicon-link"></span></a>Configuration directives</h3>
 
 <ul>
 <li>
@@ -222,10 +216,35 @@ Hello <span class="nt">&lt;b&gt;</span>{{ name }}<span class="nt">&lt;/b&gt;</sp
 <li>
 <code>cms</code> - array for <strong>standard</strong> solution configuration.</li>
 </ul>
-      </section>
+        </section>
 
+        <aside id="sidebar">
+          <a href="https://github.com/studentIvan/Tranquility/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/studentIvan/Tranquility/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/studentIvan/Tranquility"></a> is maintained by <a href="https://github.com/studentIvan">studentIvan</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
-    
+
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-43235672-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
   </body>
 </html>
