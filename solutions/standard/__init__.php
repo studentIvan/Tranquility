@@ -16,10 +16,8 @@ if (isset($config['cms'])) {
         require_once $__DIRADM__ . '/datamappers/News.php';
     }
 
-    if (isset($config['cms']['users']) and $config['cms']['users']) {
-        require_once $__DIRADM__ . '/datamappers/Users.php';
-        require_once $__DIRADM__ . '/datamappers/Roles.php';
-    }
+    require_once $__DIRADM__ . '/datamappers/Users.php';
+    require_once $__DIRADM__ . '/datamappers/Roles.php';
 
     require_once $__DIRADM__ . '/datamappers/Stats.php';
     if (isset($config['cms']['visitors']) and $config['cms']['visitors']) {
