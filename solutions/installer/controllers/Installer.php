@@ -52,6 +52,7 @@ class Installer
                 "'password' => ''" => "'password' => '$mysqlPassword'",
                 "'security_token' => 'ololo'" => "'security_token' => '$secretToken'",
                 "'Tranquility site'" => "'$siteName'",
+                "'visitors' => false" => "'visitors' => true",
             );
 
             $cfg = file_get_contents('../config/config.php');
