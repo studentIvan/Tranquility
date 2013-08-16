@@ -97,6 +97,8 @@
 		});
 		
 		$('#main-container').fadeOut(0).fadeIn();
+
+        {% if not admin_part %}{% include 'admin/homepage.js.twig' %}{% endif %}
 		
 		batmanHand.init(function (path, title) {
 			if (title == 'Главная :: управление')

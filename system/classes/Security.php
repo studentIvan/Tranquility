@@ -9,7 +9,7 @@ class Security
     /**
      * @static
      * @param string $secret
-     * @throw Exception
+     * @throws Exception
      */
     public static function setSecret($secret)
     {
@@ -28,7 +28,9 @@ class Security
     public static function getDigest($var)
     {
         $buffer = '';
-
+        if ($var === false) {
+            $var = 'false';
+        }
         if (is_array($var)) {
             foreach ($var as $element) $buffer .= self::getDigest($element);
         } else {
@@ -45,7 +47,7 @@ class Security
      */
     public static function getUniqueDigestForUserIP($var)
     {
-        return self::getDigest($var . $_SERVER['REMOTE_ADDR']);
+        return self::getDigest($var . (isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : ''));
     }
 
     public static function getCsrfToken()

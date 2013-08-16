@@ -100,7 +100,7 @@ return array(
     /*
      * Free space on your hosting in mb
      */
-    'hosting_free_space_mb' => 100,
+    'hosting_free_space_mb' => 1024,
 
     /**
      * Visitors clear INTERVAL configuration

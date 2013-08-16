@@ -1,0 +1,7 @@
+<h4>Общий размер сайта</h4>
+<small>{{ total_space_info }}</span></small>
+<div class="progress progress-striped">
+    <div class="progress-bar {% if total_space_percent > 80 %}progress-bar-danger{% elseif total_space_percent > 60 %}progress-bar-warning{% elseif total_space_percent < 10 %}progress-bar-success{% endif %}"
+         style="width: {% if total_space_percent %}{{ total_space_percent }}{% else %}100{% endif %}%;"
+         role="progressbar" aria-valuenow="{{ total_space_percent }}" aria-valuemin="0" aria-valuemax="100"></div>
+</div>

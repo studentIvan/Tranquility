@@ -221,11 +221,17 @@ abstract class CRUDObjectInterface
      */
     public function getCount()
     {
-        return $this->getDriver()->getCount();
+        try {
+            return $this->getDriver()->getCount();
+        }
+        catch (Exception $e) {
+            return 0;
+        }
     }
 
     /**
      * @param array $postedData
+     * @throws ForbiddenException
      * @return bool
      */
     public function create($postedData)
@@ -285,6 +291,7 @@ abstract class CRUDObjectInterface
     /**
      * @param int $offset
      * @param int $limit
+     * @throws ForbiddenException
      * @return array
      */
     public function getListing($offset = 0, $limit = 30)

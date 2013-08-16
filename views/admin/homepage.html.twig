@@ -90,11 +90,11 @@
 </div>
 <br>
 <div class="panel">
-    <h4>Общий размер сайта</h4>
-    <small>{{ total_space_info }}</small>
-    <div class="progress progress-striped">
-        <div class="progress-bar {% if total_space_percent > 80 %}progress-bar-danger{% elseif total_space_percent > 60 %}progress-bar-warning{% elseif total_space_percent < 10 %}progress-bar-success{% endif %}"
-             style="width: {% if total_space_percent %}{{ total_space_percent }}{% else %}100{% endif %}%;"></div>
+    <div class="panel-body" id="space-info">
+        <h4>Подсчёт размера сайта, подождите...</h4>
+        <div class="progress progress-striped active">
+            <div class="progress-bar" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+        </div>
     </div>
 </div>
 <div class="panel">

@@ -5,14 +5,32 @@ class Admin
     protected static $configuration = array();
     protected static $models = array();
 
-    public static function control($matches)
+    /**
+     * @param $matches
+     */
+    public static function dispatcher($matches)
     {
         /**
          * Loading configuration
          */
         self::$configuration = Process::$context['cms']['admin_cfg'];
 
-        if (!in_array(Session::getRole(), self::$configuration['access_roles'])) {
+        if (self::isAccessAllow(Session::getRole(), self::$configuration['access_roles'])) {
+            self::load($matches);
+        } else {
+            Process::getTwigInstance()->display('admin/login.html.twig', Process::$context);
+        }
+    }
+
+    /**
+     * @param integer $role
+     * @param array $zoolRolesList
+     * @return bool
+     */
+    public static function isAccessAllow($role, $zoolRolesList)
+    {
+        if (!is_array($zoolRolesList)) return false;
+        if (!in_array($role, $zoolRolesList, true)) {
             Process::$context['bot_secure'] = array(
                 'input_login' => Security::getUniqueDigestForUserIP('input_login'),
                 'input_pass' => Security::getUniqueDigestForUserIP('input_pass'),
@@ -30,21 +48,92 @@ class Admin
                 $temporary = $remember ? false : true;
                 try {
                     Session::authorize($login, $password, $temporary);
-                    if (!in_array(Session::getRole(), self::$configuration['access_roles'])) {
+                    if (!in_array($role, $zoolRolesList, true)) {
                         throw new AuthException('role error');
                     } else {
                         afterSessionStartedCallback();
-                        self::load($matches);
+                        return true;
                     }
                 } catch (Exception $e) {
                     Process::$context['flash_error'] = true;
-                    Process::getTwigInstance()->display('admin/login.html.twig', Process::$context);
+                    return false;
                 }
             } else {
-                Process::getTwigInstance()->display('admin/login.html.twig', Process::$context);
+                return false;
             }
         } else {
-            self::load($matches);
+            return true;
+        }
+    }
+
+    public static function ajax()
+    {
+        if (self::$checkCSRFToken and $selectedAction = Data::input('a')) {
+            /**
+             * @var $selectedPartitionModel CRUDObjectInterface
+             */
+            $selectedPartitionModel = null;
+            list($selectedElement, $selectedPartition) = Data::inputsList('e', 'p');
+
+            foreach (self::$models as $m)
+                /**
+                 * @var $m CRUDObjectInterface
+                 */
+            if ($m->getMenuURI() === $selectedPartition)
+                $selectedPartitionModel = $m;
+
+            if (is_null($selectedPartitionModel) and $selectedAction !== 'get-site-size')
+                throw new ForbiddenException();
+
+            switch ($selectedAction) {
+                case 'get-site-size':
+                    try {
+                        $totalSpace = round((Data::getDirSize(dirname(__FILE__) . '/../../../')) / 1024 / 1024, 2);
+                        $freeSpace = isset(Process::$context['hosting_free_space_mb'])
+                            ? Process::$context['hosting_free_space_mb'] : 1024;
+                        Process::$context['total_space_info'] = "$totalSpace мб из $freeSpace мб";
+                        Process::$context['total_space_percent'] = ($totalSpace / abs(intval($freeSpace))) * 100;
+                        Process::getTwigInstance()->display('admin/space.info.html.twig', Process::$context);
+                    } catch (Exception $e) {
+                        Process::$context['flash_error'] = $e->getMessage();
+                        Process::getTwigInstance()->display('admin/alert.danger.html.twig', Process::$context);
+                    }
+                    break;
+                case 'delete':
+                    try {
+                        $selectedPartitionModel->delete($selectedElement);
+                        echo 'ok';
+                    } catch (Exception $e) {
+                        Process::$context['flash_error'] = $e->getMessage();
+                        Process::getTwigInstance()->display('admin/alert.danger.html.twig', Process::$context);
+                    }
+                    break;
+
+                case 'edit-form':
+                    Process::$context['panel_base_uri'] = isset(self::$configuration['base_uri'])
+                        ? self::$configuration['base_uri'] : '/admin';
+                    Process::$context['admin_part'] = $selectedPartition;
+                    $returnPage = isset($_GET['rp']) ? preg_replace('/[^a-z0-9_]/', '', $_GET['rp']) : false;
+                    if ($returnPage) Process::$context['return_page'] = $returnPage;
+                    Process::$context['fields'] = $selectedPartitionModel->getFields();
+                    Process::$context['diff_field'] = $selectedPartitionModel->getDiffField();
+                    Process::$context['read_data'] = $selectedPartitionModel->readElement($selectedElement);
+                    Process::getTwigInstance()->display('admin/form.edit.html.twig', Process::$context);
+                    break;
+
+                case 'view':
+                    Process::$context['fields'] = $selectedPartitionModel->getFields();
+                    Process::$context['read_data'] = $selectedPartitionModel->readElement($selectedElement);
+                    Process::getTwigInstance()->display('admin/form.view.html.twig', Process::$context);
+                    break;
+
+                default:
+                    throw new NotFoundException();
+            }
+
+            exit;
+        } else {
+            throw new ForbiddenException();
         }
     }
 
@@ -88,89 +177,45 @@ class Admin
         include_once $thisDir . '/../crud/factoring/CRUDField.php';
         include_once $thisDir . '/../crud/interfaces/CRUDDriverInterface.php';
         include_once $thisDir . '/../crud/interfaces/CRUDObjectInterface.php';
-        foreach (self::$configuration['registered_crud'] as $crud) {
-            if (!class_exists($crud)) {
-                $targetUser = $thisDir . '/../../../crud/' . $crud . '.php';
-                $targetStandard = $thisDir . '/../crud/' . $crud . '.php';
-                if (file_exists($targetUser)) {
-                    include_once $targetUser;
-                } elseif (file_exists($targetStandard)) {
-                    include_once $targetStandard;
-                } else {
-                    throw new Exception("CRUD $crud not exists");
+
+        if (isset(self::$configuration['registered_crud'])
+            and is_array(self::$configuration['registered_crud'])) {
+            foreach (self::$configuration['registered_crud'] as $crud) {
+                if (!class_exists($crud)) {
+                    $targetUser = $thisDir . '/../../../crud/' . $crud . '.php';
+                    $targetStandard = $thisDir . '/../crud/' . $crud . '.php';
+                    if (file_exists($targetUser)) {
+                        include_once $targetUser;
+                    } elseif (file_exists($targetStandard)) {
+                        include_once $targetStandard;
+                    } else {
+                        throw new Exception("CRUD $crud not exists");
+                    }
                 }
+
+                /**
+                 * @var $p CRUDObjectInterface
+                 */
+                $p = new $crud();
+
+                if (($p instanceof CRUDObjectInterface) === false)
+                    throw new Exception("CRUD $p is not instance of CRUDObjectInterface");
+
+                self::$models[] = $p;
+                $menuInfo = $p->getInfo();
+                if ($menuInfo !== false)
+                    Process::$context['admin_menu_elements'][] = $menuInfo;
             }
-
-            /**
-             * @var $p CRUDObjectInterface
-             */
-            $p = new $crud();
-
-            if (($p instanceof CRUDObjectInterface) === false)
-                throw new Exception("CRUD $p is not instance of CRUDObjectInterface");
-
-            self::$models[] = $p;
-            $menuInfo = $p->getInfo();
-            if ($menuInfo !== false)
-                Process::$context['admin_menu_elements'][] = $menuInfo;
         }
 
         if ($partition === 'ajax') {
-            if (self::$checkCSRFToken and $selectedAction = Data::input('a')) {
-                /**
-                 * @var $selectedPartitionModel CRUDObjectInterface
-                 */
-                $selectedPartitionModel = null;
-                list($selectedElement, $selectedPartition) = Data::inputsList('e', 'p');
-
-                foreach (self::$models as $m)
-                    if ($m->getMenuURI() === $selectedPartition)
-                        $selectedPartitionModel = $m;
-
-                if (is_null($selectedPartitionModel))
-                    throw new ForbiddenException();
-
-                switch ($selectedAction) {
-                    case 'delete':
-                        try {
-                            $selectedPartitionModel->delete($selectedElement);
-                            echo 'ok';
-                        } catch (Exception $e) {
-                            Process::$context['flash_error'] = $e->getMessage();
-                            Process::getTwigInstance()->display('admin/alert.danger.html.twig', Process::$context);
-                        }
-                        break;
-
-                    case 'edit-form':
-                        Process::$context['panel_base_uri'] = self::$configuration['base_uri'];
-                        Process::$context['admin_part'] = $selectedPartition;
-                        $returnPage = isset($_GET['rp']) ? preg_replace('/[^a-z0-9_]/', '', $_GET['rp']) : false;
-                        if ($returnPage) Process::$context['return_page'] = $returnPage;
-                        Process::$context['fields'] = $selectedPartitionModel->getFields();
-                        Process::$context['diff_field'] = $selectedPartitionModel->getDiffField();
-                        Process::$context['read_data'] = $selectedPartitionModel->readElement($selectedElement);
-                        Process::getTwigInstance()->display('admin/form.edit.html.twig', Process::$context);
-                        break;
-
-                    case 'view':
-                        Process::$context['fields'] = $selectedPartitionModel->getFields();
-                        Process::$context['read_data'] = $selectedPartitionModel->readElement($selectedElement);
-                        Process::getTwigInstance()->display('admin/form.view.html.twig', Process::$context);
-                        break;
-
-                    default:
-                        throw new NotFoundException();
-                }
-
-                exit;
-            } else {
-                throw new ForbiddenException();
-            }
+            self::ajax();
         }
 
         Process::$context['site_title'] = Process::$context['page_title'];
         Process::$context['page_title'] = 'Tranquility Admin';
-        Process::$context['panel_base_uri'] = self::$configuration['base_uri'];
+        Process::$context['panel_base_uri'] = isset(self::$configuration['base_uri'])
+            ? self::$configuration['base_uri'] : '/admin';
 
         if (!isset(Process::$context['current_user'])) {
             try {
@@ -184,7 +229,12 @@ class Admin
             }
         }
 
-        Process::$context['container'] = self::getContainer($partition, $action);
+        try {
+            Process::$context['container'] = self::getContainer($partition, $action);
+        } catch (PDOException $e) {
+            Process::$context['flash_error'] = $e->getMessage();
+            Process::$context['container'] = false;
+        }
         Process::$context['query_string'] = (isset($_SERVER['QUERY_STRING'])
             and !empty($_SERVER['QUERY_STRING'])) ? '?' . $_SERVER['QUERY_STRING'] : false;
         $template = (Process::$context['container']['type'] == 'form')
@@ -192,8 +242,18 @@ class Admin
         Process::getTwigInstance()->display($template, Process::$context);
     }
 
-    public static function getContainer($partition, $action)
+    /**
+     * @param string $partition
+     * @param string $action
+     * @param array $CRUDModelsList
+     * @return array
+     * @throws NotFoundException
+     * @throws ForbiddenException
+     */
+    public static function getContainer($partition, $action, $CRUDModelsList = null)
     {
+        $CRUDModelsList = (!$CRUDModelsList) ? self::$models : $CRUDModelsList;
+
         $container = array(
             'type' => 'page',
             'page' => 'homepage'
@@ -201,11 +261,13 @@ class Admin
 
         if ($partition) {
             if ($action == 'create' || $action == 'edit' || $action == 'view' || $action == 'delete') {
-                foreach (self::$models as $m) {
+                $partWasFinded = false;
+                foreach ($CRUDModelsList as $m) {
                     /**
                      * @var $m CRUDObjectInterface
                      */
                     if ($m->getMenuURI() === $partition) {
+                        $partWasFinded = true;
                         $container['create_new_message'] = $m->getCreateString();
                         if ($container['create_new_message']) {
                             $container['type'] = 'form';
@@ -244,32 +306,35 @@ class Admin
                                     Process::$context['read_data'] = $m->readElement($unique);
                                     Process::$context['diff_field'] = $m->getDiffField();
                                     if (!Process::$context['read_data'])
-                                        throw new NotFoundException();
+                                        throw new NotFoundException('selected element does not exists');
                                     Process::$context['page_title'] = $m->getMenuName() . ' :: редактирование';
                                 } catch (Exception $e) {
-                                    throw new NotFoundException();
+                                    throw new NotFoundException($e->getMessage());
                                 }
                             } elseif ($action == 'delete') {
                                 if (!self::$checkCSRFToken)
-                                    throw new ForbiddenException();
+                                    throw new ForbiddenException('csrf attack detected');
                                 try {
                                     $m->delete($unique);
                                     Process::redirect(Process::$context['panel_base_uri'] . '/' . $m->getMenuURI());
                                 } catch (Exception $e) {
-                                    throw new NotFoundException();
+                                    throw new NotFoundException('selected element does not exists');
                                 }
                             } else {
                                 Process::$context['page_title'] =
                                     $m->getMenuName() . ' :: ' . (($action == 'create') ? $container['create_new_message'] : 'изменить');
                             }
                         } else {
-                            throw new ForbiddenException();
+                            throw new ForbiddenException('selected partition read-only');
                         }
                     }
                 }
+                if (!$partWasFinded) {
+                    throw new NotFoundException('selected partition does not exists');
+                }
             } else {
                 $partWasFinded = false;
-                foreach (self::$models as $m) {
+                foreach ($CRUDModelsList as $m) {
                     /**
                      * @var $m CRUDObjectInterface
                      */
@@ -337,6 +402,7 @@ class Admin
                         $container['create_new_message'] = $m->getCreateString();
                         $container['only_display'] = $m->isOnlyDisplay();
                         $container['filter_options'] = $m->getFilterOptions();
+
                         foreach ($container['fields'] as $f => $d) {
                             if ($d['function']) {
                                 foreach ($container['data'] as &$e) {
@@ -356,20 +422,16 @@ class Admin
                     }
                 }
                 if (!$partWasFinded) {
-                    throw new NotFoundException();
+                    throw new NotFoundException('selected partition does not exists');
                 }
             }
         } else {
             try {
                 /** Dashboard homepage */
-                $totalSpace = round((Data::getDirSize(dirname(__FILE__) . '/../../../')) / 1024 / 1024, 2);
-                $freeSpace = Process::$context['hosting_free_space_mb'];
-                Process::$context['total_space_info'] = $totalSpace . ' мб из ' . $freeSpace . ' мб';
-                Process::$context['total_space_percent'] = ($totalSpace / $freeSpace) * 100;
                 Process::$context['visit_stats'] = Stats::getVisitors();
                 Process::$context['users_stats'] = Stats::getUsers();
             } catch (Exception $e) {
-                Process::$context['total_space_info'] = 'не удалось получить размер сайта';
+                Process::$context['flash_error'] = $e->getMessage();
             }
         }
 
