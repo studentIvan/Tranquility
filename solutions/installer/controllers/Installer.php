@@ -5,10 +5,11 @@ class Installer
     {
         if (($secretToken = Data::uriVar('secure'))
             and ($siteName = Data::uriVar('site'))
-            and ($mysqlHost = Data::uriVar('mysqlhost'))
-            and ($mysqlLogin = Data::uriVar('mysqllogin')))
+            and ($siteDescription = Data::uriVar('site-description'))
+            and ($mysqlHost = Data::uriVar('mysql-host'))
+            and ($mysqlLogin = Data::uriVar('mysql-login')))
         {
-            $mysqlPassword = Data::uriVar('mysqlpassword');
+            $mysqlPassword = Data::uriVar('mysql-password');
             $mysqlPassword = $mysqlPassword ? $mysqlPassword : '';
             $mysqlAuth = ($mysqlPassword != '') ?
                 "-u{$mysqlLogin} -p{$mysqlPassword}" : "-u{$mysqlLogin}";
@@ -55,6 +56,8 @@ class Installer
                 "'security_token' => 'ololo'" => "'security_token' => '$secretToken'",
                 "'Tranquility site'" => "'$siteName'",
                 "'visitors' => false" => "'visitors' => true",
+                "'Just another feed channel'" => "'$siteName feed channel'",
+                "'No description'" => "'$siteDescription'",
             );
 
             $cfg = file_get_contents('../config/config.php');

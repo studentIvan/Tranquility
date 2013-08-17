@@ -5,8 +5,9 @@
         <meta charset="utf-8">
         <title>{{ page_title }}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="description" content="">
-        <meta name="author" content="">
+        <meta name="description" content="{{ cms.news.feed_description }}">
+        <link rel="alternate" type="application/rss+xml" title="{{ cms.news.feed_title }} - RSS" href="/feed/rss.xml">
+        <link rel="alternate" type="application/atom+xml" title="{{ cms.news.feed_title }} - Atom" href="/feed/atom.xml">
 
         <link href="{{ resource.bootstrap_css }}" rel="stylesheet">
         <style>

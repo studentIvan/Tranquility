@@ -37,6 +37,7 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                     switch ($d['type']) {
                         case 'string':
                         case 'text':
+                        case 'visual':
                             $filterContain = preg_replace('![^a-zа-яё0-9\040]!iu', '', $filter['text']);
                             $filterString = ($filterString) ? "$filterString OR " : " WHERE ";
                             $filterString .= "$f LIKE '%$filterContain%' ";
@@ -192,6 +193,7 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                             break;
                         case 'string':
                         case 'text':
+                        case 'visual':
                             $allFields[$f]['use_in_text_filter'] = ($filter['text']);
                             break;
                         case 'integer':
@@ -404,6 +406,7 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                             case 'select':
                             case 'string':
                             case 'text':
+                            case 'visual':
                                 $insertedFieldsStatic[$key] = "'{$fields[$key]['default']}'";
                                 break;
                         }

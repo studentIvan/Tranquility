@@ -36,27 +36,33 @@
                         <legend>Setup Configuration</legend>
                         <div class="form-group">
                             <label for="sited">Site title</label>
-                            <input type="text" class="form-control" id="sited" name="site" required="required"/>
+                            <input type="text" class="form-control" id="sited" name="site" required="required">
+                        </div>
+                        <div class="form-group">
+                            <label for="sitexd">Site short description</label>
+                            <input type="text" class="form-control" id="sitexd" name="site-description" required="required"
+                                   value="No description :(">
                         </div>
                         <div class="form-group">
                             <label for="secd">A random set of letters and numbers:</label>
-                            <input type="text" class="form-control" id="secd" name="secure" required="required"/>
+                            <input type="text" class="form-control" id="secd" name="secure" required="required">
                         </div>
                         <div class="form-group">
                             <label for="mysqlhostd">MySQL host:</label>
-                            <input type="text" class="form-control" id="mysqlhostd" name="mysqlhost" required="required"
-                                   value="localhost"/>
+                            <input type="text" class="form-control" id="mysqlhostd" name="mysql-host" required="required"
+                                   value="localhost">
                         </div>
                         <div class="form-group">
                             <label for="mysqllogind">MySQL user login:</label>
-                            <input type="text" class="form-control" id="mysqllogind" name="mysqllogin"
-                                   required="required" value="root"/>
+                            <input type="text" class="form-control" id="mysqllogind" name="mysql-login"
+                                   required="required" value="root">
                         </div>
                         <div class="form-group">
                             <label for="mysqlpasswordd">MySQL user password:</label>
-                            <input type="text" class="form-control" id="mysqlpasswordd" name="mysqlpassword" value=""/>
+                            <input type="text" class="form-control" id="mysqlpasswordd"
+                                   name="mysql-password" value="">
                         </div>
-                        <button type="submit" class="btn btn-default">
+                        <button type="submit" class="btn btn-default" onclick="$('body').fadeOut(); return true;">
                             <i class="icon-fire"></i>&nbsp;RUN INSTALLER
                         </button>
                     </fieldset>

@@ -22,6 +22,9 @@
                         {% if field_data.type == 'text' %}
                             <textarea name="pf-{{ field }}" class="form-control"
                                       id="field-{{ field }}"></textarea>
+                        {% elseif field_data.type == 'visual' %}
+                            <textarea name="pf-{{ field }}" class="form-control editor-attach"
+                                      id="field-{{ field }}"></textarea>
                         {% elseif field_data.type == 'select' %}
                             <select name="pf-{{ field }}" class="form-control"
                                     id="field-{{ field }}">

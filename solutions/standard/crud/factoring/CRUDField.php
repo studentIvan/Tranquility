@@ -20,6 +20,7 @@ class CRUDField
 
     const TYPE_STRING = 'string';
     const TYPE_TEXT = 'text';
+    const TYPE_TEXT_VISUAL = 'visual';
     const TYPE_PASSWORD = 'password';
     const TYPE_INTEGER = 'integer';
     const TYPE_DECIMAL = 'decimal';

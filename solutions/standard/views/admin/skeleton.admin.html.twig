@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link href="{{ resource.bootstrap_css }}" rel="stylesheet" media="screen">
-    <link href="/css/icons.css" rel="stylesheet" media="screen">
+    <link href="{{ resource.icons_css }}" rel="stylesheet" media="screen">
     <style>
         body {
             padding-top: 70px;
@@ -150,7 +150,8 @@
 <script src="{{ resource.ldt_js }}"></script>
 <script src="{{ resource.bootstrap_js }}"></script>
 {% if not mobile %}
-    <script src="{{ resource.batman_hand_js }}"></script>{% endif %}
+    <script src="{{ resource.batman_hand_js }}"></script>
+{% endif %}
 {% include "admin/admin.js.html.twig" with container %}
 </body>
 </html>

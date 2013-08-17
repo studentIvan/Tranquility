@@ -34,7 +34,7 @@ class CRUDNews extends CRUDObjectInterface
             CRUDField::PARAM_DISPLAY => true,
         ),
         'content' => array(
-            CRUDField::PARAM_TYPE => CRUDField::TYPE_TEXT,
+            CRUDField::PARAM_TYPE => CRUDField::TYPE_TEXT_VISUAL,
             CRUDField::PARAM_DESCRIPTION => 'Контент',
         ),
         'tags' => array(
