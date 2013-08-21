@@ -12,7 +12,7 @@
                 <div class="form-group">
                     <label for="field-{{ field }}" class="col-lg-2 control-label">
                         {% if not field_data.description %}
-                            {{ field }}
+                            {{ field|capitalize }}
                         {% else %}
                             {{ field_data.description }}
                         {% endif %}
@@ -21,10 +21,14 @@
                     <div class="col-lg-10">
                         {% if field_data.type == 'text' %}
                             <textarea name="pf-{{ field }}" class="form-control"
-                                      id="field-{{ field }}"></textarea>
+                                      id="field-{{ field }}"{% if field_data.placeholder %}
+                            placeholder="{{ field_data.placeholder }}"
+                                    {% endif %}></textarea>
                         {% elseif field_data.type == 'visual' %}
                             <textarea name="pf-{{ field }}" class="form-control editor-attach"
-                                      id="field-{{ field }}"></textarea>
+                                      id="field-{{ field }}"{% if field_data.placeholder %}
+                                placeholder="{{ field_data.placeholder }}"
+                                    {% endif %}></textarea>
                         {% elseif field_data.type == 'select' %}
                             <select name="pf-{{ field }}" class="form-control"
                                     id="field-{{ field }}">
@@ -34,35 +38,52 @@
                             </select>
                         {% elseif field_data.type == 'password' %}
                             <input type="password" name="pf-{{ field }}" class="form-control"
-                                   id="field-{{ field }}">
+                                   id="field-{{ field }}"{% if field_data.placeholder %}
+                                placeholder="{{ field_data.placeholder }}"
+                                    {% endif %}>
                         {% elseif field_data.type == 'email' %}
                             <input type="email" name="pf-{{ field }}" class="form-control"
                                    id="field-{{ field }}" placeholder="user@example.com" autocapitalize="off"
                                    autocorrect="off">
                         {% elseif field_data.type == 'integer' %}
                             <input type="number" name="pf-{{ field }}" class="form-control"
-                                   id="field-{{ field }}">
+                                   id="field-{{ field }}"{% if field_data.placeholder %}
+                                placeholder="{{ field_data.placeholder }}"
+                                    {% endif %}>
                         {% elseif field_data.type == 'date' %}
                             <input type="date" name="pf-{{ field }}" class="form-control"
-                                   id="field-{{ field }}">
+                                   id="field-{{ field }}"{% if field_data.placeholder %}
+                                placeholder="{{ field_data.placeholder }}"
+                                    {% endif %}>
                         {% elseif field_data.type == 'datetime' %}
                             <input type="datetime" name="pf-{{ field }}" class="form-control"
-                                   id="field-{{ field }}">
+                                   id="field-{{ field }}"{% if field_data.placeholder %}
+                                placeholder="{{ field_data.placeholder }}"
+                                    {% endif %}>
                         {% elseif field_data.type == 'url' or field_data.type == 'uri' or field_data.type == 'image_uri' %}
                             <input type="url" name="pf-{{ field }}" class="form-control"
-                                   id="field-{{ field }}">
+                                   id="field-{{ field }}"{% if field_data.placeholder %}
+                                placeholder="{{ field_data.placeholder }}"
+                                    {% endif %}>
+                        {% elseif field_data.type == 'tags' %}
+                            <input type="text" name="pf-{{ field }}" class="form-control tags-input"
+                                   id="field-{{ field }}" data-auto="{}">
                         {% else %}
                             <input type="text" name="pf-{{ field }}" class="form-control"
-                                   id="field-{{ field }}">
+                                   id="field-{{ field }}"{% if field_data.placeholder %}
+                                placeholder="{{ field_data.placeholder }}"
+                                    {% endif %}>
                         {% endif %}
                     </div>
                 </div>
             {% endif %}
         {% endfor %}
         {% if container.type == 'form' %}
+            <br>
             <div class="col-lg-2">&nbsp;</div>
             <div class="col-lg-10">
-                <button type="submit" class="btn btn-success"><i class="icon-download-alt icon-white"></i>&nbsp;Сохранить
+                <button type="submit" class="btn btn-success btn-lg btn-block">
+                    <span class="glyphicon glyphicon-floppy-save"></span>&nbsp;Сохранить
                 </button>
             </div>
         {% endif %}

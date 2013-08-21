@@ -3,12 +3,12 @@ class CRUDUsers extends CRUDObjectInterface
 {
     protected $menuName = 'Пользователи';
     protected $menuCreate = 'добавить пользователя';
-    protected $menuIcon = 'icon-user';
+    protected $menuIcon = 'user';
     protected $tableName = 'users';
     protected $orderByField = 'registered_at';
 
     protected $filterOptions = array(
-        'filter_string' => false,
+        'filter_string' => true,
         'filter_date' => true,
         'filter_less_or_more' => false,
     );
@@ -31,10 +31,10 @@ class CRUDUsers extends CRUDObjectInterface
         'role' => array(
             CRUDField::PARAM_TYPE => CRUDField::TYPE_SELECT,
             CRUDField::PARAM_DESCRIPTION => 'Роль',
-            CRUDField::PARAM_ONE_TO_MANY_SETTINGS => array(
-                CRUDField::PARAM_ONE_TO_MANY_JOIN_TABLE => 'roles',
-                CRUDField::PARAM_ONE_TO_MANY_JOIN_CONDITION_JOIN_TABLE_FIELD => 'id',
-                CRUDField::PARAM_ONE_TO_MANY_TARGET_JOIN_TABLE_FIELD => 'title',
+            CRUDField::PARAM_MANY_TO_ONE_SETTINGS => array(
+                CRUDField::MANY_TO_ONE_JOIN_TABLE => 'roles',
+                CRUDField::MANY_TO_ONE_JOIN_CONDITION_JOIN_TABLE_FIELD => 'id',
+                CRUDField::MANY_TO_ONE_TARGET_JOIN_TABLE_FIELD => 'title',
             ),
             CRUDField::PARAM_DISPLAY => true,
         ),

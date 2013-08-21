@@ -13,7 +13,7 @@
                 <div class="form-group">
                     <label for="field-{{ field }}" class="col-lg-2 control-label">
                         {% if not field_data.description %}
-                            {{ field }}
+                            {{ field|capitalize }}
                         {% else %}
                             {{ field_data.description }}
                         {% endif %}
@@ -22,7 +22,9 @@
                     <div class="col-lg-10">
                         {% if field_data.type == 'text' %}
                             <textarea name="pf-{{ field }}" class="form-control"
-                                      id="field-{{ field }}">{% if read_data[field] %}{{ read_data[field] }}{% endif %}</textarea>
+                                      id="field-{{ field }}"{% if field_data.placeholder %}
+                                placeholder="{{ field_data.placeholder }}"
+                                    {% endif %}>{% if read_data[field] %}{{ read_data[field] }}{% endif %}</textarea>
                         {% elseif field_data.type == 'visual' %}
                             <textarea name="pf-{{ field }}" class="form-control editor-attach"
                                       id="field-{{ field }}">{% if read_data[field] %}{{ read_data[field] }}{% endif %}</textarea>
@@ -35,26 +37,44 @@
                             </select>
                         {% elseif field_data.type == 'password' %}
                             <input type="password" name="pf-{{ field }}" class="form-control"
-                                   id="field-{{ field }}">
+                                   id="field-{{ field }}"{% if field_data.placeholder %}
+                                placeholder="{{ field_data.placeholder }}"
+                                    {% endif %}>
                         {% elseif field_data.type == 'email' %}
                             <input type="email" name="pf-{{ field }}" class="form-control"
                                    id="field-{{ field }}" placeholder="user@example.com" autocapitalize="off"
                                    autocorrect="off"
                                     {% if read_data[field] %} value="{{ read_data[field] }}"{% endif %}>
                         {% elseif field_data.type == 'integer' %}
-                            <input type="number" name="pf-{{ field }}" class="form-control"
+                            <input type="number" name="pf-{{ field }}" class="form-control"{% if field_data.placeholder %}
+                                placeholder="{{ field_data.placeholder }}"
+                                    {% endif %}
                                    id="field-{{ field }}"{% if read_data[field] %} value="{{ read_data[field] }}"{% endif %}>
                         {% elseif field_data.type == 'date' %}
-                            <input type="date" name="pf-{{ field }}" class="form-control"
+                            <input type="date" name="pf-{{ field }}" class="form-control"{% if field_data.placeholder %}
+                                placeholder="{{ field_data.placeholder }}"
+                                    {% endif %}
                                    id="field-{{ field }}"{% if read_data[field] %} value="{{ read_data[field] }}"{% endif %}>
                         {% elseif field_data.type == 'datetime' %}
-                            <input type="datetime" name="pf-{{ field }}" class="form-control"
+                            <input type="datetime" name="pf-{{ field }}" class="form-control"{% if field_data.placeholder %}
+                                placeholder="{{ field_data.placeholder }}"
+                                    {% endif %}
                                    id="field-{{ field }}"{% if read_data[field] %} value="{{ read_data[field] }}"{% endif %}>
                         {% elseif field_data.type == 'url' or field_data.type == 'uri' or field_data.type == 'image_uri' %}
-                            <input type="url" name="pf-{{ field }}" class="form-control"
+                            <input type="url" name="pf-{{ field }}" class="form-control"{% if field_data.placeholder %}
+                                placeholder="{{ field_data.placeholder }}"
+                                    {% endif %}
                                    id="field-{{ field }}"{% if read_data[field] %} value="{{ read_data[field] }}"{% endif %}>
+                        {% elseif field_data.type == 'tags' %}
+                            <input type="text" name="pf-{{ field }}" class="form-control tags-input-edit"
+                                   id="field-{{ field }}"
+                                   data-auto="{% if read_data[field~"__many"] %}{{ read_data[field~"__many"] }}{% else %}{}{% endif %}"
+                                    {% if read_data[field] %}
+                                    value="{{ read_data[field] }}"{% endif %}>
                         {% else %}
-                            <input type="text" name="pf-{{ field }}" class="form-control"
+                            <input type="text" name="pf-{{ field }}" class="form-control"{% if field_data.placeholder %}
+                                placeholder="{{ field_data.placeholder }}"
+                                    {% endif %}
                                    id="field-{{ field }}"{% if read_data[field] %} value="{{ read_data[field] }}"{% endif %}>
                         {% endif %}
                     </div>
@@ -62,9 +82,11 @@
             {% endif %}
         {% endfor %}
         {% if container.type == 'form' %}
+            <br>
             <div class="col-lg-2">&nbsp;</div>
             <div class="col-lg-10">
-                <button type="submit" class="btn btn-success"><i class="icon-check icon-white"></i>&nbsp;Сохранить
+                <button type="submit" class="btn btn-success btn-lg btn-block">
+                    <span class="glyphicon glyphicon-floppy-saved"></span>&nbsp;Сохранить
                     изменения
                 </button>
             </div>

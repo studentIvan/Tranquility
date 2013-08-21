@@ -27,11 +27,11 @@
         <li class="list-group-item">
             <a class="btn btn-default"
                href="{{ panel_base_uri }}/{{ admin_part }}/edit?e={{ read_data[container.diff_field] }}">
-                <i class="icon-edit icon-white"></i>&nbsp;Изменить
+                <span class="glyphicon glyphicon-edit"></span>&nbsp;Изменить
             </a>
             <button id="btn-delete" type="button" class="btn btn-danger"
                     data-unique="{{ read_data[container.diff_field] }}">
-                <i class="icon-remove icon-white"></i>&nbsp;Удалить
+                <span class="glyphicon glyphicon-remove"></span>&nbsp;Удалить
             </button>
         </li>
     {% endif %}

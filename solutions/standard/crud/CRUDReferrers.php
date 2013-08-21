@@ -4,7 +4,7 @@ class CRUDReferrers extends CRUDObjectInterface
     protected $menuName = 'Реферреры';
     protected $menuCreate = false;
     protected $tableName = 'referrers';
-    protected $menuIcon = 'icon-globe';
+    protected $menuIcon = 'send';
     protected $diffField = 'url_hash';
     protected $orderByField = 'rating';
 

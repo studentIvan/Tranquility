@@ -4,7 +4,7 @@ class CRUDSessions extends CRUDObjectInterface
     protected $menuName = 'Онлайн';
     protected $menuCreate = false;
     protected $tableName = 'sessions';
-    protected $menuIcon = 'icon-barcode';
+    protected $menuIcon = 'dashboard';
     protected $diffField = 'token';
     protected $orderByField = 'uptime';
     protected $onlyDisplay = true;
@@ -20,12 +20,11 @@ class CRUDSessions extends CRUDObjectInterface
         ),
         'role' => array(
             CRUDField::PARAM_TYPE => CRUDField::TYPE_SELECT,
-            CRUDField::PARAM_ONE_TO_MANY_SETTINGS => array(
-                CRUDField::PARAM_ONE_TO_MANY_JOIN_TABLE => 'roles',
-                CRUDField::PARAM_ONE_TO_MANY_JOIN_CONDITION_JOIN_TABLE_FIELD => 'id',
-                CRUDField::PARAM_ONE_TO_MANY_TARGET_JOIN_TABLE_FIELD => 'title',
-                CRUDField::PARAM_ONE_TO_MANY_JOIN_TYPE => CRUDField::JOIN_TYPE_LEFT,
-                CRUDField::PARAM_ONE_TO_MANY_JOIN_GROUP => 'r',
+            CRUDField::PARAM_MANY_TO_ONE_SETTINGS => array(
+                CRUDField::MANY_TO_ONE_JOIN_TABLE => 'roles',
+                CRUDField::MANY_TO_ONE_JOIN_CONDITION_JOIN_TABLE_FIELD => 'id',
+                CRUDField::MANY_TO_ONE_TARGET_JOIN_TABLE_FIELD => 'title',
+                CRUDField::MANY_TO_ONE_JOIN_GROUP => 'r',
             ),
             CRUDField::PARAM_DISPLAY => true,
         ),
@@ -42,12 +41,11 @@ class CRUDSessions extends CRUDObjectInterface
         'uid' => array(
             CRUDField::PARAM_TYPE => CRUDField::TYPE_SELECT,
             CRUDField::PARAM_MODIFY => '<a href="#" class="tooltipped" data-toggle="tooltip" title="Этот пользователь авторизован">@$1</a>',
-            CRUDField::PARAM_ONE_TO_MANY_SETTINGS => array(
-                CRUDField::PARAM_ONE_TO_MANY_JOIN_TABLE => 'users',
-                CRUDField::PARAM_ONE_TO_MANY_JOIN_CONDITION_JOIN_TABLE_FIELD => 'id',
-                CRUDField::PARAM_ONE_TO_MANY_TARGET_JOIN_TABLE_FIELD => 'login',
-                CRUDField::PARAM_ONE_TO_MANY_JOIN_TYPE => CRUDField::JOIN_TYPE_LEFT,
-                CRUDField::PARAM_ONE_TO_MANY_JOIN_GROUP => 'u',
+            CRUDField::PARAM_MANY_TO_ONE_SETTINGS => array(
+                CRUDField::MANY_TO_ONE_JOIN_TABLE => 'users',
+                CRUDField::MANY_TO_ONE_JOIN_CONDITION_JOIN_TABLE_FIELD => 'id',
+                CRUDField::MANY_TO_ONE_TARGET_JOIN_TABLE_FIELD => 'login',
+                CRUDField::MANY_TO_ONE_JOIN_GROUP => 'u',
             ),
             CRUDField::PARAM_DISPLAY => true,
         ),

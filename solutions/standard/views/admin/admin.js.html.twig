@@ -1,5 +1,8 @@
 <script type="text/javascript">
-    modifyPanel = {% if not container.only_display %}'<div class="modify"><a href="#modalView" data-toggle="modal" class="view-link">Просмотреть</a> | {% if container.create_new_message %}<a href="#modalEdit" data-toggle="modal" class="change-link">Изменить</a> | {% endif %}' +
+    modifyPanel = {% if not container.only_display %}'<div class="modify">' +
+            '<a href="#modalView" data-toggle="modal" class="view-link">Просмотреть</a>' +
+            ' | {% if container.create_new_message %}<a href="#modalEdit" data-toggle="modal" ' +
+            'class="change-link">Изменить</a> | {% endif %}' +
             '<a href="#delete" class="delete-link">Удалить</a></div>';{% else %}'';{% endif %}
     $(document).ready(function () {
         ldt = new LocalizedDate(4);
@@ -34,7 +37,8 @@
 					
 					$('#top-of-container').html('<div class="alert alert-info">Происходит удаление...</div>');
 					
-					$.post("{{ panel_base_uri }}/ajax?csrf_token={{ csrf_token }}", { a: "delete", p: "{{ admin_part }}", e: unique })
+					$.post("{{ panel_base_uri }}/ajax?csrf_token={{ csrf_token }}",
+                            { a: "delete", p: "{{ admin_part }}", e: unique })
 					.done(function(data) 
 					{
 						if (data !== 'ok') 
@@ -57,7 +61,11 @@
 							result = (nCounter3.html())*1-1;
 							nCounter3.html(result);
 							
-							$('#top-of-container').html('<div class="alert alert-success"><button type="button" class="close" data-dismiss="alert">&times;</button>Элемент успешно удален.</div>');
+							$('#top-of-container').html(
+                                    '<div class="alert alert-success">' +
+                                            '<button type="button" class="close" data-dismiss="alert">&times;</button>' +
+                                            'Элемент успешно удален.</div>'
+                            );
 						}
 					});
 				}
@@ -79,9 +87,21 @@
 		$('#modalEdit').on('shown.bs.modal', function () {
 			var unique = $(this).data('unique');
 			$.post("{{ panel_base_uri }}/ajax?csrf_token={{ csrf_token }}{% if admin_part_action %}&rp={{ admin_part_action }}{% endif %}", { a: "edit-form", p: "{{ admin_part }}", e: unique })
-			.done(function(data) {
-				$("#modalEditBody").html(data);
-			});
+                    .done(function (data) {
+                        $("#modalEditBody").html(data);
+                        $('.tags-input-edit').each(function () {
+                            var tagsAutoData = $(this).data('auto');
+                            $(this).tagsInput({
+                                'autocomplete': eval(tagsAutoData),
+                                'height': 'auto',
+                                'width': 'auto',
+                                'interactive': true,
+                                'defaultText': '',
+                                'removeWithBackspace': true,
+                                'placeholderColor': 'gray'
+                            })
+                        });
+                    });
 		}).on('hidden.bs.modal', function () {
 			$("#modalEditBody").html('<div class="progress progress-striped active"><div class="progress-bar" style="width: 100%"></div></div>');
 		});
@@ -103,8 +123,8 @@
         {% if not admin_part %}{% include 'admin/homepage.js.twig' %}{% endif %}
 		
 		batmanHand.init(function (path, title) {
-			if (title == 'Главная :: управление')
-				title = 'Tranquility Admin';
+			if (title == 'Главная')
+				title = 'Dashboard';
 			document.title = title;
 			$('#title-brand').html(title);
 			window.location.href = path;
@@ -115,6 +135,18 @@
 			$('.base-active').addClass('active');
 		}
 		{% endif %}
+        $('.tags-input').each(function() {
+            var tagsAutoData = $(this).data('auto');
+            $(this).tagsInput({
+                'autocomplete': eval(tagsAutoData),
+                'height':'auto',
+                'width':'auto',
+                'interactive':true,
+                'defaultText':'',
+                'removeWithBackspace' : true,
+                'placeholderColor' : 'gray'
+            })
+        });
 		$('#btn-delete').click(function() {
 			if (window.confirm('Вы уверены?')) {
 				var unique = $(this).data('unique');

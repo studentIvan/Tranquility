@@ -10,6 +10,7 @@
         <link rel="alternate" type="application/atom+xml" title="{{ cms.news.feed_title }} - Atom" href="/feed/atom.xml">
 
         <link href="{{ resource.bootstrap_css }}" rel="stylesheet">
+        <link href="{{ resource.bootstrap_theme_css }}" rel="stylesheet" media="screen">
         <style>
             body {
                 padding-top: 70px;
@@ -36,13 +37,13 @@
 
         <div class="collapse navbar-collapse navbar-ex1-collapse">
             {% if not current_user %}
-                <form class="pull-right form-inline" style="margin-top: 10px;" action="/login" method="POST">
+                <!--<form class="pull-right form-inline" style="margin-top: 10px;" action="/login" method="POST">
                     <input class="form-control input-small" style="width: 100px;" placeholder="Логин" name="login">
                     <input class="form-control input-small" style="width: 100px; margin-left: 2px;" type="password"
                            placeholder="Пароль" name="password">
                     <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
                     <button type="submit" style="margin-left: 2px;" class="btn btn-small">Sign in</button>
-                </form>
+                </form>-->
                 <!--<form class="navbar-form form-inline" action="/login" method="POST">
                     <input type="text" class="input-small" placeholder="Логин" name="login">
                     <input type="password" class="input-small" style="margin-left: 2px;" placeholder="Пароль" name="password">

@@ -17,7 +17,7 @@ abstract class CRUDObjectInterface
      * Menu Icon from "Icon glyphs" set
      * @var string
      */
-    protected $menuIcon = 'icon-folder-open';
+    protected $menuIcon = 'folder-open';
 
     protected $tableName = '';
     protected $diffField = 'id';
@@ -27,6 +27,7 @@ abstract class CRUDObjectInterface
     private $filter = false;
     protected $elementsPerPage = 5;
     protected $onlyDisplay = false;
+    protected $debugSQL = false;
 
     /**
      * Who can work with it?
@@ -54,6 +55,10 @@ abstract class CRUDObjectInterface
      */
     public function __construct($driver = 'MySQL')
     {
+        if (empty($this->tableName)) {
+            throw new Exception('Вы не указали таблицу (tableName) в настройках этой модели');
+        }
+
         $driver = "CRUD{$driver}Driver";
 
         if (!class_exists($driver))
@@ -68,9 +73,11 @@ abstract class CRUDObjectInterface
             $field['default'] = isset($field['default']) ? $field['default'] : false;
             $field['display'] = isset($field['display']) ? $field['display'] : false;
             $field['from'] = isset($field['from']) ? $field['from'] : false;
+            $field['from_many'] = isset($field['from_many']) ? $field['from_many'] : false;
             $field['modify'] = isset($field['modify']) ? $field['modify'] : false;
             $field['function'] = isset($field['function']) ? $field['function'] : false;
             $field['count_of'] = isset($field['count_of']) ? $field['count_of'] : false;
+            $field['coalesce'] = isset($field['coalesce']) ? $field['coalesce'] : false;
 
             if (is_array($field['default'])) {
                 $field['default'] = call_user_func($field['default']);
@@ -96,6 +103,14 @@ abstract class CRUDObjectInterface
     {
         if (!$this->driver) throw new Exception('CRUD driver not exists');
         return $this->driver;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getSQLDebugState()
+    {
+        return $this->debugSQL;
     }
 
     /**
@@ -244,6 +259,7 @@ abstract class CRUDObjectInterface
     /**
      * @param string $unique
      * @param array $postedData
+     * @throws ForbiddenException
      * @return bool
      */
     public function update($unique, $postedData)
@@ -255,6 +271,7 @@ abstract class CRUDObjectInterface
 
     /**
      * @param mixed $unique
+     * @throws ForbiddenException
      * @return bool
      */
     public function delete($unique)
@@ -302,12 +319,18 @@ abstract class CRUDObjectInterface
 
     /**
      * @param mixed $unique
+     * @throws ForbiddenException
      * @return array
      */
     public function readElement($unique)
     {
         if (!$this->checkRBACPolicy()) throw new ForbiddenException();
-        return $this->getDriver()->readElement($unique);
+        try {
+            return $this->getDriver()->readElement($unique);
+        } catch (PDOException $e) {
+            Process::$context['flash_error'] = $e->getMessage();
+            return array();
+        }
     }
 
     /**

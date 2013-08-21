@@ -4,7 +4,7 @@ class CRUDRoles extends CRUDObjectInterface
     protected $menuName = 'Роли';
     protected $menuCreate = 'новая роль';
     protected $tableName = 'roles';
-    protected $menuIcon = 'icon-briefcase';
+    protected $menuIcon = 'tower';
 
     protected $fields = array(
         'id' => array(

@@ -16,13 +16,13 @@
                     <button {% if not mobile %}data-toggle="modal" data-target="#modalCreate"{% else %}
                         onclick="window.location.href='{{ panel_base_uri }}/{{ admin_part }}/create'"
                             {% endif %} class="btn btn-default navbar-btn">
-                        <i class="icon-plus"></i>&nbsp;<span id="addmsg">{{ container.create_new_message }}</span>
+                        <span class="glyphicon glyphicon-plus"></span>&nbsp;<span id="addmsg">{{ container.create_new_message }}</span>
                     </button>
                 {% endif %}
                 {% if not mobile %}
                     <button class="btn btn-default navbar-btn"
                             onclick="$('#updt').html('обновление...');$(this).addClass('disabled');window.location.reload();">
-                        <i class="icon-refresh"></i>&nbsp;<span id="updt">обновить страницу</span>
+                        <span class="glyphicon glyphicon-refresh"></span>&nbsp;<span id="updt">обновить страницу</span>
                     </button>
                 {% endif %}
             </div>
@@ -31,10 +31,13 @@
 {% endblock %}
 {% block container %}
     <span id="top-of-container">
-{% if flash_error %}
-    {% include 'admin/alert.danger.html.twig' %}
-{% endif %}
-</span>
+        {% if flash_error %}
+            {% include 'admin/alert.danger.html.twig' %}
+        {% endif %}
+        {% if flash_warning %}
+            {% include 'admin/alert.warning.html.twig' %}
+        {% endif %}
+    </span>
     {% if container.type == 'text' %}
         {{ container.text }}
     {% elseif container.type == 'page' %}
@@ -113,7 +116,7 @@
                             </td>
                         {% endif %}
                         <td style="width: 12%; padding-left: 4px;">
-                            <button type="submit" class="btn btn-info"><i class="icon-filter icon-white"></i>&nbsp;Фильтровать
+                            <button type="submit" class="btn btn-info"><span class="glyphicon glyphicon-filter"></span>&nbsp;Фильтровать
                             </button>
                         </td>
                     </tr>
@@ -204,8 +207,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="$('#edit-form').submit()"><i
-                                    class="icon-check icon-white"></i>&nbsp;Сохранить изменения
+                        <button type="button" class="btn btn-primary" onclick="$('#edit-form').submit()"><span
+                                    class="glyphicon glyphicon-check"></span>&nbsp;Сохранить изменения
                         </button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Отмена</button>
                     </div>

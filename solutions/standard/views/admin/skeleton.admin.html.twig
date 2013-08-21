@@ -6,7 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link href="{{ resource.bootstrap_css }}" rel="stylesheet" media="screen">
-    <link href="{{ resource.icons_css }}" rel="stylesheet" media="screen">
+    <link href="{{ resource.bootstrap_theme_css }}" rel="stylesheet" media="screen">
+    <link href="/css/jquery.tagsinput.css" rel="stylesheet" media="screen">
     <style>
         body {
             padding-top: 70px;
@@ -16,6 +17,10 @@
 
         h2 a {
             color: #5f5f5f;
+        }
+
+        a:active, a:link {
+            outline: 0;
         }
 
         .table-expand tr {
@@ -91,15 +96,16 @@
     </div>
 
     <div class="collapse navbar-collapse navbar-ex1-collapse">
-        {% if mobile %}
-            <ul class="nav navbar-nav">
+        <ul class="nav navbar-nav">
+            <li><a href="/" target="_blank">Открыть сайт</a></li>
+            {% if mobile %}
                 {% for e in admin_menu_elements %}
                     <li{% if admin_part == e.uri %} class="active"{% endif %}>
                         <a href="{{ panel_base_uri }}/{{ e.uri }}">{{ e.name }} {% if e.count %}[{{ e.count }}]{% endif %}</a>
                     </li>
                 {% endfor %}
-            </ul>
-        {% endif %}
+            {% endif %}
+        </ul>
         {% if mobile %}
             <ul class="nav navbar-nav pull-right">
                 <li><a href="{{ panel_base_uri }}/logout?csrf_token={{ csrf_token }}">Выход ({{ current_user.login }}
@@ -116,8 +122,28 @@
                         {% endif %}
                         <b class="caret"></b>
                     </a>
-                    <ul class="dropdown-menu">
-                        <li><a href="{{ panel_base_uri }}/logout?csrf_token={{ csrf_token }}">Выход</a></li>
+                    <ul class="dropdown-menu" role="menu">
+                        {% if current_user.id %}
+                            <li role="presentation" class="dropdown-header">
+                                Управление
+                            </li>
+                            <li role="presentation">
+                                <a role="menuitem" href="{{ panel_base_uri }}/crudusers/edit?e={{ current_user.id }}">
+                                    Изменить пароль
+                                </a>
+                            </li>
+                            <li role="presentation">
+                                <a role="menuitem" href="{{ panel_base_uri }}/crudusersdata/edit?e={{ current_user.id }}">
+                                    Изменить профиль
+                                </a>
+                            </li>
+                            <li role="presentation" class="divider"></li>
+                        {% endif %}
+                        <li role="presentation">
+                            <a role="menuitem" href="{{ panel_base_uri }}/logout?csrf_token={{ csrf_token }}">
+                                Выход
+                            </a>
+                        </li>
                     </ul>
                 </li>
             </ul>
@@ -127,12 +153,12 @@
 {% block fixedb %}{% endblock %}
 {% if not mobile %}
 <div class="row" style="width: 99%">
-    <div class="col-lg-2" style="min-width: 250px">
+    <div class="col-lg-2" style="min-width: 290px; margin-left: 5px;">
         <ul class="nav nav-pills nav-stacked">
             {% for e in admin_menu_elements %}
                 <li class="{% if admin_part == e.uri %}base-active active{% endif %} left-menu-element"><a
                             href="{{ panel_base_uri }}/{{ e.uri }}" data-history="{{ e.name }} :: управление">
-                        <i class="{{ e.icon }}"></i>&nbsp;
+                        <span class="glyphicon glyphicon-{{ e.icon }}"></span>&nbsp;
                         {{ e.name }}
                         {% if e.count %}<span class="badge pull-right">{{ e.count }}</span>{% endif %}
                     </a></li>
@@ -149,6 +175,7 @@
 <script src="{{ resource.jquery_js }}"></script>
 <script src="{{ resource.ldt_js }}"></script>
 <script src="{{ resource.bootstrap_js }}"></script>
+<script src="/js/jquery.tagsinput.min.js"></script>
 {% if not mobile %}
     <script src="{{ resource.batman_hand_js }}"></script>
 {% endif %}

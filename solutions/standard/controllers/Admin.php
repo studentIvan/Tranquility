@@ -29,7 +29,10 @@ class Admin
      */
     public static function isAccessAllow($role, $zoolRolesList)
     {
-        if (!is_array($zoolRolesList)) return false;
+        if (!is_array($zoolRolesList)) {
+            return false;
+        }
+
         if (!in_array($role, $zoolRolesList, true)) {
             Process::$context['bot_secure'] = array(
                 'input_login' => Security::getUniqueDigestForUserIP('input_login'),
@@ -48,6 +51,7 @@ class Admin
                 $temporary = $remember ? false : true;
                 try {
                     Session::authorize($login, $password, $temporary);
+                    $role = Session::getRole();
                     if (!in_array($role, $zoolRolesList, true)) {
                         throw new AuthException('role error');
                     } else {
@@ -171,7 +175,7 @@ class Admin
          * Init models
          */
         Process::$context['admin_menu_elements'] = array(array(
-            'name' => 'Главная', 'uri' => '', 'icon' => 'icon-home',
+            'name' => 'Главная', 'uri' => '', 'icon' => 'home',
         ));
 
         include_once $thisDir . '/../crud/factoring/CRUDField.php';
@@ -193,10 +197,14 @@ class Admin
                     }
                 }
 
-                /**
-                 * @var $p CRUDObjectInterface
-                 */
-                $p = new $crud();
+                try {
+                    /**
+                     * @var $p CRUDObjectInterface
+                     */
+                    $p = new $crud();
+                } catch (Exception $e) {
+                    continue;
+                }
 
                 if (($p instanceof CRUDObjectInterface) === false)
                     throw new Exception("CRUD $p is not instance of CRUDObjectInterface");
@@ -213,7 +221,7 @@ class Admin
         }
 
         Process::$context['site_title'] = Process::$context['page_title'];
-        Process::$context['page_title'] = 'Tranquility Admin';
+        Process::$context['page_title'] = 'Dashboard';
         Process::$context['panel_base_uri'] = isset(self::$configuration['base_uri'])
             ? self::$configuration['base_uri'] : '/admin';
 
@@ -392,13 +400,29 @@ class Admin
                         $count = $m->getCount();
                         $perPage = $m->getElementsPerPageNum();
                         $pagination = Data::paginate($count, $perPage, $page);
-                        Process::$context['page_title'] = $m->getMenuName() . ' :: управление';
+                        //Process::$context['page_title'] = $m->getMenuName() . ' :: управление';
+                        Process::$context['page_title'] = $m->getMenuName();
                         $container['type'] = 'listing';
                         $container['count'] = ($count > $perPage) ? $perPage : $count;
                         $container['all_count'] = $count;
                         $container['diff_field'] = $m->getDiffField();
                         $container['fields_displayable'] = $m->getDisplayable();
-                        $container['data'] = $m->getListing($pagination['offset'], $perPage);
+
+                        if (count($container['fields_displayable']) === 0) {
+                            Process::$context['flash_error'] = 'Не указано не одного поля для отображения.
+                            Укажите PARAM_DISPLAY => true, хотя бы для одного поля.';
+                        }
+
+                        try {
+                            $container['data'] = $m->getListing($pagination['offset'], $perPage);
+                        } catch (Exception $e) {
+                            Process::$context['flash_error'] = ($e->getCode() == 42000)
+                                ? 'Ошибка логического пересечения таблиц. Для одного или более полей укажите уникальный join-group.
+                                Пример: CRUDField::MANY_TO_ONE_JOIN_GROUP => "x"'
+                                : $e->getMessage();
+                            $container['data'] = array();
+                        }
+
                         $container['create_new_message'] = $m->getCreateString();
                         $container['only_display'] = $m->isOnlyDisplay();
                         $container['filter_options'] = $m->getFilterOptions();

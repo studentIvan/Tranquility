@@ -1,6 +1,8 @@
 <?php
 class CRUDMySQLDriver extends CRUDDriverInterface
 {
+    protected $manyToManyCreateRegistry = array();
+
     /**
      * @param string $table
      * @param string $valueField
@@ -38,78 +40,91 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                         case 'string':
                         case 'text':
                         case 'visual':
-                            $filterContain = preg_replace('![^a-zа-яё0-9\040]!iu', '', $filter['text']);
-                            $filterString = ($filterString) ? "$filterString OR " : " WHERE ";
-                            $filterString .= "$f LIKE '%$filterContain%' ";
+                        case 'tags':
+                            if ($d['from'] or $d['from_many']) {
+
+                            } else {
+                                $filterContain = preg_replace('![^a-zа-яё0-9\040]!iu', '', $filter['text']);
+                                $filterString = ($filterString) ? "$filterString OR " : " WHERE ";
+                                $filterString .= "$f LIKE '%$filterContain%' ";
+                            }
                             break;
                         case 'integer':
                         case 'decimal':
                         case 'number':
                             if ($filter['lm'] and isset($filter['lm']['operator']) and isset($filter['lm']['operand'])) {
-                                switch ($filter['lm']['operator']) {
-                                    case 'more_than':
-                                        $filterContain = floatval($filter['lm']['operand']);
-                                        $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
-                                        $filterString .= "$f > '$filterContain' ";
-                                        break;
-                                    case 'less_than':
-                                        $filterContain = floatval($filter['lm']['operand']);
-                                        $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
-                                        $filterString .= "$f < '$filterContain' ";
-                                        break;
+                                if ($d['from'] or $d['from_many']) {
+
+                                } else {
+                                    switch ($filter['lm']['operator']) {
+                                        case 'more_than':
+                                            $filterContain = floatval($filter['lm']['operand']);
+                                            $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+                                            $filterString .= "$f > '$filterContain' ";
+                                            break;
+                                        case 'less_than':
+                                            $filterContain = floatval($filter['lm']['operand']);
+                                            $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+                                            $filterString .= "$f < '$filterContain' ";
+                                            break;
+                                    }
                                 }
                             }
                             break;
                         case 'date':
                         case 'datetime':
                             if ($filter['date']) {
-                                switch ($filter['date']) {
-                                    case 'all':
-                                        break;
-                                    case 'today':
-                                        $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
-                                        $filterString .= "DATE($f)=DATE(NOW()) ";
-                                        break;
-                                    case 'yesterday':
-                                        $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
-                                        $filterString .= "DATE($f)=DATE(NOW() - INTERVAL 1 DAY) ";
-                                        break;
-                                    case 'this_week':
-                                        $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
-                                        $filterString .= "DATE($f)>=DATE(NOW() - INTERVAL 1 WEEK) ";
-                                        break;
-                                    case 'last_week':
-                                        $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
-                                        $filterString .= "DATE($f)<DATE(NOW() - INTERVAL 1 WEEK) AND DATE($f)>=DATE(NOW() - INTERVAL 2 WEEK) ";
-                                        break;
-                                    case 'this_month':
-                                        $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
-                                        $filterString .= "DATE($f)>=DATE(NOW() - INTERVAL 1 MONTH) ";
-                                        break;
-                                    case 'last_month':
-                                        $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
-                                        $filterString .= "DATE($f)<DATE(NOW() - INTERVAL 1 MONTH) AND DATE($f)>=DATE(NOW() - INTERVAL 2 MONTH) ";
-                                        break;
-                                    case 'for_two_months':
-                                        $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
-                                        $filterString .= "DATE($f)>=DATE(NOW() - INTERVAL 2 MONTH) ";
-                                        break;
-                                    case 'for_four_months':
-                                        $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
-                                        $filterString .= "DATE($f)>=DATE(NOW() - INTERVAL 4 MONTH) ";
-                                        break;
-                                    case 'for_half_year':
-                                        $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
-                                        $filterString .= "DATE($f)>=DATE(NOW() - INTERVAL 6 MONTH) ";
-                                        break;
-                                    case 'this_year':
-                                        $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
-                                        $filterString .= "DATE($f)>=DATE(NOW() - INTERVAL 1 YEAR) ";
-                                        break;
-                                    case 'last_year':
-                                        $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
-                                        $filterString .= "DATE($f)<DATE(NOW() - INTERVAL 1 YEAR) AND DATE($f)>=DATE(NOW() - INTERVAL 2 YEAR) ";
-                                        break;
+                                if ($d['from'] or $d['from_many']) {
+
+                                } else {
+                                    switch ($filter['date']) {
+                                        case 'all':
+                                            break;
+                                        case 'today':
+                                            $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+                                            $filterString .= "DATE($f)=DATE(NOW()) ";
+                                            break;
+                                        case 'yesterday':
+                                            $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+                                            $filterString .= "DATE($f)=DATE(NOW() - INTERVAL 1 DAY) ";
+                                            break;
+                                        case 'this_week':
+                                            $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+                                            $filterString .= "DATE($f)>=DATE(NOW() - INTERVAL 1 WEEK) ";
+                                            break;
+                                        case 'last_week':
+                                            $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+                                            $filterString .= "DATE($f)<DATE(NOW() - INTERVAL 1 WEEK) AND DATE($f)>=DATE(NOW() - INTERVAL 2 WEEK) ";
+                                            break;
+                                        case 'this_month':
+                                            $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+                                            $filterString .= "DATE($f)>=DATE(NOW() - INTERVAL 1 MONTH) ";
+                                            break;
+                                        case 'last_month':
+                                            $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+                                            $filterString .= "DATE($f)<DATE(NOW() - INTERVAL 1 MONTH) AND DATE($f)>=DATE(NOW() - INTERVAL 2 MONTH) ";
+                                            break;
+                                        case 'for_two_months':
+                                            $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+                                            $filterString .= "DATE($f)>=DATE(NOW() - INTERVAL 2 MONTH) ";
+                                            break;
+                                        case 'for_four_months':
+                                            $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+                                            $filterString .= "DATE($f)>=DATE(NOW() - INTERVAL 4 MONTH) ";
+                                            break;
+                                        case 'for_half_year':
+                                            $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+                                            $filterString .= "DATE($f)>=DATE(NOW() - INTERVAL 6 MONTH) ";
+                                            break;
+                                        case 'this_year':
+                                            $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+                                            $filterString .= "DATE($f)>=DATE(NOW() - INTERVAL 1 YEAR) ";
+                                            break;
+                                        case 'last_year':
+                                            $filterString = ($filterString) ? "$filterString AND " : " WHERE ";
+                                            $filterString .= "DATE($f)<DATE(NOW() - INTERVAL 1 YEAR) AND DATE($f)>=DATE(NOW() - INTERVAL 2 YEAR) ";
+                                            break;
+                                    }
                                 }
                             }
                             break;
@@ -127,21 +142,55 @@ class CRUDMySQLDriver extends CRUDDriverInterface
      */
     public function readElement($unique)
     {
-        $joinString = '';
+        $joinString = $groupByString = '';
         $diffField = $this->getCRUDObject()->getDiffField();
         $tableName = $this->getCRUDObject()->getTableName();
-        $selectedFields = array();
+        $selectedFields = $tagsValues = array();
         foreach ($this->getCRUDObject()->getFields() as $fieldKey => $fieldData) {
             if ($fieldData['type'] !== 'calculated') {
                 if ($fieldData['from']) {
                     $foreignIndex = isset($fieldData['from']['group']) ? $fieldData['from']['group'] : 'b';
                     $selectedFields[] = "$foreignIndex.{$fieldData['from']['as']} AS $fieldKey";
-                    $joinType = isset($fieldData['from']['join']) ? $fieldData['from']['join'] : 'INNER';
+                    $joinType = isset($fieldData['from']['join']) ? $fieldData['from']['join'] : 'LEFT';
                     $on = isset($fieldData['from']['on']) ? "a.{$fieldData['from']['on']}" : "a.$fieldKey";
                     $joinString .= "
 						$joinType JOIN {$fieldData['from']['table']} as $foreignIndex 
 						ON $foreignIndex.{$fieldData['from']['field']} = $on
 					";
+                } elseif ($fieldData['from_many']) {
+                    /* relation table joining */
+                    $foreignRelationIndex = isset($fieldData['from_many']['group_many_relation']) ?
+                        $fieldData['from_many']['group_many_relation'] : 'r';
+                    $foreignDataIndex = isset($fieldData['from_many']['group_many_data']) ?
+                        $fieldData['from_many']['group_many_data'] : 'd';
+                    $selectedFields[] = "GROUP_CONCAT($foreignDataIndex.{$fieldData['from_many']['as_many_data']} SEPARATOR ',') AS $fieldKey";
+                    $relationTable = isset($fieldData['from_many']['table_many_relation'])
+                        ? $fieldData['from_many']['table_many_relation'] : $fieldData['from_many']['table_many_data'] . '_relation';
+                    $relationOnField = isset($fieldData['from_many']['on_many_relation']) ?
+                        $fieldData['from_many']['on_many_relation'] : 'id';
+                    $dataIndexField = isset($fieldData['from_many']['field_many_data']) ?
+                        $fieldData['from_many']['field_many_data'] : 'id';
+                    $joinString .= "
+						LEFT JOIN $relationTable as $foreignRelationIndex
+						ON $foreignRelationIndex.{$fieldData['from_many']['field_many_relation']} = a.$relationOnField
+						LEFT JOIN {$fieldData['from_many']['table_many_data']} as $foreignDataIndex
+						ON $foreignDataIndex.$dataIndexField = $foreignRelationIndex.{$fieldData['from_many']['on_many_data']}
+					";
+
+                    /*if ($fieldData['type'] == 'tags') {
+                        $stEx = Database::getInstance()->query("
+                            SELECT {$fieldData['from_many']['as_many_data']} AS tags_fills
+                            FROM {$fieldData['from_many']['table_many_data']}
+                        ");
+                        $r = $stEx->fetchAll(PDO::FETCH_COLUMN);
+                        foreach ($r as $key) {
+                            $tagsValues[$fieldKey . '__many'][$key] = $key;
+                        }
+                        $tagsValues[$fieldKey . '__many'] = json_encode($tagsValues[$fieldKey . '__many']);
+
+                    }*/
+                    /*$groupByString = (!empty($groupByString)) ? "$groupByString, " : "GROUP BY ";
+                    $groupByString .= "$foreignDataIndex.{$fieldData['from_many']['field_many_data']}";*/
                 } else {
                     $selectedFields[] = "a.$fieldKey";
                 }
@@ -153,15 +202,130 @@ class CRUDMySQLDriver extends CRUDDriverInterface
 			FROM $tableName AS a
 			$joinString
 			WHERE a.$diffField=:unique
+			$groupByString
 			LIMIT 1
         ");
 
         $statement->bindParam(':unique', $unique, PDO::PARAM_STR);
+        //echo $statement->queryString;
         $statement->execute();
 
-        return $statement->fetch(PDO::FETCH_ASSOC);
+        $returns = $statement->fetch(PDO::FETCH_ASSOC);
+        if (count($tagsValues) > 0)
+            $returns = array_merge($returns, $tagsValues);
+        //var_dump($returns);
+        return $returns;
     }
 
+    /**
+     * @param array $params
+     */
+    protected function manyToManyCreateRegistryAdd($params)
+    {
+        $this->manyToManyCreateRegistry[] = $params;
+    }
+
+    /**
+     * @param $unique
+     */
+    protected function manyToManyCreateRegistryExecute($unique)
+    {
+        foreach ($this->manyToManyCreateRegistry as $x)
+        {
+            $this->manyToManyCreate($unique, $x[0], $x[1]);
+        }
+    }
+
+    /**
+     * @param string $value
+     * @return array
+     */
+    protected function manyToManyValuesParse($value)
+    {
+        $values = explode(',', preg_replace('/\,+/', ',', $value));
+        array_walk($values, array('Data', 'walkingTrim'));
+        foreach ($values as &$xVal)
+            if (empty($xVal)) $xVal = null;
+        return $values;
+    }
+
+    /**
+     * @param integer|string $unique
+     * @param array $settings
+     * @param string $value
+     */
+    protected function manyToManyCreate($unique, $settings, $value)
+    {
+        $valuesOriginal = $values = $this->manyToManyValuesParse($value);
+
+        $pdo = Database::getInstance();
+        $dataField = $settings['as_many_data'];
+        $dataTable = $settings['table_many_data'];
+        $sql = "INSERT IGNORE INTO $dataTable ($dataField) VALUES ";
+        foreach ($values as &$xValue)
+            $xValue = '(' . $pdo->quote(htmlspecialchars($xValue, ENT_QUOTES)) . ')';
+        $sql .= join(',', $values);
+        $pdo->query($sql);
+
+        $relationTable = isset($settings['table_many_relation'])
+            ? $settings['table_many_relation'] : $settings['table_many_data'] . '_relation';
+        $dataIndexField = isset($settings['field_many_data']) ?
+            $settings['field_many_data'] : 'id';
+        $relationAField = $settings['field_many_relation'];
+        $relationBField = $settings['on_many_data'];
+        foreach ($valuesOriginal as &$value)
+            $value = $pdo->quote(htmlspecialchars($value, ENT_QUOTES));
+        $valuesOriginal = join(',', $valuesOriginal);
+        $sql = "SELECT $dataIndexField FROM $dataTable WHERE $dataField IN ($valuesOriginal)";
+        $insertRelationBuffer = $pdo->query($sql)->fetchAll(PDO::FETCH_COLUMN);
+        $sql = "INSERT INTO $relationTable ($relationAField, $relationBField) VALUES ";
+        $unique = $pdo->quote($unique);
+        foreach ($insertRelationBuffer as &$dataId)
+            $dataId = "($unique, $dataId)";
+        $sql .= join(',', $insertRelationBuffer);
+        $pdo->query($sql);
+    }
+
+    /**
+     * @param integer|string $unique
+     * @param array $settings
+     * @param string $value
+     */
+    protected function manyToManyUpdate($unique, $settings, $value)
+    {
+        $valuesOriginal = $values = $this->manyToManyValuesParse($value);
+
+        $pdo = Database::getInstance();
+        $dataField = $settings['as_many_data'];
+        $dataTable = $settings['table_many_data'];
+        $sql = "INSERT IGNORE INTO $dataTable ($dataField) VALUES ";
+        foreach ($values as &$xValue)
+            $xValue = '(' . $pdo->quote(htmlspecialchars($xValue, ENT_QUOTES)) . ')';
+        $sql .= join(',', $values);
+        $pdo->query($sql);
+
+        $relationTable = isset($settings['table_many_relation'])
+            ? $settings['table_many_relation'] : $settings['table_many_data'] . '_relation';
+        $dataIndexField = isset($settings['field_many_data']) ?
+            $settings['field_many_data'] : 'id';
+        $relationAField = $settings['field_many_relation'];
+        $relationBField = $settings['on_many_data'];
+        $unique = $pdo->quote($unique);
+
+        $pdo->query("DELETE FROM $relationTable WHERE $relationAField=$unique");
+
+        foreach ($valuesOriginal as &$value)
+            $value = $pdo->quote(htmlspecialchars($value, ENT_QUOTES));
+        $valuesOriginal = join(',', $valuesOriginal);
+        $sql = "SELECT $dataIndexField FROM $dataTable WHERE $dataField IN ($valuesOriginal)";
+        $insertRelationBuffer = $pdo->query($sql)->fetchAll(PDO::FETCH_COLUMN);
+        $sql = "INSERT INTO $relationTable ($relationAField, $relationBField) VALUES ";
+
+        foreach ($insertRelationBuffer as &$dataId)
+            $dataId = "($unique, $dataId)";
+        $sql .= join(',', $insertRelationBuffer);
+        $pdo->query($sql);
+    }
 
     /**
      * @param int $offset
@@ -176,30 +340,45 @@ class CRUDMySQLDriver extends CRUDDriverInterface
         $foreignIndex = 'b';
         $orderFilter = false;
         $foreignIndexes = array();
-        $joinString = $filterString = $groupBy = '';
+        $joinString = $filterString = $groupByString = '';
         $tableName = $this->getCRUDObject()->getTableName();
         $orderByField = $this->getCRUDObject()->getOrderByField();
+        //$diffField = $this->getCRUDObject()->getDiffField();
 
         if ($filter = $this->getCRUDObject()->getFilter()) {
             foreach ($allFields as $f => $d) {
                 $allFields[$f]['use_in_text_filter'] = false;
+                $allFields[$f]['use_in_text_filter_having'] = false;
                 $allFields[$f]['use_in_date_filter'] = false;
                 $allFields[$f]['use_in_lm_filter'] = false;
                 if ($d['display'] == true) {
                     switch ($d['type']) {
                         case 'date':
                         case 'datetime':
-                            $allFields[$f]['use_in_date_filter'] = ($filter['date']);
+                            if ($d['from'] or $d['from_many']) {
+
+                            } else {
+                                $allFields[$f]['use_in_date_filter'] = ($filter['date']);
+                            }
                             break;
                         case 'string':
                         case 'text':
                         case 'visual':
-                            $allFields[$f]['use_in_text_filter'] = ($filter['text']);
+                        case 'tags':
+                            if ($d['from'] or $d['from_many']) {
+                                $allFields[$f]['use_in_text_filter_having'] = ($filter['text']);
+                            } else {
+                                $allFields[$f]['use_in_text_filter'] = ($filter['text']);
+                            }
                             break;
                         case 'integer':
                         case 'decimal':
                         case 'number':
-                            $allFields[$f]['use_in_lm_filter'] = ($filter['lm']);
+                            if ($d['from'] or $d['from_many']) {
+
+                            } else {
+                                $allFields[$f]['use_in_lm_filter'] = ($filter['lm']);
+                            }
                             break;
                     }
                 }
@@ -223,8 +402,10 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                                 $foreignIndex = $d['from']['group'];
                             }
                             $foreignIndexes[] = $foreignIndex;
-                            $ff = "$foreignIndex.{$d['from']['as']} AS $f";
-                            $joinType = isset($d['from']['join']) ? $d['from']['join'] : 'INNER';
+                            $ff = ($d['coalesce'])
+                                ? "COALESCE($foreignIndex.{$d['from']['as']}, null, '{$d['coalesce']}') AS $f"
+                                : "$foreignIndex.{$d['from']['as']} AS $f";
+                            $joinType = isset($d['from']['join']) ? $d['from']['join'] : 'LEFT';
                             $on = isset($d['from']['on']) ? "a.{$d['from']['on']}" : "a.$f";
                             $joinString .= "
                             $joinType JOIN {$d['from']['table']} as $foreignIndex
@@ -232,11 +413,39 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                             ";
                         }
                     }
+                } elseif ($d['from_many']) {
+                    foreach ($tmpFields as &$ff) {
+                        if ($ff == $f) {
+                            $foreignRelationIndex = isset($d['from_many']['group_many_relation']) ?
+                                $d['from_many']['group_many_relation'] : 'r';
+                            $foreignIndexes[] = $foreignRelationIndex;
+                            $foreignDataIndex = isset($d['from_many']['group_many_data']) ?
+                                $d['from_many']['group_many_data'] : 'd';
+                            $foreignIndexes[] = $foreignDataIndex;
+                            $ff = "GROUP_CONCAT($foreignDataIndex.{$d['from_many']['as_many_data']} SEPARATOR ',') AS $f";
+                            $relationTable = isset($d['from_many']['table_many_relation'])
+                                ? $d['from_many']['table_many_relation'] : $d['from_many']['table_many_data'] . '_relation';
+                            $relationOnField = isset($d['from_many']['on_many_relation']) ?
+                                $d['from_many']['on_many_relation'] : 'id';
+                            $dataIndexField = isset($d['from_many']['field_many_data']) ?
+                                $d['from_many']['field_many_data'] : 'id';
+                            $joinString .= "
+                                LEFT JOIN $relationTable as $foreignRelationIndex
+                                ON $foreignRelationIndex.{$d['from_many']['field_many_relation']} = a.$relationOnField
+                                LEFT JOIN {$d['from_many']['table_many_data']} as $foreignDataIndex
+                                ON $foreignDataIndex.$dataIndexField = $foreignRelationIndex.{$d['from_many']['on_many_data']}
+                            ";
+                            /*$groupByString = (!empty($groupByString)) ? "$groupByString, " : "GROUP BY ";
+                            $groupByString .= "$foreignDataIndex.{$d['from_many']['field_many_data']}";*/
+                        }
+                    }
+                } elseif ($d['type'] !== 'calculated') {
+                    $groupByString = (!empty($groupByString)) ? "$groupByString, " : "GROUP BY ";
+                    $groupByString .= "a.$f";
                 }
                 if ($d['count_of']) {
-                    $groupBy = "
-                        GROUP BY {$d['count_of']}
-                    ";
+                    $groupByString = (!empty($groupByString)) ? "$groupByString, " : "GROUP BY ";
+                    $groupByString .= $d['count_of'];
 
                     foreach ($tmpFields as &$ff) {
                         if ($ff == $f) {
@@ -251,6 +460,8 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                     $filterString = ($filterString) ? "$filterString OR " : " WHERE ";
                     $index = (!$d['from']) ? 'a.' : '';
                     $filterString .= "{$index}{$f} LIKE '%$filterContain%' ";
+                } elseif ($filter and $d['use_in_text_filter_having']) {
+
                 } elseif ($filter and $d['use_in_lm_filter'] and isset($filter['lm']['operator']) and isset($filter['lm']['operand'])) {
                     switch ($filter['lm']['operator']) {
                         case 'more_than':
@@ -337,7 +548,11 @@ class CRUDMySQLDriver extends CRUDDriverInterface
         }
 
         foreach ($tmpFields as &$field) {
-            $field = str_replace("a.COUNT", "COUNT", "a.$field");
+            $field = str_replace(
+                array("a.COALESCE", "a.GROUP_CONCAT", "a.COUNT"),
+                array("COALESCE", "GROUP_CONCAT", "COUNT"),
+                "a.$field"
+            );
             foreach ($foreignIndexes as $index) {
                 $field = str_replace("a.$index.", "$index.", $field);
             }
@@ -346,24 +561,27 @@ class CRUDMySQLDriver extends CRUDDriverInterface
         $requiredFields = join(',', $tmpFields);
         $orderBy = $orderByField ? "ORDER BY a.$orderByField DESC" : '';
         $orderBy = $orderFilter ? str_replace("a.$orderByField", $orderByField, $orderBy) : $orderBy;
+        //$groupByString = (!empty($groupByString)) ? "$groupByString, " : "GROUP BY ";
+        //$groupByString .= "a.$diffField";
         $statement = Database::getInstance()->prepare("
             SELECT $requiredFields
             FROM $tableName AS a 
 			$joinString
 			$filterString
-            $groupBy $orderBy LIMIT :limit OFFSET :offset
+            $groupByString
+            $orderBy
+            LIMIT :limit OFFSET :offset
         ");
 
-        //Process::$context['flash_error'] = $statement->queryString;
+        if ($this->getCRUDObject()->getSQLDebugState())
+            Process::$context['flash_warning'] = $statement->queryString;
+        //echo $statement->queryString;
         $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
         $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
         $statement->execute();
 
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        /**
-         * calculated field v.1.0
-         */
         foreach ($allFields as $f => $d) {
             if ($d['type'] == 'calculated' and $d['display']) {
                 foreach ($result as &$key) {
@@ -371,6 +589,16 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                     $key[$f] = $this->getCRUDObject()->$calc($key);
                 }
             }
+            if ($d['from_many'] !== false and $d['display']) {
+                foreach ($result as &$key) {
+                    $key[$f] = preg_replace('/(.+?)\,(.+?)/', '$1, $2', $key[$f]);
+                }
+            }
+            /*if ($d['type'] == 'tags' and $d['display']) {
+                foreach ($result as &$key) {
+                    $key[$f] = preg_replace('/([^,]+)/us', ' <a href="#">#$1</a>', $key[$f]);
+                }
+            }*/
         }
 
         return $result;
@@ -413,18 +641,25 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                     }
                 }
             } elseif ($value) {
-                $fType = strtolower($fields[$key]['type']);
+                if ($fields[$key]['from_many']) {
+                    $this->manyToManyCreateRegistryAdd(
+                        array($fields[$key]['from_many'], $value)
+                    );
+                } else {
+                    $fType = strtolower($fields[$key]['type']);
 
-                if ($fType == 'password') {
-                    /*\***** !DO PASSWORD! *****\*/
-                    $value = Security::getDigest($value);
-                } elseif ($fType == 'decimal') {
-                    $value = str_replace(',', '.', $value);
+                    if ($fType == 'password') {
+                        /*\***** !DO PASSWORD! *****\*/
+                        $value = Security::getDigest($value);
+                    } elseif ($fType == 'decimal') {
+                        $value = str_replace(',', '.', $value);
+                    }
+
+                    $insertedFields[] = $key;
+                    $insertedValues[":$key"] = ($fType == 'integer'
+                        or $fType == 'number' or $fType == 'decimal') ?
+                        array($value, PDO::PARAM_INT) : array($value, PDO::PARAM_STR);
                 }
-
-                $insertedFields[] = $key;
-                $insertedValues[":$key"] = ($fType == 'integer' or $fType == 'number' or $fType == 'decimal') ?
-                    array($value, PDO::PARAM_INT) : array($value, PDO::PARAM_STR);
             }
         }
 
@@ -435,7 +670,13 @@ class CRUDMySQLDriver extends CRUDDriverInterface
         $statement = Database::getInstance()->prepare("INSERT INTO $table ($insertedFieldsResult) VALUES ($insertedValuesResult)");
         foreach ($insertedValues as $valueKey => $valueData)
             $statement->bindParam($valueKey, $valueData[0], $valueData[1]);
-        return $statement->execute();
+        $result = $statement->execute();
+        if ($result) {
+            $this->manyToManyCreateRegistryExecute(
+                Database::getInstance()->lastInsertId()
+            );
+        }
+        return $result;
     }
 
     /**
@@ -453,20 +694,26 @@ class CRUDMySQLDriver extends CRUDDriverInterface
 
         foreach ($postedData as $key => $value) {
             if ($value !== false) {
-                $fType = strtolower($fields[$key]['type']);
-
-                if ($fType == 'password') {
-                    /*\***** !DO PASSWORD! *****\*/
-                    $value = Security::getDigest($value);
-                }
-
-                if (($fType == 'date' or $fType == 'datetime') and empty($value)) {
-                    $updatedFields[] = $key;
-                    $updatedValues[":$key"] = array(null, PDO::PARAM_NULL);
+                if ($fields[$key]['from_many']) {
+                    $this->manyToManyUpdate(
+                        $unique, $fields[$key]['from_many'], $value
+                    );
                 } else {
-                    $updatedFields[] = $key;
-                    $updatedValues[":$key"] = ($fType == 'integer' or $fType == 'number') ?
-                        array($value, PDO::PARAM_INT) : array($value, PDO::PARAM_STR);
+                    $fType = strtolower($fields[$key]['type']);
+
+                    if ($fType == 'password') {
+                        /*\***** !DO PASSWORD! *****\*/
+                        $value = Security::getDigest($value);
+                    }
+
+                    if (($fType == 'date' or $fType == 'datetime') and empty($value)) {
+                        $updatedFields[] = $key;
+                        $updatedValues[":$key"] = array(null, PDO::PARAM_NULL);
+                    } else {
+                        $updatedFields[] = $key;
+                        $updatedValues[":$key"] = ($fType == 'integer' or $fType == 'number') ?
+                            array($value, PDO::PARAM_INT) : array($value, PDO::PARAM_STR);
+                    }
                 }
             }
         }

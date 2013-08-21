@@ -4,9 +4,15 @@ class CRUDUsersData extends CRUDObjectInterface
     protected $menuName = 'Профили';
     protected $menuCreate = 'добавить профиль';
     protected $tableName = 'users_data';
-    protected $menuIcon = 'icon-file';
+    protected $menuIcon = 'link';
     protected $diffField = 'user_id';
     protected $orderByField = 'user_id';
+
+    /*protected $filterOptions = array(
+        'filter_string' => true,
+        'filter_date' => false,
+        'filter_less_or_more' => false,
+    );*/
 
     protected $fields = array(
         'user_id' => array(
@@ -17,11 +23,11 @@ class CRUDUsersData extends CRUDObjectInterface
             CRUDField::PARAM_TYPE => CRUDField::TYPE_INFINITY,
             CRUDField::PARAM_DESCRIPTION => 'Логин',
             CRUDField::PARAM_MODIFY => '<a href="#" class="tooltipped" data-toggle="tooltip" title="Владелец профиля">@$1</a>',
-            CRUDField::PARAM_ONE_TO_MANY_SETTINGS => array(
-                CRUDField::PARAM_ONE_TO_MANY_JOIN_TABLE => 'users',
-                CRUDField::PARAM_ONE_TO_MANY_JOIN_CONDITION_JOIN_TABLE_FIELD => 'id',
-                CRUDField::PARAM_ONE_TO_MANY_TARGET_JOIN_TABLE_FIELD => 'login',
-                CRUDField::PARAM_ONE_TO_MANY_JOIN_CONDITION_THIS_TABLE_FIELD => 'user_id',
+            CRUDField::PARAM_ONE_TO_ONE_SETTINGS => array(
+                CRUDField::ONE_TO_ONE_JOIN_TABLE => 'users',
+                CRUDField::ONE_TO_ONE_JOIN_CONDITION_JOIN_TABLE_FIELD => 'id',
+                CRUDField::ONE_TO_ONE_TARGET_JOIN_TABLE_FIELD => 'login',
+                CRUDField::ONE_TO_ONE_JOIN_CONDITION_THIS_TABLE_FIELD => 'user_id',
             ),
             CRUDField::PARAM_DISPLAY => true,
         ),

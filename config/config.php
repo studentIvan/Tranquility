@@ -37,9 +37,9 @@ return array(
         'ldt_js' => '/js/ldt.min.js',
         'bootstrap_js' => '/js/bootstrap.min.js',
         'bootstrap_css' => '/css/bootstrap.min.css',
+        'bootstrap_theme_css' => '/css/bootstrap-theme.min.css',
         'html5shim_js' => 'http://html5shim.googlecode.com/svn/trunk/html5.js',
         'batman_hand_js' => '/js/batman_hand.min.js',
-        'icons_css' => '/css/icons.css',
 
         /**
          * JQuery

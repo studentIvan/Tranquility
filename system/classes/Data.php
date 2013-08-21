@@ -134,4 +134,14 @@ class Data
         closedir($dh);
         return $dirSize;
     }
+
+    /**
+     * @param string $value
+     * @param null $key
+     * @return string
+     */
+    public static function walkingTrim(&$value, $key = null)
+    {
+        return trim($value);
+    }
 }
