@@ -179,6 +179,7 @@ class Admin
         ));
 
         include_once $thisDir . '/../crud/factoring/CRUDField.php';
+        include_once $thisDir . '/../crud/factoring/CRUDConfig.php';
         include_once $thisDir . '/../crud/interfaces/CRUDDriverInterface.php';
         include_once $thisDir . '/../crud/interfaces/CRUDObjectInterface.php';
 

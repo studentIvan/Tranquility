@@ -1,28 +1,33 @@
 <?php
 class CRUDRoles extends CRUDObjectInterface
 {
-    protected $menuName = 'Роли';
-    protected $menuCreate = 'новая роль';
-    protected $tableName = 'roles';
-    protected $menuIcon = 'tower';
+    protected function setup()
+    {
+        $config = new CRUDConfig($this);
 
-    protected $fields = array(
-        'id' => array(
-            CRUDField::PARAM_DEFAULT => CRUDField::DEFAULT_NULL,
-            CRUDField::PARAM_DESCRIPTION => 'ID роли',
-            CRUDField::PARAM_TYPE => CRUDField::TYPE_INTEGER,
-        ),
-        'title' => array(
-            CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
-            CRUDField::PARAM_DESCRIPTION => 'Название',
-            CRUDField::PARAM_DISPLAY => true,
-        ),
-        'info' => array(
-            CRUDField::PARAM_TYPE => CRUDField::TYPE_CALCULATED,
-            CRUDField::PARAM_DISPLAY_FUNCTION => 'roleTypeField',
-            CRUDField::PARAM_DISPLAY => true,
-        ),
-    );
+        $config->setMenuName('Роли');
+        $config->setMenuCreate('новая роль');
+        $config->setTableName('roles');
+        $config->setMenuIcon('tower');
+
+        $config->setFields(array(
+            'id' => array(
+                CRUDField::PARAM_DEFAULT => CRUDField::DEFAULT_NULL,
+                CRUDField::PARAM_DESCRIPTION => 'ID роли',
+                CRUDField::PARAM_TYPE => CRUDField::TYPE_INTEGER,
+            ),
+            'title' => array(
+                CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
+                CRUDField::PARAM_DESCRIPTION => 'Название',
+                CRUDField::PARAM_DISPLAY => true,
+            ),
+            'info' => array(
+                CRUDField::PARAM_TYPE => CRUDField::TYPE_CALCULATED,
+                CRUDField::PARAM_DISPLAY_FUNCTION => 'roleTypeField',
+                CRUDField::PARAM_DISPLAY => true,
+            ),
+        ));
+    }
 
     public function roleTypeField($key)
     {

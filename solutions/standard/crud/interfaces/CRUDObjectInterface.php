@@ -5,29 +5,29 @@ abstract class CRUDObjectInterface
      * Menu name
      * @var string
      */
-    protected $menuName = 'Something';
+    private $menuName = 'Something';
 
     /**
      * (Create new) string
      * @var string
      */
-    protected $menuCreate = 'create new';
+    private $menuCreate = 'create new';
 
     /**
      * Menu Icon from "Icon glyphs" set
      * @var string
      */
-    protected $menuIcon = 'folder-open';
+    private $menuIcon = 'folder-open';
 
-    protected $tableName = '';
-    protected $diffField = 'id';
-    protected $orderByField = 'id';
-    protected $fields = array();
+    private $tableName = '';
+    private $diffField = 'id';
+    private $orderByField = 'id';
+    private $fields = array();
     private $driver = false;
     private $filter = false;
-    protected $elementsPerPage = 5;
-    protected $onlyDisplay = false;
-    protected $debugSQL = DEVELOPER_MODE;
+    private $elementsPerPage = 5;
+    private $onlyDisplay = false;
+    private $debugSQL = DEVELOPER_MODE;
 
     /**
      * Who can work with it?
@@ -50,11 +50,16 @@ abstract class CRUDObjectInterface
         'filter_less_or_more' => false,
     );
 
+    protected $setupBlock = false;
+
     /**
      *
      */
     public function __construct($driver = 'MySQL')
     {
+        $this->setup();
+        $this->setupBlock = true;
+
         if (empty($this->tableName)) {
             throw new Exception('Вы не указали таблицу (tableName) в настройках этой модели');
         }
@@ -145,6 +150,111 @@ abstract class CRUDObjectInterface
             }
         }
         while ($fieldBugFind);
+    }
+
+    protected function setup()
+    {
+
+    }
+
+    /**
+     * @param $tableName
+     */
+    public function setTableName($tableName)
+    {
+        if (!$this->setupBlock)
+            $this->tableName = $tableName;
+    }
+
+    /**
+     * @param $menuCreate
+     */
+    public function setMenuCreate($menuCreate)
+    {
+        if (!$this->setupBlock)
+            $this->menuCreate = $menuCreate;
+    }
+
+    /**
+     * @param $menuIcon
+     */
+    public function setMenuIcon($menuIcon)
+    {
+        if (!$this->setupBlock)
+            $this->menuIcon = $menuIcon;
+    }
+
+    /**
+     * @param $menuName
+     */
+    public function setMenuName($menuName)
+    {
+        if (!$this->setupBlock)
+            $this->menuName = $menuName;
+    }
+
+    /**
+     * @param $orderByField
+     */
+    public function setOrderByField($orderByField)
+    {
+        if (!$this->setupBlock)
+            $this->orderByField = $orderByField;
+    }
+
+    /**
+     * @param $diffField
+     */
+    public function setDiffField($diffField)
+    {
+        if (!$this->setupBlock)
+            $this->diffField = $diffField;
+    }
+
+    /**
+     * @param $onlyDisplay
+     */
+    public function setOnlyDisplay($onlyDisplay)
+    {
+        if (!$this->setupBlock)
+            $this->onlyDisplay = $onlyDisplay;
+    }
+
+    /**
+     * @param array $fields
+     */
+    public function setFields($fields)
+    {
+        if (!$this->setupBlock)
+            $this->fields = $fields;
+    }
+
+    /**
+     * @param $filter
+     */
+    public function addFilter($filter)
+    {
+        if (!$this->setupBlock)
+            $this->filterOptions[$filter] = true;
+    }
+
+    /**
+     * @param string $action
+     * @param array|string $roles
+     */
+    public function setPolicyForAction($action, $roles)
+    {
+        if (!$this->setupBlock)
+            $this->RBACPolicy[$action] = $roles;
+    }
+
+    /**
+     * @param $n
+     */
+    public function setElementsPerPage($n)
+    {
+        if (!$this->setupBlock)
+            $this->elementsPerPage = $n;
     }
 
     /**

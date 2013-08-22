@@ -1,34 +1,39 @@
 <?php
 class CRUDReferrers extends CRUDObjectInterface
 {
-    protected $menuName = 'Реферреры';
-    protected $menuCreate = false;
-    protected $tableName = 'referrers';
-    protected $menuIcon = 'send';
-    protected $diffField = 'url_hash';
-    protected $orderByField = 'rating';
+    protected function setup()
+    {
+        $config = new CRUDConfig($this);
 
-    protected $fields = array(
-        'flag' => array(
-            CRUDField::PARAM_TYPE => CRUDField::TYPE_CALCULATED,
-            CRUDField::PARAM_DISPLAY_FUNCTION => 'flagField',
-            CRUDField::PARAM_DISPLAY => true,
-        ),
-        'url_hash' => array(
-            CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
-        ),
-        'url' => array(
-            CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
-            CRUDField::PARAM_MODIFY => 'переходы по ссылке: <a href="http://anonym.to/?$1" target="_blank">$1</a>',
-            CRUDField::PARAM_DISPLAY => true,
-        ),
-        'rating' => array(
-            CRUDField::PARAM_TYPE => CRUDField::TYPE_INTEGER,
-            CRUDField::PARAM_MODIFY => '$1 раз',
-            CRUDField::PARAM_IS_COUNT_OF_FIELD => 'url',
-            CRUDField::PARAM_DISPLAY => true,
-        ),
-    );
+        $config->setMenuName('Реферреры');
+        $config->setMenuCreate(false);
+        $config->setTableName('referrers');
+        $config->setDiffField('url_hash');
+        $config->setOrderByField('rating');
+        $config->setMenuIcon('send');
+
+        $config->setFields(array(
+            'flag' => array(
+                CRUDField::PARAM_TYPE => CRUDField::TYPE_CALCULATED,
+                CRUDField::PARAM_DISPLAY_FUNCTION => 'flagField',
+                CRUDField::PARAM_DISPLAY => true,
+            ),
+            'url_hash' => array(
+                CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
+            ),
+            'url' => array(
+                CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
+                CRUDField::PARAM_MODIFY => 'переходы по ссылке: <a href="http://anonym.to/?$1" target="_blank">$1</a>',
+                CRUDField::PARAM_DISPLAY => true,
+            ),
+            'rating' => array(
+                CRUDField::PARAM_TYPE => CRUDField::TYPE_INTEGER,
+                CRUDField::PARAM_MODIFY => '$1 раз',
+                CRUDField::PARAM_IS_COUNT_OF_FIELD => 'url',
+                CRUDField::PARAM_DISPLAY => true,
+            ),
+        ));
+    }
 
     public function flagField($key)
     {
