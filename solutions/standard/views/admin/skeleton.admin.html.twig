@@ -11,6 +11,7 @@
     <style>
         body {
             padding-top: 70px;
+            margin-right: 15px;
             {% if container.count %} padding-bottom: 60px;
         {% endif %}
         }
@@ -157,7 +158,7 @@
         <ul class="nav nav-pills nav-stacked">
             {% for e in admin_menu_elements %}
                 <li class="{% if admin_part == e.uri %}base-active active{% endif %} left-menu-element"><a
-                            href="{{ panel_base_uri }}/{{ e.uri }}" data-history="{{ e.name }} :: управление">
+                            href="{{ panel_base_uri }}/{{ e.uri }}" data-history="{{ e.name }}">
                         <span class="glyphicon glyphicon-{{ e.icon }}"></span>&nbsp;
                         {{ e.name }}
                         {% if e.count %}<span class="badge pull-right">{{ e.count }}</span>{% endif %}

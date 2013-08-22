@@ -1,6 +1,17 @@
 {% if flash_error %}
     {% include 'admin/alert.danger.html.twig' %}
 {% endif %}
+{% if flash_warning %}
+    {% include 'admin/alert.warning.html.twig' %}
+{% endif %}
+{% if flash_success %}
+    {% include 'admin/alert.success.html.twig' %}
+{% endif %}
+{% if flash_console %}
+    <script type="text/javascript">
+        console.info({{ flash_console|json_encode|raw }});
+    </script>
+{% endif %}
 <ul class="list-group">
     {% for field_name, field_data in fields %}
         {% if read_data[field_name] %}

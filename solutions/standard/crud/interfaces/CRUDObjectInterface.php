@@ -27,7 +27,7 @@ abstract class CRUDObjectInterface
     private $filter = false;
     protected $elementsPerPage = 5;
     protected $onlyDisplay = false;
-    protected $debugSQL = false;
+    protected $debugSQL = DEVELOPER_MODE;
 
     /**
      * Who can work with it?
@@ -87,6 +87,15 @@ abstract class CRUDObjectInterface
                 $field['options'] = $this->getSelectOptions($field['from']['table'], $field['from']['field'], $field['from']['as']);
             }
 
+            if ($field['from']) {
+                $field['from']['group'] = 'x' . substr(md5(rand(1000, 9000)), 0, 5);
+            }
+
+            if ($field['from_many']) {
+                $field['from_many']['group_many_relation'] = 'y' . substr(md5(rand(1000, 9000)), 0, 5);
+                $field['from_many']['group_many_data'] = 'z' . substr(md5(rand(1000, 9000)), 0, 5);
+            }
+
             if (isset($field['values']) and $field['type'] == 'select') {
                 $field['options'] = array();
                 foreach ($field['values'] as $key => $value) {
@@ -94,9 +103,52 @@ abstract class CRUDObjectInterface
                 }
             }
         }
+
+        if (isset($this->fields[$this->diffField]) and $this->fields[$this->diffField]['modify']) {
+            $this->fields[$this->diffField]['modify'] = false;
+            Process::$context['flash_warning'] =
+                'Параметр modify не поддерживается уникальным полем, создайте дополнительное поле';
+        }
+
+        do
+        {
+            $fieldsCursor = 0;
+            $fieldBugFind = false;
+            foreach ($this->fields as $fieldKey => $fieldData)
+            {
+                if ($fieldData['display'] and $fieldData['from'] and !$fieldData['default']
+                    and ($fieldData['type'] == 'integer' or $fieldData['type'] == 'number'))
+                {
+                    $fieldCopy = $fieldData;
+                    $fieldCopy['type'] = 'infinity';
+                    if ($fieldCopy['description'])
+                        $fieldCopy['description'] .= ' (объект)';
+                    $fieldCopy['from']['group'] = 'x' . substr(md5(rand(1000, 9000)), 0, 5);
+
+                    $fieldData['display'] = false;
+                    $fieldData['from'] = false;
+                    $this->fields[$fieldKey] = $fieldData;
+
+                    Data::arrayPutToPosition(
+                        $this->fields, $fieldCopy, $fieldsCursor + 1, $fieldKey . '_inf'
+                    );
+
+                    $fieldBugFind = true;
+                }
+
+                if ($fieldBugFind) {
+                    $fieldBugFind = false;
+                    break;
+                }
+
+                $fieldsCursor++;
+            }
+        }
+        while ($fieldBugFind);
     }
 
     /**
+     * @throws Exception
      * @return CRUDDriverInterface
      */
     protected function getDriver()
@@ -159,7 +211,7 @@ abstract class CRUDObjectInterface
      */
     public function checkRBACPolicy($action = 'read')
     {
-        return ($this->RBACPolicy[$action] == 'any' or in_array(Session::getRole(), $this->RBACPolicy[$action]));
+        return ($this->RBACPolicy[$action] === 'any' or in_array(Session::getRole(), $this->RBACPolicy[$action], true));
     }
 
     /**

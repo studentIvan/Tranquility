@@ -44,3 +44,8 @@ You can rename webroot so as you like. For example: htdocs (as default hosting d
 
 ### Birthday
 16th April 2012
+
+### Testing
+* For tests u need a PHPUnit
+* Example run: ```php ide-phpunit.php --configuration /projects/mysite/testing/phpunit.xml```
+* Or just right-click on testing/phpunit.xml and select 'Run it (Run phpunit.xml)' in your professional IDE

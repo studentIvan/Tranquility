@@ -1,8 +1,24 @@
 {% extends 'skeleton.html.twig' %}
 {% block body %}
-<ul>
-{% for key, value in user %}
-    <li><strong>{{ key }}</strong>: {{ value }}</li>
-{% endfor %}
-</ul>
+    <div class="page-header">
+        <h1>@{{ user.login }}
+            {% if user.full_name %}<small>user.full_name</small>{% endif %}
+        </h1>
+    </div>
+    <div class="row">
+        <div class="col-lg-2">
+            <br>
+            <img src="{% if user.photo %}{{ user.photo }}{% else %}/img/anonymous.png{% endif %}">
+        </div>
+        <div class="col-lg-8">
+            <ul class="list-group">
+                {% if user.nickname %}<li class="list-group-item"><strong>Ник</strong>: {{ user.nickname }}</li>{% endif %}
+                {% if user.full_name %}<li class="list-group-item"><strong>Полное имя</strong>: {{ user.full_name }}</li>{% endif %}
+                {% if user.birthday %}<li class="list-group-item"><strong>Дата рождения</strong>: {{ user.birthday }}</li>{% endif %}
+                <li class="list-group-item"><strong>Дата регистрации</strong>: <span class="dtl10n">{{ user.registered_at }}</span></li>
+                <li class="list-group-item"><strong>Пол</strong>: {% if user.gender == 'm' %}парень{% else %}девушка{% endif %}</li>
+                {% if user.about_me %}<li class="list-group-item"><strong>Обо мне</strong>: {{ user.about_me }}</li>{% endif %}
+            </ul>
+        </div>
+    </div>
 {% endblock %}

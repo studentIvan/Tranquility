@@ -1,4 +1,20 @@
 <?php
+require_once dirname(__FILE__) . '/../crud/interfaces/CRUDDriverInterface.php';
+require_once dirname(__FILE__) . '/../crud/interfaces/CRUDObjectInterface.php';
+require_once dirname(__FILE__) . '/../controllers/Admin.php';
+require_once dirname(__FILE__) . '/../controllers/Feeder.php';
+
+class CRUDTestObject extends CRUDObjectInterface {
+    protected $tableName = 'nothing';
+
+    public function setRBACPolicy($RBACPolicy) {
+        $this->RBACPolicy = $RBACPolicy;
+    }
+    public function getMenuURI() {
+        return 'thispartitionreallyexists';
+    }
+}
+
 class AdminTest extends PHPUnit_Framework_TestCase
 {
     public function testIsAccessAllow()
@@ -43,8 +59,18 @@ class AdminTest extends PHPUnit_Framework_TestCase
 
     public function testGetContainerRBACForbiddenException()
     {
-        try {
-            Admin::getContainer('thispartitionreallyexists', false, array(new CRUDTestObject()));
+        try
+        {
+            $CRUDTestObject = new CRUDTestObject();
+
+            $CRUDTestObject->setRBACPolicy(array(
+                'create' => array(999),
+                'read' => array(999),
+                'update' => array(999),
+                'delete' => array(999),
+            ));
+
+            Admin::getContainer('thispartitionreallyexists', false, array($CRUDTestObject));
         } catch (ForbiddenException $expected) {
             return;
         }
@@ -52,7 +78,7 @@ class AdminTest extends PHPUnit_Framework_TestCase
         $this->fail('An expected exception has not been raised.');
     }
 
-    public function testGetContainerPDOException()
+    public function testGetContainerFlashError()
     {
         $CRUDTestObject = new CRUDTestObject();
 
@@ -63,9 +89,9 @@ class AdminTest extends PHPUnit_Framework_TestCase
             'delete' => 'any',
         ));
 
-        try {
-            Admin::getContainer('thispartitionreallyexists', false, array($CRUDTestObject));
-        } catch (PDOException $expected) {
+        Admin::getContainer('thispartitionreallyexists', false, array($CRUDTestObject));
+
+        if (isset(Process::$context['flash_error'])) {
             return;
         }
 

@@ -18,7 +18,6 @@ class CRUDField
     const ONE_TO_ONE_JOIN_CONDITION_THIS_TABLE_FIELD = 'on';
     const ONE_TO_ONE_TARGET_JOIN_TABLE_FIELD = 'as';
     const ONE_TO_ONE_JOIN_TYPE = 'join';
-    const ONE_TO_ONE_JOIN_GROUP = 'group';
 
     const PARAM_MANY_TO_ONE_SETTINGS = 'from';
     const MANY_TO_ONE_JOIN_TABLE = 'table';
@@ -26,7 +25,6 @@ class CRUDField
     const MANY_TO_ONE_JOIN_CONDITION_THIS_TABLE_FIELD = 'on';
     const MANY_TO_ONE_TARGET_JOIN_TABLE_FIELD = 'as';
     const MANY_TO_ONE_JOIN_TYPE = 'join';
-    const MANY_TO_ONE_JOIN_GROUP = 'group';
 
     /**
      * @todo ONE_TO_MANY support
@@ -40,8 +38,6 @@ class CRUDField
     const MANY_TO_MANY_DATA_TABLE_JOIN_CONDITION_JOIN_TABLE_FIELD = 'field_many_data';
     const MANY_TO_MANY_DATA_TABLE_JOIN_CONDITION_RELATION_TABLE_FIELD = 'on_many_data';
     const MANY_TO_MANY_DATA_TABLE_TARGET_JOIN_TABLE_FIELD = 'as_many_data';
-    const MANY_TO_MANY_RELATION_TABLE_JOIN_GROUP = 'group_many_relation';
-    const MANY_TO_MANY_DATA_TABLE_JOIN_GROUP = 'group_many_data';
 
     const TYPE_STRING = 'string';
     const TYPE_TEXT = 'text';

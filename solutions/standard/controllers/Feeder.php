@@ -6,12 +6,10 @@ class Feeder
         switch ($matches[1])
         {
             case 'rss':
-                //header("Content-Type: text/plain; charset=utf-8");
                 header("Content-Type: application/rss+xml; charset=utf-8");
                 echo self::getRSS();
                 break;
             case 'atom':
-                //header("Content-Type: text/plain; charset=utf-8");
                 header("Content-Type: application/atom+xml; charset=utf-8");
                 echo self::getAtom();
                 break;

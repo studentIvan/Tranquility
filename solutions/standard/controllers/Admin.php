@@ -415,6 +415,8 @@ class Admin
 
                         try {
                             $container['data'] = $m->getListing($pagination['offset'], $perPage);
+                        } catch (ForbiddenException $e) {
+                            throw $e;
                         } catch (Exception $e) {
                             Process::$context['flash_error'] = ($e->getCode() == 42000)
                                 ? 'Ошибка логического пересечения таблиц. Для одного или более полей укажите уникальный join-group.

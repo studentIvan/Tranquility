@@ -24,7 +24,6 @@ class CRUDSessions extends CRUDObjectInterface
                 CRUDField::MANY_TO_ONE_JOIN_TABLE => 'roles',
                 CRUDField::MANY_TO_ONE_JOIN_CONDITION_JOIN_TABLE_FIELD => 'id',
                 CRUDField::MANY_TO_ONE_TARGET_JOIN_TABLE_FIELD => 'title',
-                CRUDField::MANY_TO_ONE_JOIN_GROUP => 'r',
             ),
             CRUDField::PARAM_DISPLAY => true,
         ),
@@ -45,7 +44,6 @@ class CRUDSessions extends CRUDObjectInterface
                 CRUDField::MANY_TO_ONE_JOIN_TABLE => 'users',
                 CRUDField::MANY_TO_ONE_JOIN_CONDITION_JOIN_TABLE_FIELD => 'id',
                 CRUDField::MANY_TO_ONE_TARGET_JOIN_TABLE_FIELD => 'login',
-                CRUDField::MANY_TO_ONE_JOIN_GROUP => 'u',
             ),
             CRUDField::PARAM_DISPLAY => true,
         ),
@@ -58,13 +56,13 @@ class CRUDSessions extends CRUDObjectInterface
     public function statusField($key)
     {
         if (Session::getToken() == $key['token']) {
-            return '<i class="icon-eye-close"></i>
+            return '<span class="glyphicon glyphicon-eye-close"></span>
             <div style="position: absolute; top: 25px;
              color: lightgray; white-space: nowrap">
             * это ваша текущая сессия
             </div>';
         } else {
-            return '<i class="icon-eye-open"></i>';
+            return '<i class="glyphicon glyphicon-eye-open"></i>';
         }
     }
 }

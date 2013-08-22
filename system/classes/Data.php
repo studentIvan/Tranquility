@@ -144,4 +144,33 @@ class Data
     {
         return trim($value);
     }
+
+    /**
+     * @author yuri
+     * @uri http://www.php.net/manual/ru/function.array-push.php#106717
+     *
+     * @param array $array
+     * @param mixed $object
+     * @param integer $position
+     * @param mixed $name
+     * @return array
+     */
+    public static function arrayPutToPosition(&$array, $object, $position, $name = null)
+    {
+        $count = 0;
+        $return = array();
+        foreach ($array as $k => $v) {
+            if ($count == $position) {
+                if (!$name) $name = $count;
+                $return[$name] = $object;
+                $inserted = true;
+            }
+            $return[$k] = $v;
+            $count++;
+        }
+        if (!$name) $name = $count;
+        if (!$inserted) $return[$name];
+        $array = $return;
+        return $array;
+    }
 }

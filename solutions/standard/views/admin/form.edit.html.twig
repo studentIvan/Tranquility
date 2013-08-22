@@ -32,7 +32,7 @@
                             <select name="pf-{{ field }}" class="form-control"
                                     id="field-{{ field }}">
                                 {% for option in field_data.options %}
-                                    <option value="{{ option.value }}"{% if read_data[field] == option.value %} selected="selected"{% endif %}>{{ option.name }}</option>
+                                    <option value="{{ option.value }}"{% if read_data[field] == option.value or read_data[field] == option.name %} selected="selected"{% endif %}>{{ option.name }}</option>
                                 {% endfor %}
                             </select>
                         {% elseif field_data.type == 'password' %}

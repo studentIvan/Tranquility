@@ -152,7 +152,8 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                     $foreignIndex = isset($fieldData['from']['group']) ? $fieldData['from']['group'] : 'b';
                     $selectedFields[] = "$foreignIndex.{$fieldData['from']['as']} AS $fieldKey";
                     $joinType = isset($fieldData['from']['join']) ? $fieldData['from']['join'] : 'LEFT';
-                    $on = isset($fieldData['from']['on']) ? "a.{$fieldData['from']['on']}" : "a.$fieldKey";
+                    $on = isset($fieldData['from']['on']) ?
+                        "a.{$fieldData['from']['on']}" : str_replace('_inf', '', "a.$fieldKey");
                     $joinString .= "
 						$joinType JOIN {$fieldData['from']['table']} as $foreignIndex 
 						ON $foreignIndex.{$fieldData['from']['field']} = $on
@@ -207,7 +208,8 @@ class CRUDMySQLDriver extends CRUDDriverInterface
         ");
 
         $statement->bindParam(':unique', $unique, PDO::PARAM_STR);
-        //echo $statement->queryString;
+        if ($this->getCRUDObject()->getSQLDebugState())
+            Process::$context['flash_console'] = 'SQL Query Debug:' . preg_replace('/\s+/s', ' ', $statement->queryString);
         $statement->execute();
 
         $returns = $statement->fetch(PDO::FETCH_ASSOC);
@@ -406,7 +408,8 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                                 ? "COALESCE($foreignIndex.{$d['from']['as']}, null, '{$d['coalesce']}') AS $f"
                                 : "$foreignIndex.{$d['from']['as']} AS $f";
                             $joinType = isset($d['from']['join']) ? $d['from']['join'] : 'LEFT';
-                            $on = isset($d['from']['on']) ? "a.{$d['from']['on']}" : "a.$f";
+                            $on = isset($d['from']['on']) ?
+                                "a.{$d['from']['on']}" : str_replace('_inf', '', "a.$f");
                             $joinString .= "
                             $joinType JOIN {$d['from']['table']} as $foreignIndex
                             ON $foreignIndex.{$d['from']['field']} = $on
@@ -439,7 +442,7 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                             $groupByString .= "$foreignDataIndex.{$d['from_many']['field_many_data']}";*/
                         }
                     }
-                } elseif ($d['type'] !== 'calculated') {
+                } elseif ($d['type'] !== 'calculated' and !$d['count_of']) {
                     $groupByString = (!empty($groupByString)) ? "$groupByString, " : "GROUP BY ";
                     $groupByString .= "a.$f";
                 }
@@ -574,7 +577,7 @@ class CRUDMySQLDriver extends CRUDDriverInterface
         ");
 
         if ($this->getCRUDObject()->getSQLDebugState())
-            Process::$context['flash_warning'] = $statement->queryString;
+            Process::$context['flash_console'] = 'SQL Query Debug:' . preg_replace('/\s+/s', ' ', $statement->queryString);
         //echo $statement->queryString;
         $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
         $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
@@ -655,10 +658,16 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                         $value = str_replace(',', '.', $value);
                     }
 
-                    $insertedFields[] = $key;
-                    $insertedValues[":$key"] = ($fType == 'integer'
-                        or $fType == 'number' or $fType == 'decimal') ?
-                        array($value, PDO::PARAM_INT) : array($value, PDO::PARAM_STR);
+                    if (($fType == 'date' or $fType == 'datetime'
+                            or $fType == 'integer' or $fType == 'number') and empty($value)) {
+                        $insertedFields[] = $key;
+                        $insertedValues[":$key"] = array(null, PDO::PARAM_NULL);
+                    } else {
+                        $insertedFields[] = $key;
+                        $insertedValues[":$key"] = ($fType == 'integer'
+                            or $fType == 'number' or $fType == 'decimal') ?
+                            array($value, PDO::PARAM_INT) : array($value, PDO::PARAM_STR);
+                    }
                 }
             }
         }
@@ -706,7 +715,8 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                         $value = Security::getDigest($value);
                     }
 
-                    if (($fType == 'date' or $fType == 'datetime') and empty($value)) {
+                    if (($fType == 'date' or $fType == 'datetime'
+                            or $fType == 'integer' or $fType == 'number') and empty($value)) {
                         $updatedFields[] = $key;
                         $updatedValues[":$key"] = array(null, PDO::PARAM_NULL);
                     } else {

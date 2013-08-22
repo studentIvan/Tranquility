@@ -1,5 +1,5 @@
-<phpunit bootstrap="./__init__.php">
-    <testsuite name="Tranquility - Installer - Testsuite">
+<phpunit bootstrap="../../../testing/__init__.php">
+    <testsuite name="Tranquility - Installer - TestSuite">
         <directory>./</directory>
     </testsuite>
 </phpunit>

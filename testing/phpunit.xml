@@ -1,0 +1,6 @@
+<phpunit bootstrap="./__init__.php">
+    <testsuite name="Tranquility - FullTestSuite">
+        <directory>../</directory>
+        <exclude>../vendor</exclude>
+    </testsuite>
+</phpunit>

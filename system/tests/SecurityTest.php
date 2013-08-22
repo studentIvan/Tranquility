@@ -1,4 +1,13 @@
 <?php
+class SecurityDebug extends Security
+{
+    public static function getDigestWithSpecialSecret($var, $secret)
+    {
+        self::$secret = $secret;
+        return self::getDigest($var);
+    }
+}
+
 class SecurityTest extends PHPUnit_Framework_TestCase
 {
     public function testGetDigestFalseInNotZero()
