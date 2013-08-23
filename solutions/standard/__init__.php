@@ -14,6 +14,7 @@ Process::$context['hosting_free_space_mb'] =
 if (isset($config['cms'])) {
     if (isset($config['cms']['news']) and $config['cms']['news']) {
         require_once $__DIRADM__ . '/datamappers/News.php';
+        require_once $__DIRADM__ . '/datamappers/Comments.php';
     }
 
     require_once $__DIRADM__ . '/datamappers/Users.php';

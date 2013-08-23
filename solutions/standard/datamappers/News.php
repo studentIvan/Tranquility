@@ -17,7 +17,7 @@ class News
             n.created_at AS created_at, n.posted_by AS poster_id,
             u.login AS poster_login,
             GROUP_CONCAT(DISTINCT t.name SEPARATOR ',') AS tags,
-            COUNT(c.id) AS comments_total
+            COUNT(DISTINCT c.id) AS comments_total
             FROM news n LEFT JOIN users u
             ON n.posted_by=u.id
             LEFT JOIN tags_relation as tr

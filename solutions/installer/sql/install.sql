@@ -75,14 +75,13 @@ DROP TABLE IF EXISTS `news_comments`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `news_comments` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `parent_id` int(10) unsigned DEFAULT NULL,
   `news_id` int(10) unsigned NOT NULL,
   `message` text NOT NULL,
   `author_id` int(10) unsigned DEFAULT NULL,
   `posted_at` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `news_id` (`news_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,7 +90,7 @@ CREATE TABLE `news_comments` (
 
 LOCK TABLES `news_comments` WRITE;
 /*!40000 ALTER TABLE `news_comments` DISABLE KEYS */;
-INSERT INTO `news_comments` VALUES (1,NULL,1,'Demo',1,'2013-08-20 17:27:30'),(2,3,6,'Admin, okay',1,'2013-08-20 17:27:52'),(3,NULL,6,'Привет мир!\r\nОлолол',NULL,'2013-08-20 17:48:47'),(4,NULL,1,'Noasdnas',1,'2013-08-22 15:56:42'),(5,NULL,6,'куекеукеукеуке',1,'2013-08-22 20:34:06');
+INSERT INTO `news_comments` VALUES (1,6,'Привет мир',1,'2013-08-23 16:02:15'),(2,6,'@Admin, ага, и тебе не хворать',NULL,'2013-08-23 16:03:00'),(3,6,'Лорем испум долор сит амет - это часть нашей жизни, так давайте же будем это ценить! Или мы не рыба совсем? Ну за себя я говорю, что я точно полноценная рыбная рыба.',1,'2013-08-23 16:04:18'),(4,6,'Ололо!',1,'2013-08-23 17:40:41');
 /*!40000 ALTER TABLE `news_comments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -327,4 +326,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-08-23  3:32:17
+-- Dump completed on 2013-08-23 17:43:53

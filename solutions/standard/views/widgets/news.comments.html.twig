@@ -3,9 +3,95 @@
         <form method="POST" id="comment-form">
             <fieldset>
                 <legend>Комментарии</legend>
-                <textarea class="form-control"></textarea>
-                <input type="submit" class="btn btn-default" value="Комментировать">
+                <textarea name="asdjooqw8djsndasdasyo437trhs"
+                          class="form-control" id="comment-form-message" required="required"></textarea>
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+                <div id="comment-preview" style="display: none; padding-bottom: 15px;"></div>
+                <div class="btn-group">
+                    <button type="submit" role="submit" class="btn btn-default">
+                        <span class="glyphicon glyphicon-share"></span>&nbsp;Публикация
+                    </button>
+                    <button type="button" onclick="previewCommentToggle(this)" data-state="form" role="button"
+                            class="btn btn-default">
+                        <span class="glyphicon glyphicon-eye-open"></span>&nbsp;Предпросмотр
+                    </button>
+                </div>
             </fieldset>
         </form>
     </li>
+    {% for comment in comments %}
+        <li class="list-group-item">
+            <p class="list-group-item-text" style="padding-bottom: 4px; font-weight: bold;">
+                {% if comment.poster_login %}
+                    <a href="/profile/{{ comment.poster_id }}.html">
+                        {% if comment.poster_photo %}
+                            <img src="{{ comment.poster_photo }}" alt="" height="18px">
+                        {% else %}
+                            <img src="/img/anonymous.png" alt="" height="18px">
+                        {% endif %}
+                        {% if comment.poster_nick %}
+                            {% set commenter = comment.poster_nick %}
+                        {% elseif comment.poster_full_name %}
+                            {% set commenter = comment.poster_full_name %}
+                        {% else %}
+                            {% set commenter = comment.poster_login %}
+                        {% endif %}
+                        {{ commenter }}
+                    </a>
+                {% else %}
+                    {% set commenter = 'Гость' %}
+                    <img src="/img/anonymous.png" alt="" height="18px">
+                    {{ commenter }}
+                {% endif %}
+            </p>
+            <p class="list-group-item-text" style="font-size: 12px;">
+                {{ comment.message|raw }}
+            </p>
+            <p class="list-group-item-text" style="padding-top: 5px; font-size: 12px;">
+                <span style="color: #808080;">
+                    <span class="dtl10n">{{ comment.posted_at }}</span>&nbsp;|
+                </span>
+                <a href="#comment-form" onclick='answer({{ commenter|json_encode|raw }})'>Ответить</a>
+            </p>
+        </li>
+    {% endfor %}
 </ul>
+<script type="text/javascript">
+    function answer(to) {
+        var commentFormMessage = $('#comment-form-message');
+        commentFormMessage.val('@' + to + ', ');
+    }
+
+    function previewCommentToggle(previewBtn) {
+        var commentFormMessage = $('#comment-form-message');
+        var commentPreview = $('#comment-preview');
+        var compiledMessage = buildMessage(escapeHtml(commentFormMessage.val()));
+        commentPreview.html(compiledMessage);
+
+        if ($(previewBtn).data('state') == 'preview') {
+            commentFormMessage.css('display', 'block');
+            commentPreview.css('display', 'none');
+            $(previewBtn).html('<span class="glyphicon glyphicon-eye-open"></span>&nbsp;Предпросмотр');
+            $(previewBtn).data('state', 'form');
+        } else {
+            commentPreview.css('display', 'block');
+            commentFormMessage.css('display', 'none');
+            $(previewBtn).html('<span class="glyphicon glyphicon-edit"></span>&nbsp;Вернуться к редактированию');
+            $(previewBtn).data('state', 'preview');
+        }
+    }
+
+    function buildMessage(message) {
+        return message.replace(/(@.+?),/, '<span style="font-weight: bold; font-style: italic; color: rgb(42, 100, 150);">$1</span>,');
+    }
+
+    function escapeHtml(text) {
+        return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+    }
+</script>

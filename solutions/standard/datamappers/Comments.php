@@ -1,20 +1,15 @@
 <?php
 class Comments
 {
-    public static function create($newsId, $message, $parentId = false)
+    public static function create($newsId, $message)
     {
-        $sql = "INSERT INTO news_comments (news_id, message, parent_id, author_id)
-        VALUES (:news_id, :message, :parent_id, :author_id)";
+        $sql = "INSERT INTO news_comments (news_id, message, author_id, posted_at)
+          VALUES (:news_id, :message, :author_id, NOW())";
         $authorId = Session::getUid();
         $statement = Database::getInstance()->prepare($sql);
         $statement->bindParam(':news_id', $newsId, PDO::PARAM_INT);
         $statement->bindParam(':message', $message, PDO::PARAM_STR);
-        if ($parentId) {
-            $statement->bindParam(':parent_id', $parentId, PDO::PARAM_INT);
-        } else {
-            $parentId = null;
-            $statement->bindParam(':parent_id', $parentId, PDO::PARAM_NULL);
-        }
+
         if ($authorId !== 0) {
             $statement->bindParam(':author_id', $authorId, PDO::PARAM_INT);
         } else {
@@ -35,19 +30,13 @@ class Comments
         return $statement->fetch(PDO::FETCH_ASSOC);
     }
 
-    public static function update($id, $newsId, $message, $parentId = false)
+    public static function update($id, $newsId, $message)
     {
-        $sql = "UPDATE news_comments SET news_id=:news_id, message=:message, parent_id=:parent_id WHERE id=:id";
+        $sql = "UPDATE news_comments SET news_id=:news_id, message=:message WHERE id=:id";
         $statement = Database::getInstance()->prepare($sql);
         $statement->bindParam(':id', $id, PDO::PARAM_INT);
         $statement->bindParam(':news_id', $newsId, PDO::PARAM_INT);
         $statement->bindParam(':message', $message, PDO::PARAM_STR);
-        if ($parentId) {
-            $statement->bindParam(':parent_id', $parentId, PDO::PARAM_INT);
-        } else {
-            $parentId = null;
-            $statement->bindParam(':parent_id', $parentId, PDO::PARAM_NULL);
-        }
 
         return $statement->execute();
     }
@@ -65,22 +54,32 @@ class Comments
         }
     }
 
-    public static function listingForNewsId($newsId, $offset = 0, $limit = 30)
+    public static function listingForNewsId($newsId)
     {
         $statement = Database::getInstance()->prepare("
-            SELECT c.id, c.message, u.login, c.posted_at
+            SELECT c.id, c.message,
+            u.id as poster_id, u.login as poster_login,
+            c.posted_at, d.nickname as poster_nick,
+            d.full_name as poster_full_name,
+            d.photo as poster_photo
             FROM news_comments AS c
             LEFT JOIN users AS u
             ON u.id = c.author_id
+            LEFT JOIN users_data AS d
+            ON d.user_id = u.id
             WHERE c.news_id =:news_id
-            LIMIT :limit OFFSET :offset
+            ORDER BY c.posted_at DESC
         ");
 
         $statement->bindParam(':news_id', $newsId, PDO::PARAM_INT);
-        $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
-        $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
         $statement->execute();
+        $comments = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        return $statement->fetchAll(PDO::FETCH_ASSOC);
+        foreach ($comments as $key => $value) {
+            $comments[$key]['message'] = preg_replace('/(@.+?),/u',
+                '<span style="font-weight: bold; font-style: italic; color: rgb(42, 100, 150);">$1</span>,', $value['message']);
+        }
+
+        return $comments;
     }
 } 

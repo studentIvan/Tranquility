@@ -51,6 +51,7 @@ class CRUDField
     const TYPE_DATE = 'date';
     const TYPE_DATETIME = 'datetime';
     const TYPE_CALCULATED = 'calculated';
+    const TYPE_MATERIALIZED_PATH = 'path';
     const TYPE_ENUMERATION = 'enum';
     const TYPE_TAGS = 'tags';
 

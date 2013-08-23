@@ -1,0 +1,75 @@
+{% if container.filter_options.filter_string or container.filter_options.filter_date or container.filter_options.filter_less_or_more %}
+    <form>
+        <table style="width: 100%; margin-bottom: 8px;">
+            <tr>
+                {% if container.filter_options.filter_less_or_more and container.filter_options.filter_string %}
+                    <td style="width: 15%;">
+                        <select class="form-control" name="fx">
+                            <option value="contain"{% if container.filter.lm == 'contain' %} selected="selected"{% endif %}>
+                                Содержит:
+                            </option>
+                            <option value="more_than"{% if container.filter.lm == 'more_than' %} selected="selected"{% endif %}>
+                                Больше чем:
+                            </option>
+                            <option value="less_than"{% if container.filter.lm == 'less_than' %} selected="selected"{% endif %}>
+                                Меньше чем:
+                            </option>
+                        </select>
+                    </td>
+                {% endif %}
+                {% if container.filter_options.filter_string %}
+                    <td><input type="search" class="form-control" name="ft"
+                               placeholder="Введите текст для фильтрации данных"{% if container.filter.text %} value="{{ container.filter.text }}"{% endif %}>
+                    </td>
+                {% endif %}
+                {% if container.filter_options.filter_date %}
+                    <td {% if container.filter_options.filter_string %}style="width: 20%;"{% endif %}>
+                        <select class="form-control" name="fd">
+                            <option value="all"{% if container.filter.date == 'all' %} selected="selected"{% endif %}>
+                                За всё время
+                            </option>
+                            <option value="today"{% if container.filter.date == 'today' %} selected="selected"{% endif %}>
+                                Сегодня
+                            </option>
+                            <option value="yesterday"{% if container.filter.date == 'yesterday' %} selected="selected"{% endif %}>
+                                Вчера
+                            </option>
+                            <option value="this_week"{% if container.filter.date == 'this_week' %} selected="selected"{% endif %}>
+                                За неделю
+                            </option>
+                            <option value="last_week"{% if container.filter.date == 'last_week' %} selected="selected"{% endif %}>
+                                На прошлой неделе
+                            </option>
+                            <option value="this_month"{% if container.filter.date == 'this_month' %} selected="selected"{% endif %}>
+                                За этот месяц
+                            </option>
+                            <option value="last_month"{% if container.filter.date == 'last_month' %} selected="selected"{% endif %}>
+                                За прошлый месяц
+                            </option>
+                            <option value="for_two_months"{% if container.filter.date == 'for_two_months' %} selected="selected"{% endif %}>
+                                За два месяца
+                            </option>
+                            <option value="for_four_months"{% if container.filter.date == 'for_four_months' %} selected="selected"{% endif %}>
+                                За четыре месяца
+                            </option>
+                            <option value="for_half_year"{% if container.filter.date == 'for_half_year' %} selected="selected"{% endif %}>
+                                За полгода
+                            </option>
+                            <option value="this_year"{% if container.filter.date == 'this_year' %} selected="selected"{% endif %}>
+                                За этот год
+                            </option>
+                            <option value="last_year"{% if container.filter.date == 'last_year' %} selected="selected"{% endif %}>
+                                За прошлый год
+                            </option>
+                        </select>
+                    </td>
+                {% endif %}
+                <td style="width: 12%; padding-left: 4px;">
+                    <button type="submit" class="btn btn-info"><span class="glyphicon glyphicon-filter"></span>&nbsp;Фильтровать
+                    </button>
+                </td>
+            </tr>
+        </table>
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    </form>
+{% endif %}

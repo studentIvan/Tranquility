@@ -40,6 +40,7 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                         case 'string':
                         case 'text':
                         case 'visual':
+                        case 'path':
                         case 'tags':
                             if ($d['from'] or $d['from_many']) {
 
@@ -366,6 +367,7 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                         case 'string':
                         case 'text':
                         case 'visual':
+                        case 'path':
                         case 'tags':
                             if ($d['from'] or $d['from_many']) {
                                 $allFields[$f]['use_in_text_filter_having'] = ($filter['text']);
@@ -638,6 +640,7 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                             case 'string':
                             case 'text':
                             case 'visual':
+                            case 'path':
                                 $insertedFieldsStatic[$key] = "'{$fields[$key]['default']}'";
                                 break;
                         }

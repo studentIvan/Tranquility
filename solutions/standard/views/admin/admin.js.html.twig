@@ -1,9 +1,5 @@
 <script type="text/javascript">
-    modifyPanel = {% if not container.only_display %}'<div class="modify">' +
-            '<a href="#modalView" data-toggle="modal" class="view-link">Просмотреть</a>' +
-            ' | {% if container.create_new_message %}<a href="#modalEdit" data-toggle="modal" ' +
-            'class="change-link">Изменить</a> | {% endif %}' +
-            '<a href="#delete" class="delete-link">Удалить</a></div>';{% else %}'';{% endif %}
+    modifyPanel = {% if not container.only_display %}'{% include 'admin/admin.elements.menu.html.twig' %}';{% else %}'';{% endif %}
     $(document).ready(function () {
         ldt = new LocalizedDate(4);
         $(".field-datetime").each(function () {

@@ -17,11 +17,6 @@ class CRUDNewsComments extends CRUDObjectInterface
                 CRUDField::PARAM_DESCRIPTION => 'ID комментария',
                 CRUDField::PARAM_TYPE => CRUDField::TYPE_INTEGER,
             ),
-            'parent_id' => array(
-                CRUDField::PARAM_DESCRIPTION => 'ID родителя',
-                CRUDField::PARAM_TYPE => CRUDField::TYPE_INTEGER,
-                CRUDField::PARAM_PLACEHOLDER => 'нет родителя',
-            ),
             'message' => array(
                 CRUDField::PARAM_TYPE => CRUDField::TYPE_TEXT,
                 CRUDField::PARAM_DESCRIPTION => 'Текст',

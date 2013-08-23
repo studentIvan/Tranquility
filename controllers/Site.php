@@ -18,14 +18,23 @@ class Site
             throw new NotFoundException();
         }
 
+        $commentWhichWasPosted = Data::input('asdjooqw8djsndasdasyo437trhs');
+        $CSRFToken = Data::input('csrf_token');
+
+        if ($commentWhichWasPosted and $CSRFToken === Process::$context['csrf_token']) {
+            Comments::create($newsId, $commentWhichWasPosted);
+        }
+
         Process::$context['page_title'] = $post->title;
         Process::$context['news_content'] = $post->content;
         Process::$context['news_created_at'] = $post->created_at;
+        Process::$context['comments'] = Comments::listingForNewsId($newsId);
     }
 
     public static function logout()
     {
-        if (Process::$context['csrf_token'] === Data::uriVar('csrf_token')) Session::stop();
+        if (Process::$context['csrf_token'] === Data::uriVar('csrf_token'))
+            Session::stop();
         Process::redirect('/');
     }
 
