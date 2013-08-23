@@ -3,12 +3,14 @@ class Comments
 {
     public static function create($newsId, $message)
     {
-        $sql = "INSERT INTO news_comments (news_id, message, author_id, posted_at)
-          VALUES (:news_id, :message, :author_id, NOW())";
+        $sql = "INSERT INTO news_comments (news_id, message, author_id, posted_at, ip)
+          VALUES (:news_id, :message, :author_id, NOW(), INET_ATON(:ip))";
         $authorId = Session::getUid();
+        $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
         $statement = Database::getInstance()->prepare($sql);
         $statement->bindParam(':news_id', $newsId, PDO::PARAM_INT);
         $statement->bindParam(':message', $message, PDO::PARAM_STR);
+        $statement->bindParam(':ip', $ip, PDO::PARAM_STR);
 
         if ($authorId !== 0) {
             $statement->bindParam(':author_id', $authorId, PDO::PARAM_INT);
@@ -58,6 +60,7 @@ class Comments
     {
         $statement = Database::getInstance()->prepare("
             SELECT c.id, c.message,
+            COALESCE(INET_NTOA(c.ip), 0, '127.0.0.1') as poster_ip,
             u.id as poster_id, u.login as poster_login,
             c.posted_at, d.nickname as poster_nick,
             d.full_name as poster_full_name,

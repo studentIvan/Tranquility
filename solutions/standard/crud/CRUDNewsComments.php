@@ -52,6 +52,13 @@ class CRUDNewsComments extends CRUDObjectInterface
                 CRUDField::PARAM_DEFAULT => CRUDField::DEFAULT_NOW,
                 CRUDField::PARAM_DISPLAY => true,
             ),
+            'ip' => array(
+                CRUDField::PARAM_TYPE => CRUDField::TYPE_INTEGER,
+                CRUDField::PARAM_DISPLAY_FUNCTION => 'long2ip',
+                CRUDField::PARAM_MODIFY => '<a href="http://ip-whois.net/ip_geo.php?ip=$1" target="_blank">$1</a>',
+                CRUDField::PARAM_DEFAULT => ip2long($_SERVER['REMOTE_ADDR']),
+                CRUDField::PARAM_DISPLAY => true,
+            ),
         ));
 
         $config->addFilter(CRUDConfig::FILTER_STRING);

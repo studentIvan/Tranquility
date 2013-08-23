@@ -79,9 +79,10 @@ CREATE TABLE `news_comments` (
   `message` text NOT NULL,
   `author_id` int(10) unsigned DEFAULT NULL,
   `posted_at` datetime NOT NULL,
+  `ip` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `news_id` (`news_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -90,7 +91,7 @@ CREATE TABLE `news_comments` (
 
 LOCK TABLES `news_comments` WRITE;
 /*!40000 ALTER TABLE `news_comments` DISABLE KEYS */;
-INSERT INTO `news_comments` VALUES (1,6,'Привет мир',1,'2013-08-23 16:02:15'),(2,6,'@Admin, ага, и тебе не хворать',NULL,'2013-08-23 16:03:00'),(3,6,'Лорем испум долор сит амет - это часть нашей жизни, так давайте же будем это ценить! Или мы не рыба совсем? Ну за себя я говорю, что я точно полноценная рыбная рыба.',1,'2013-08-23 16:04:18'),(4,6,'Ололо!',1,'2013-08-23 17:40:41');
+INSERT INTO `news_comments` VALUES (1,6,'Привет мир',1,'2013-08-23 16:02:15',2130706433),(2,6,'@Admin, ага, и тебе не хворать',NULL,'2013-08-23 16:03:00',2130706433),(3,6,'Лорем испум долор сит амет - это часть нашей жизни, так давайте же будем это ценить! Или мы не рыба совсем? Ну за себя я говорю, что я точно полноценная рыбная рыба.',1,'2013-08-23 16:04:18',2130706433),(4,6,'Ололо!',1,'2013-08-23 17:40:41',2130706433),(5,6,'А я Гость',NULL,'2013-08-23 17:45:45',2130706433),(6,6,'@Admin, привет!',NULL,'2013-08-23 17:45:55',2130706433),(7,5,'жжжжжж',NULL,'2013-08-23 17:46:58',2130706433);
 /*!40000 ALTER TABLE `news_comments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -326,4 +327,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-08-23 17:43:53
+-- Dump completed on 2013-08-23 18:22:45

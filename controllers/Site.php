@@ -21,6 +21,8 @@ class Site
         $commentWhichWasPosted = Data::input('asdjooqw8djsndasdasyo437trhs');
         $CSRFToken = Data::input('csrf_token');
 
+        Process::$context['is_cool_boy'] = in_array(Session::getRole(), Process::$context['cool_roles']);
+
         if ($commentWhichWasPosted and $CSRFToken === Process::$context['csrf_token']) {
             Comments::create($newsId, $commentWhichWasPosted);
         }

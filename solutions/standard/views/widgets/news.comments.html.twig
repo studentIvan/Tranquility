@@ -44,6 +44,9 @@
                     <img src="/img/anonymous.png" alt="" height="18px">
                     {{ commenter }}
                 {% endif %}
+                {% if is_cool_boy %}
+                    &nbsp;<span style="font-size: 11px; color: lightgray;">{{ comment.poster_ip }}</span>
+                {% endif %}
             </p>
             <p class="list-group-item-text" style="font-size: 12px;">
                 {{ comment.message|raw }}
