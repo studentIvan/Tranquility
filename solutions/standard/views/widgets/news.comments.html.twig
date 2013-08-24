@@ -3,12 +3,28 @@
         <form method="POST" id="comment-form">
             <fieldset>
                 <legend>Комментарии</legend>
-                <textarea name="asdjooqw8djsndasdasyo437trhs"
-                          class="form-control" id="comment-form-message" required="required"></textarea>
-                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                {% if flash_error %}
+                <div class="alert alert-danger">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {{ flash_error }}
+                </div>
+                {% endif %}
+                <div style="padding-bottom: 5px;">
+                    <label for="comment-form-message">Текст комментария:</label>
+                    <textarea name="asdjooqw8djsndasdasyo437trhs"
+                              class="form-control" id="comment-form-message" required="required"></textarea>
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-                <div id="comment-preview" style="display: none; padding-bottom: 15px;"></div>
-                <div class="btn-group">
+                    <div id="comment-preview" style="display: none; padding-bottom: 15px;"></div>
+                </div>
+
+                <div>
+                    <label for="comment-form-captcha"><span id="captcha-image">Код с картинки:</span></label>
+                    <input id="comment-form-captcha" name="captcha" onclick="showCaptcha()"
+                           class="form-control" placeholder="Кликните по полю, чтобы показать изображение">
+                </div>
+
+                <div class="btn-group" style="padding-top: 8px;">
                     <button type="submit" role="submit" class="btn btn-default">
                         <span class="glyphicon glyphicon-share"></span>&nbsp;Публикация
                     </button>
@@ -61,6 +77,11 @@
     {% endfor %}
 </ul>
 <script type="text/javascript">
+    function showCaptcha() {
+        $('#captcha-image').html('<img src="/captcha/{{ csrf_token }}.png" alt="Загрузка изображения...">');
+        $('#comment-form-captcha').attr('placeholder', 'Введите защитный код');
+    }
+
     function answer(to) {
         var commentFormMessage = $('#comment-form-message');
         commentFormMessage.val('@' + to + ', ');

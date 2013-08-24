@@ -148,7 +148,7 @@ class CRUDMySQLDriver extends CRUDDriverInterface
         $tableName = $this->getCRUDObject()->getTableName();
         $selectedFields = $tagsValues = array();
         foreach ($this->getCRUDObject()->getFields() as $fieldKey => $fieldData) {
-            if ($fieldData['type'] !== 'calculated') {
+            if ($fieldData['type'] !== 'calculated' and !$fieldData['count_of']) {
                 if ($fieldData['from']) {
                     $foreignIndex = isset($fieldData['from']['group']) ? $fieldData['from']['group'] : 'b';
                     $selectedFields[] = "$foreignIndex.{$fieldData['from']['as']} AS $fieldKey";

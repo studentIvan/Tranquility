@@ -17,7 +17,11 @@
         {% if read_data[field_name] %}
             <li class="list-group-item">
                 <h4 class="list-group-item-heading">
-                    {% if field_data.description %}{{ field_data.description }}{% else %}{{ field_name }}{% endif %}
+                    {% if field_data.description %}
+                        {{ field_data.description }}
+                    {% else %}
+                        {{ field_name|capitalize }}
+                    {% endif %}
                 </h4>
 
                 <p class="list-group-item-text{% if field_data.type == 'datetime' %} field-datetime{% endif %}">

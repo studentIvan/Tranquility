@@ -24,7 +24,17 @@ class Site
         Process::$context['is_cool_boy'] = in_array(Session::getRole(), Process::$context['cool_roles']);
 
         if ($commentWhichWasPosted and $CSRFToken === Process::$context['csrf_token']) {
-            Comments::create($newsId, $commentWhichWasPosted);
+            try {
+                $captcha = Data::input('captcha');
+                if (!$captcha) throw new InvalidArgumentException('Не введён код с картинки');
+                Process::load('GDCaptcha');
+                if (!GDCaptcha::checkCorrect($captcha)) {
+                    throw new InvalidArgumentException("Неверно введён код с картинки");
+                }
+                Comments::create($newsId, $commentWhichWasPosted);
+            } catch (InvalidArgumentException $e) {
+                Process::$context['flash_error'] = $e->getMessage();
+            }
         }
 
         Process::$context['page_title'] = $post->title;
