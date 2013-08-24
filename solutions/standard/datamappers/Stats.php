@@ -9,6 +9,13 @@ class Stats
         $statement->bindParam(':ip', $ip2long, PDO::PARAM_INT);
         return $statement->execute();
     }
+
+    public static function getOnline()
+    {
+        $sql = "SELECT TIME(NOW() - MIN(uptime)) AS how_long, COUNT( * ) AS total FROM sessions";
+        $statement = Database::getInstance()->query($sql);
+        return $statement->fetch(PDO::FETCH_ASSOC);
+    }
 	
 	/**
 	 * @return array

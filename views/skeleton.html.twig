@@ -8,6 +8,8 @@
         <meta name="description" content="{{ cms.news.feed_description }}">
         <link rel="alternate" type="application/rss+xml" title="{{ cms.news.feed_title }} - RSS" href="/feed/rss.xml">
         <link rel="alternate" type="application/atom+xml" title="{{ cms.news.feed_title }} - Atom" href="/feed/atom.xml">
+        <link href="/favicon.ico" rel="icon" type="image/x-icon">
+        <link rel="apple-touch-icon" href="/favicon.png">
 
         <link href="{{ resource.bootstrap_css }}" rel="stylesheet">
         <!--<link href="{{ resource.bootstrap_theme_css }}" rel="stylesheet" media="screen">-->
@@ -36,7 +38,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" style="max-width: none;" href="/">{{ page_title }}</a>
+            <a class="navbar-brand" href="/">{{ page_title }}</a>
         </div>
 
         <div class="collapse navbar-collapse navbar-ex1-collapse">

@@ -74,4 +74,11 @@ abstract class CRUDDriverInterface
     public function delete($unique)
     {
     }
+
+    /**
+     * @return bool
+     */
+    public function truncate()
+    {
+    }
 }

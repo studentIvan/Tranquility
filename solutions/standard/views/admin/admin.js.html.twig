@@ -131,6 +131,7 @@
 			$('.base-active').addClass('active');
 		}
 		{% endif %}
+
         $('.tags-input').each(function() {
             var tagsAutoData = $(this).data('auto');
             $(this).tagsInput({
@@ -143,11 +144,42 @@
                 'placeholderColor' : 'gray'
             })
         });
+
 		$('#btn-delete').click(function() {
 			if (window.confirm('Вы уверены?')) {
 				var unique = $(this).data('unique');
 				window.location.href = '{{ panel_base_uri }}/{{ admin_part }}/delete?e=' + unique + '&csrf_token={{ csrf_token }}';
 			}
 		});
+
+        $('#truncate-button').click(function () {
+            if (window.confirm('Вы уверены?')) {
+                $('#truncate').html('чистка...');
+                $(this).addClass('disabled');
+                $.post("{{ panel_base_uri }}/ajax?csrf_token={{ csrf_token }}",
+                        { a: "truncate", p: "{{ admin_part }}" })
+                        .done(function (data) {
+                            if (data !== 'ok') {
+                                $('#top-of-container').html(data);
+                            } else {
+                                var nCounter1 = $("#display-info-total"),
+                                    nCounter2 = $("#display-info-all"),
+                                    nCounter3 = $('.base-active').find('.badge');
+
+                                nCounter1.html('0');
+                                nCounter2.html('0');
+                                nCounter3.html('0');
+
+                                $('#main-container').html('<span id="top-of-container"></span>');
+                                $('#top-of-container').html(
+                                        '<div class="alert alert-success">' +
+                                                '<button type="button" class="close" ' +
+                                                'data-dismiss="alert">&times;</button>' +
+                                                'Чистка прошла успешно.</div>'
+                                );
+                            }
+                        });
+            }
+        });
     })
 </script>

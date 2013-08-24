@@ -444,6 +444,17 @@ abstract class CRUDObjectInterface
     }
 
     /**
+     * @throws ForbiddenException
+     * @return bool
+     */
+    public function truncate()
+    {
+        if (!$this->checkRBACPolicy('delete'))
+            throw new ForbiddenException();
+        return $this->getDriver()->truncate();
+    }
+
+    /**
      * @return string
      */
     public function getTableName()

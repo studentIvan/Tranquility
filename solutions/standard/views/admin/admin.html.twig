@@ -1,33 +1,7 @@
 {% extends 'admin/skeleton.admin.html.twig' %}
 {% block fixedb %}
     {% if container.count or container.count == 0 %}
-        <nav class="navbar navbar-fixed-bottom navbar-inverse" role="navigation"
-             style="padding-left: 10px; padding-right: 10px;">
-            {% if not mobile and container.count != 0 %}
-                <p class="navbar-text pull-left">
-                    Отображено
-                <span id="display-info-total" style="font-weight: bold;">
-                {{ (container.count ~ "</span> элемент")|plural("", "а", "ов")|raw }} на странице
-                    (всего <span id="display-info-all" style="font-weight: bold;">{{ container.all_count }}</span>)
-                </p>
-            {% endif %}
-            <div class="navbar-right">
-                {% if container.create_new_message %}
-                    <button {% if not mobile %}data-toggle="modal" data-target="#modalCreate"{% else %}
-                        onclick="window.location.href='{{ panel_base_uri }}/{{ admin_part }}/create'"
-                            {% endif %} class="btn btn-default navbar-btn">
-                        <span class="glyphicon glyphicon-plus"></span>&nbsp;<span
-                                id="addmsg">{{ container.create_new_message }}</span>
-                    </button>
-                {% endif %}
-                {% if not mobile %}
-                    <button class="btn btn-default navbar-btn"
-                            onclick="$('#updt').html('обновление...');$(this).addClass('disabled');window.location.reload();">
-                        <span class="glyphicon glyphicon-refresh"></span>&nbsp;<span id="updt">обновить страницу</span>
-                    </button>
-                {% endif %}
-            </div>
-        </nav>
+        {% include 'admin/admin.navbar.bottom.html.twig' %}
     {% endif %}
 {% endblock %}
 {% block container %}

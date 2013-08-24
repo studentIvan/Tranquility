@@ -113,6 +113,16 @@ class Admin
                     }
                     break;
 
+                case 'truncate':
+                    try {
+                        $selectedPartitionModel->truncate();
+                        echo 'ok';
+                    } catch (Exception $e) {
+                        Process::$context['flash_error'] = $e->getMessage();
+                        Process::getTwigInstance()->display('admin/alert.danger.html.twig', Process::$context);
+                    }
+                    break;
+
                 case 'edit-form':
                     Process::$context['panel_base_uri'] = isset(self::$configuration['base_uri'])
                         ? self::$configuration['base_uri'] : '/admin';
@@ -128,11 +138,27 @@ class Admin
                 case 'view':
                     Process::$context['fields'] = $selectedPartitionModel->getFields();
                     Process::$context['read_data'] = $selectedPartitionModel->readElement($selectedElement);
+                    foreach (Process::$context['fields'] as $f => $d) {
+                        if ($d['function']) {
+                            $function = $d['function'];
+                            if (function_exists($function)
+                                and isset(Process::$context['read_data'][$f])
+                                and Process::$context['read_data'][$f]) {
+                                try {
+                                    Process::$context['read_data'][$f] =
+                                        $function(Process::$context['read_data'][$f]);
+                                } catch (Exception $e) {
+                                    Process::$context['flash_warning'] = $e->getMessage();
+                                }
+                            }
+                        }
+                    }
                     Process::getTwigInstance()->display('admin/form.view.html.twig', Process::$context);
                     break;
 
                 default:
-                    throw new NotFoundException();
+                    Process::$context['flash_error'] = 'Ошибка выбора функции ajax';
+                    Process::getTwigInstance()->display('admin/alert.danger.html.twig', Process::$context);
             }
 
             exit;
@@ -302,11 +328,30 @@ class Admin
                                     }
                                 }
 
-                                try {
+                                try
+                                {
                                     Process::$context['read_data'] = $m->readElement($unique);
                                     if (!Process::$context['read_data'])
                                         throw new NotFoundException();
+
+                                    foreach ($container['fields'] as $f => $d) {
+                                        if ($d['function']) {
+                                            $function = $d['function'];
+                                            if (function_exists($function)
+                                                and isset(Process::$context['read_data'][$f])
+                                                and Process::$context['read_data'][$f]) {
+                                                try {
+                                                    Process::$context['read_data'][$f] =
+                                                        $function(Process::$context['read_data'][$f]);
+                                                } catch (Exception $e) {
+                                                    Process::$context['flash_warning'] = $e->getMessage();
+                                                }
+                                            }
+                                        }
+                                    }
+
                                     Process::$context['page_title'] = $m->getMenuName() . ' :: чтение';
+
                                 } catch (Exception $e) {
                                     throw new NotFoundException();
                                 }
@@ -362,7 +407,6 @@ class Admin
                             $container['filter']['lm'] = false;
                         }
 
-                        #region POST::CREATE
                         if (Data::input('post-action-create') and self::$checkCSRFToken) {
                             $postedData = array();
                             foreach (array_keys($container['fields']) as $fieldName) {
@@ -380,7 +424,6 @@ class Admin
                                 Process::$context['flash_error'] = $e->getMessage();
                             }
                         }
-                        #endregion
 
                         if ($action and preg_match('/page_(\d+)/', $action, $matches)) {
                             $page = $matches[1] * 1;
@@ -434,8 +477,12 @@ class Admin
                             if ($d['function']) {
                                 foreach ($container['data'] as &$e) {
                                     $function = $d['function'];
-                                    if (function_exists($function)) {
-                                        $e[$f] = $function($e[$f]);
+                                    if (function_exists($function) and isset($e[$f]) and $e[$f]) {
+                                        try {
+                                            $e[$f] = $function($e[$f]);
+                                        } catch (Exception $e) {
+                                            Process::$context['flash_warning'] = $e->getMessage();
+                                        }
                                     }
                                 }
                             }
@@ -457,6 +504,7 @@ class Admin
                 /** Dashboard homepage */
                 Process::$context['visit_stats'] = Stats::getVisitors();
                 Process::$context['users_stats'] = Stats::getUsers();
+                Process::$context['online_stats'] = Stats::getOnline();
             } catch (Exception $e) {
                 Process::$context['flash_error'] = $e->getMessage();
             }

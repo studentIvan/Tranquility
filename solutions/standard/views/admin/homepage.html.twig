@@ -57,34 +57,22 @@
         </table>
     </div>
 
-    {#<div class="stats-div" data-content="">
+    <div class="stats-div" data-content="Разница времени до первого аптайма">
         <table class="table-stats">
               <tr>
                   <td>
-                    {% if comments_stats.growth > 0 %}
-                        <div><img src="/img/admin/good.png"></div>
-                        <div class="pretty-good">
-                            +{{ comments_stats.growth }}%
-                        </div>
-                    {% elseif comments_stats.growth == 0 %}
-                        <div><img src="/img/admin/neutral.png"></div>
-                        <div class="pretty-neutral">
-                            +0%
-                        </div>
-                    {% elseif comments_stats.growth < 0 %}
-                        <div><img src="/img/admin/bad.png"></div>
-                        <div class="pretty-bad">
-                            {{ comments_stats.growth }}%
-                        </div>
-                    {% endif %}
+                      <div><img src="/img/admin/graph.png"></div>
+                      <div class="pretty-good">
+                          {{ online_stats.how_long }}
+                      </div>
                   </td>
                   <td>
-                    <div><strong>0</strong></div>
-                    <div>Комментарии</div>
+                    <div><strong>{{ online_stats.total }}</strong></div>
+                    <div>Онлайн</div>
                   </td>
               </tr>
           </table>
-    </div>#}
+    </div>
 </div>
 <br>
 {% if not mobile %}<div class="panel panel-default">

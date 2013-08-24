@@ -8,6 +8,8 @@
     <link href="{{ resource.bootstrap_css }}" rel="stylesheet" media="screen">
     <link href="{{ resource.bootstrap_theme_css }}" rel="stylesheet" media="screen">
     <link href="/css/jquery.tagsinput.css" rel="stylesheet" media="screen">
+    <link href="/img/admin/favicon.ico" rel="icon" type="image/x-icon">
+    <link rel="apple-touch-icon" href="/img/admin/favicon.png">
     <style>
         body {
             padding-top: 70px;
@@ -83,11 +85,12 @@
         .table-stats td {
             text-align: center;
             color: rgb(102, 102, 102);
+            min-width: 70px;
         }
     </style>
 </head>
 <body>
-<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
 
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
@@ -97,14 +100,17 @@
             <span class="icon-bar"></span>
         </button>
         {% if not mobile %}
-            <a id="title-brand" class="navbar-brand" style="max-width: none;"
-               href="{{ panel_base_uri }}/">{{ page_title }}</a>
+            <a class="navbar-brand" style="max-width: none;"
+               href="{{ panel_base_uri }}/">
+                <img src="/favicon.png" alt="" height="20" style="opacity: 0.6">&nbsp;
+                <span id="title-brand">{{ page_title }}</span>
+            </a>
         {% endif %}
     </div>
 
     <div class="collapse navbar-collapse navbar-ex1-collapse">
         <ul class="nav navbar-nav">
-            <li><a href="/" target="_blank">Открыть сайт</a></li>
+            {% include 'admin/admin.links.html.twig' %}
             {% if mobile %}
                 {% for e in admin_menu_elements %}
                     <li{% if admin_part == e.uri %} class="active"{% endif %}>

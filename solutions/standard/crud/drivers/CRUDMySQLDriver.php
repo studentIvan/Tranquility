@@ -579,8 +579,9 @@ class CRUDMySQLDriver extends CRUDDriverInterface
         ");
 
         if ($this->getCRUDObject()->getSQLDebugState())
-            Process::$context['flash_console'] = 'SQL Query Debug:' . preg_replace('/\s+/s', ' ', $statement->queryString);
-        //echo $statement->queryString;
+            Process::$context['flash_console'] =
+                'SQL Query Debug:' . preg_replace('/\s+/s', ' ', $statement->queryString);
+
         $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
         $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
         $statement->execute();
@@ -599,11 +600,6 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                     $key[$f] = preg_replace('/(.+?)\,(.+?)/', '$1, $2', $key[$f]);
                 }
             }
-            /*if ($d['type'] == 'tags' and $d['display']) {
-                foreach ($result as &$key) {
-                    $key[$f] = preg_replace('/([^,]+)/us', ' <a href="#">#$1</a>', $key[$f]);
-                }
-            }*/
         }
 
         return $result;
@@ -762,5 +758,14 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                 ->prepare("DELETE FROM $table WHERE $diffField=?")
                 ->execute(array($unique));
         }
+    }
+
+    /**
+     * @return bool
+     */
+    public function truncate()
+    {
+        $table = $this->getCRUDObject()->getTableName();
+        return Database::getInstance()->query("TRUNCATE $table");
     }
 }
