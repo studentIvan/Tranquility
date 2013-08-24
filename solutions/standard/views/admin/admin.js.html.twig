@@ -154,8 +154,9 @@
 
         $('#truncate-button').click(function () {
             if (window.confirm('Вы уверены?')) {
+                var truncateBtn = $(this);
                 $('#truncate').html('чистка...');
-                $(this).addClass('disabled');
+                truncateBtn.addClass('disabled');
                 $.post("{{ panel_base_uri }}/ajax?csrf_token={{ csrf_token }}",
                         { a: "truncate", p: "{{ admin_part }}" })
                         .done(function (data) {
@@ -177,6 +178,8 @@
                                                 'data-dismiss="alert">&times;</button>' +
                                                 'Чистка прошла успешно.</div>'
                                 );
+
+                                truncateBtn.fadeOut();
                             }
                         });
             }
