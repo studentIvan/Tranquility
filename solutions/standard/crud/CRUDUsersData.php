@@ -10,7 +10,7 @@ class CRUDUsersData extends CRUDObjectInterface
         $config->setTableName('users_data');
         $config->setDiffField('user_id');
         $config->setOrderByField('user_id');
-        $config->setMenuIcon('link');
+        $config->setMenuIcon('briefcase');
 
         $config->setFields(array(
             'user_id' => array(

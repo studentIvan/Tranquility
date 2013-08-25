@@ -97,6 +97,7 @@
                                 'placeholderColor': 'gray'
                             })
                         });
+                        $('.tooltipped').tooltip();
                     });
 		}).on('hidden.bs.modal', function () {
 			$("#modalEditBody").html('<div class="progress progress-striped active"><div class="progress-bar" style="width: 100%"></div></div>');
@@ -116,7 +117,7 @@
 		
 		$('#main-container').fadeOut(0).fadeIn();
 
-        {% if not admin_part %}{% include 'admin/homepage.js.twig' %}{% endif %}
+        {% if not admin_part %}{% include 'admin/homepage.twig.js' %}{% endif %}
 		
 		batmanHand.init(function (path, title) {
 			if (title == 'Главная')
@@ -184,5 +185,7 @@
                         });
             }
         });
-    })
+    });
+
+    {% include 'admin/form.textarea.html.editor.twig.js' %}
 </script>

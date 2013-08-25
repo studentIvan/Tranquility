@@ -25,6 +25,8 @@
                             placeholder="{{ field_data.placeholder }}"
                                     {% endif %}></textarea>
                         {% elseif field_data.type == 'visual' %}
+                            {% set textarea_editor_id = "field-"~field %}
+                            {% include 'admin/form.textarea.html.editor.html.twig' %}
                             <textarea name="pf-{{ field }}" class="form-control editor-attach"
                                       id="field-{{ field }}"{% if field_data.placeholder %}
                                 placeholder="{{ field_data.placeholder }}"

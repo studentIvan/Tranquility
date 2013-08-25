@@ -15,7 +15,6 @@ class TwigEx extends Twig_Extension
             'plural' => new Twig_Filter_Method($this, 'plural'),
             'nplural' => new Twig_Filter_Method($this, 'nplural'),
             'tolink' => new Twig_Filter_Method($this, 'tolink'),
-            'tagsView' => new Twig_Filter_Method($this, 'tagsView'),
         );
     }
 
@@ -61,15 +60,5 @@ class TwigEx extends Twig_Extension
     {
         $digit = intval(strtok($text, ' '));
         return $this->nplural($text, $e1, $e2, $e3, $digit);
-    }
-
-    /**
-     * @param string $string
-     * @param string $linkToTag
-     * @return string
-     */
-    public function tagsView($string, $linkToTag = '#$1')
-    {
-        return preg_replace('/([^,]+)/us', ' <a href="' . $linkToTag . '">#$1</a>', $string);
     }
 }

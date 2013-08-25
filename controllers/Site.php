@@ -7,7 +7,20 @@ class Site
         $perPage = Process::$context['cms']['news']['limit_per_page'];
         $pagination = Data::paginate(Database::count('news'), $perPage, $page);
         Process::$context['news_list'] = News::listing($pagination['offset'], $perPage);
+        foreach (Process::$context['news_list'] as &$news) {
+            if (isset($news['tags']) and $news['tags']) {
+                $news['tags'] = preg_replace('/([^,]+),?/us',
+                    '<a href="/tag/$1" class="tag-link">
+                        <span class="label label-default">$1</span>
+                    </a>', $news['tags']);
+            }
+        }
         Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
+    }
+
+    public static function tag($matches)
+    {
+        echo '<h1>Coming soon</h1>';
     }
 
     public static function showPost($matches)

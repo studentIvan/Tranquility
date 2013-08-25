@@ -186,7 +186,7 @@ CREATE TABLE `tags` (
   `name` varchar(60) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -215,7 +215,7 @@ CREATE TABLE `tags_relation` (
   KEY `tag_id` (`tag_id`),
   CONSTRAINT `tags_relation_ibfk_1` FOREIGN KEY (`news_id`) REFERENCES `news` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `tags_relation_ibfk_2` FOREIGN KEY (`tag_id`) REFERENCES `tags` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -224,7 +224,7 @@ CREATE TABLE `tags_relation` (
 
 LOCK TABLES `tags_relation` WRITE;
 /*!40000 ALTER TABLE `tags_relation` DISABLE KEYS */;
-INSERT INTO `tags_relation` VALUES (2,5,2),(4,2,3),(17,6,5),(18,6,1);
+INSERT INTO `tags_relation` VALUES (2,5,2),(4,2,3),(21,6,5),(22,6,1);
 /*!40000 ALTER TABLE `tags_relation` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -326,4 +326,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-08-24 16:24:13
+-- Dump completed on 2013-08-25  4:35:02

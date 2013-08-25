@@ -2,8 +2,6 @@
     {% for item in news_list %}
         <div class="panel panel-default">
             <div class="panel-body">
-                <div style="color: gray; font-size: 15px; padding-left: 16px; margin-top: 16px;"><span
-                            class="dtl10n">{{ item.created_at }}</span></div>
                 {% set news_link = "/"~item.id~"-"~(item.title|tolink)~".html" %}
                 <div class="panel-body" style="padding-top: 8px; padding-bottom: 8px;">
                     <h2>
@@ -15,14 +13,22 @@
                 </div>
                 <div class="panel-body panel-tags">
                     {% if item.tags %}
-                        <div><span>Теги: {{ item.tags|tagsView|raw }}</span></div>
+                        <span class="pull-right">{{ item.tags|raw }}</span>
                     {% endif %}
-                    Автор: <a href="/profile/{{ item.poster_id }}.html">@{{ item.poster_login }}</a>,&nbsp;
+                    <span class="glyphicon glyphicon-user"></span>
+                    <a href="/profile/{{ item.poster_id }}.html">
+                        {{ item.poster_login }}
+                    </a>
+                    <span>&nbsp;|&nbsp;&nbsp;</span>
+                    <span class="glyphicon glyphicon-calendar" style="padding-right: 2px;"></span>
+                    <span class="dtl10n">{{ item.created_at }}</span>
+                    <span>&nbsp;|&nbsp;&nbsp;</span>
+                    <span class="glyphicon glyphicon-comment"></span>
                     <a href="{{ news_link }}#comment-form">
                         {% if item.comments_total %}
-                            {{ (item.comments_total ~ " комментари")|plural("й", "я", "ев") }}
+                            {{ (item.comments_total ~ " Комментари")|plural("й", "я", "ев") }}
                         {% else %}
-                            0 комментариев
+                            0 Комментариев
                         {% endif %}
                     </a>
                 </div>

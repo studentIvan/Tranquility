@@ -26,10 +26,6 @@ class CRUDField
     const MANY_TO_ONE_TARGET_JOIN_TABLE_FIELD = 'as';
     const MANY_TO_ONE_JOIN_TYPE = 'join';
 
-    /**
-     * @todo ONE_TO_MANY support
-     */
-
     const PARAM_MANY_TO_MANY_SETTINGS = 'from_many';
     const MANY_TO_MANY_JOIN_DATA_TABLE = 'table_many_data';
     const MANY_TO_MANY_JOIN_RELATION_TABLE = 'table_many_relation';
@@ -41,6 +37,7 @@ class CRUDField
 
     const TYPE_STRING = 'string';
     const TYPE_TEXT = 'text';
+    const TYPE_TEXT_HTML = 'visual';
     const TYPE_TEXT_VISUAL = 'visual';
     const TYPE_PASSWORD = 'password';
     const TYPE_INTEGER = 'integer';
