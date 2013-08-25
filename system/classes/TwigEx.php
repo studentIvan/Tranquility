@@ -15,6 +15,7 @@ class TwigEx extends Twig_Extension
             'plural' => new Twig_Filter_Method($this, 'plural'),
             'nplural' => new Twig_Filter_Method($this, 'nplural'),
             'tolink' => new Twig_Filter_Method($this, 'tolink'),
+            'int' => new Twig_Filter_Method($this, 'int'),
         );
     }
 
@@ -60,5 +61,14 @@ class TwigEx extends Twig_Extension
     {
         $digit = intval(strtok($text, ' '));
         return $this->nplural($text, $e1, $e2, $e3, $digit);
+    }
+
+    /**
+     * @param string $string
+     * @return int
+     */
+    public function int($string)
+    {
+        return intval($string);
     }
 }

@@ -43,6 +43,7 @@ class CRUDUsersData extends CRUDObjectInterface
                 CRUDField::PARAM_TYPE => CRUDField::TYPE_EMAIL,
                 CRUDField::PARAM_DESCRIPTION => 'Email',
                 CRUDField::PARAM_DISPLAY => true,
+                CRUDField::PARAM_COALESCE => 'email не указан',
             ),
             'photo' => array(
                 CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
@@ -68,5 +69,7 @@ class CRUDUsersData extends CRUDObjectInterface
                 CRUDField::PARAM_DEFAULT => CRUDField::DEFAULT_NULL,
             ),
         ));
+
+        $config->addFilter(CRUDConfig::FILTER_STRING);
     }
 }

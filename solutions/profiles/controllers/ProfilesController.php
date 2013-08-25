@@ -23,6 +23,17 @@ class ProfilesController
         Process::$context['user']['photo'] = $user->getPhoto();
         Process::$context['user']['registered_at'] = $user->getRegisteredAt();
 
+        if (!empty(Process::$context['user']['nickname'])) {
+            $displayName = Process::$context['user']['nickname'];
+        } elseif (!empty(Process::$context['user']['full_name'])) {
+            $displayName = Process::$context['user']['full_name'];
+        } else {
+            $displayName = Process::$context['user']['login'];
+        }
+
+        Process::$context['user']['display_name'] = $displayName;
+        Process::$context['page_title'] .= ',  ' . $displayName;
+
         if ($data = $user->getNonIndexedData()) {
             foreach ($data as $key => $value) {
                 Process::$context['user'][$key] = $value;
