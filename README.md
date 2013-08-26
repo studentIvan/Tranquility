@@ -1,6 +1,6 @@
 # ![Tranquility](http://habrastorage.org/storage2/cef/853/3d7/cef8533d75bb0f8f014282a7a3c81668.png)
 ## Content Management Framework
-## Version 1.2.0.0 RC 7 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
+## Version 1.2.0.0 RC 8 [![endorse](http://api.coderwall.com/studentivan/endorse.png)](http://coderwall.com/studentivan)
 
 ### Features
 * Easy to install and use
@@ -10,11 +10,13 @@
 * BSD license
 
 ### Composition
-* Bootstrap 3 + jQuery 2
+* Twitter Bootstrap 3 No-Icons + Font Awesome
+* jQuery 2 + Tags Input
 * Twig template engine
 * Uri-match routing + basic application architecture
 * Many global singletons (oh god, why?)
 * LocalizedDate.JS
+* BatmanHand.JS
 
 ### Requirements
 * php 5.2.4

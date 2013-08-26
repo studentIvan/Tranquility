@@ -15,15 +15,15 @@
                     {% if item.tags %}
                         <span class="pull-right">{{ item.tags|raw }}</span>
                     {% endif %}
-                    <span class="glyphicon glyphicon-user"></span>
+                    <span class="icon-user"></span>
                     <a href="/profile/{{ item.poster_id }}.html">
                         {{ item.poster_login }}
                     </a>
                     <span>&nbsp;|&nbsp;&nbsp;</span>
-                    <span class="glyphicon glyphicon-calendar" style="padding-right: 2px;"></span>
+                    <span class="icon-calendar" style="padding-right: 2px;"></span>
                     <span class="dtl10n">{{ item.created_at }}</span>
                     <span>&nbsp;|&nbsp;&nbsp;</span>
-                    <span class="glyphicon glyphicon-comment"></span>
+                    <span class="icon-comments"></span>
                     <a href="{{ news_link }}#comment-form">
                         {% if item.comments_total %}
                             {{ (item.comments_total ~ " Комментари")|plural("й", "я", "ев") }}

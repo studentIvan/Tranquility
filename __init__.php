@@ -12,6 +12,8 @@ function afterSessionStartedCallback()
             Process::$context['current_user'] = array(
                 'id' => $user->getId(),
                 'login' => $user->getLogin(),
+                'role' => $user->getRole(),
+                'nickname' => $user->getNickname(),
                 'full_name' => $user->getFullName(),
                 'photo' => $user->getPhoto(),
             );
@@ -19,7 +21,8 @@ function afterSessionStartedCallback()
             $uid = Session::getUid();
             Process::$context['current_user'] = array(
                 'id' => $uid,
-                'login' => Database::getSingleResult("SELECT login FROM users WHERE id=$uid")
+                'login' => Database::getSingleResult("SELECT login FROM users WHERE id=$uid"),
+                'role' => Session::getRole(),
             );
         }
     }

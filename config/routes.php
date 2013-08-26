@@ -10,6 +10,7 @@ return array(
     '/tag/(\S+)' => array('!common:session', '!site:tag'),
     '/(\d+)\-\S+\.html' => array('!common:session', '!site:showPost', 'homepage'),
     '/openauth' => array('!common:session', '!site:openAuth'),
+    '/ajax_social_session_dispatcher' => array('!common:session', '!site:socialDispatcher'),
     '/login' => array('!common:session', '!site:login'),
     '/logout' => array('!common:session', '!site:logout'),
     '/test' => '!common:test',

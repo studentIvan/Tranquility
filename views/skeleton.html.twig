@@ -12,6 +12,7 @@
         <link rel="apple-touch-icon" href="/favicon.png">
 
         <link href="{{ resource.bootstrap_css }}" rel="stylesheet">
+        <link href="{{ resource.font_awesome_css }}" rel="stylesheet" media="screen">
         <!--<link href="{{ resource.bootstrap_theme_css }}" rel="stylesheet" media="screen">-->
         <style>
             body {
@@ -34,7 +35,25 @@
                 text-decoration: none;
                 outline: 0;
             }
+
+            .comment-nick {
+                font-weight: bold;
+                font-style: italic;
+                color: rgb(42, 100, 150);
+            }
+
+            #current-user-comment-nick {
+                font-weight: bold;
+                color: rgb(42, 100, 150);
+            }
+
+            #current-user-comment-photo {
+                padding-right: 5px;
+            }
         </style>
+        <script type="text/javascript">
+            initCallback = function() {}
+        </script>
     </head>
 
     <body>
@@ -50,8 +69,8 @@
             <a class="navbar-brand" href="/">{{ page_title }}</a>
         </div>
 
-        <div class="collapse navbar-collapse navbar-ex1-collapse">
-            {% if not current_user %}
+        <div class="collapse navbar-collapse navbar-ex1-collapse" id="top-menu">
+            {% if not current_user.id %}
                 <!--<form class="pull-right form-inline" style="margin-top: 10px;" action="/login" method="POST">
                     <input class="form-control input-small" style="width: 100px;" placeholder="Логин" name="login">
                     <input class="form-control input-small" style="width: 100px; margin-left: 2px;" type="password"
@@ -73,8 +92,8 @@
                     <li class="dropdown" id="menu1">
                         <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
                             {% if current_user.photo %}
-                                <img src="{{ current_user.photo }}" alt="" width="22" height="22"/>&nbsp;
-                            {% endif %}{% if current_user.full_name %}&nbsp;&nbsp;{{ current_user.full_name }}
+                                <img src="{{ current_user.photo }}" alt="" width="22" height="22"/>&nbsp;&nbsp;
+                            {% endif %}{% if current_user.full_name %}{{ current_user.full_name }}
                             {% else %}{{ current_user.login }}
                             {% endif %}
                             <b class="caret"></b>
@@ -82,7 +101,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="/profile/{{ current_user.id }}.html">Мой профиль</a></li>
                             <li class="divider"></li>
-                            <li><a href="/logout?csrf_token={{ csrf_token }}">Выход</a></li>
+                            <li><a href="/logout?csrf_token={{ csrf_token }}&amp;rpath={{ uri }}">Выход</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -105,6 +124,7 @@
             $(".dtl10n").each(function () {
                 $(this).html(ldt.localize($(this).html())).removeClass("dtl10n")
             })
+            initCallback();
         })
     </script>
     </body>

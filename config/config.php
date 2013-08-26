@@ -36,7 +36,8 @@ return array(
     'resources' => array(
         'ldt_js' => '/js/ldt.min.js',
         'bootstrap_js' => '/js/bootstrap.min.js',
-        'bootstrap_css' => '/css/bootstrap.min.css',
+        'bootstrap_css' => '/css/bootstrap.no-icons.min.css',
+        'font_awesome_css' => '/css/font-awesome.min.css',
         'bootstrap_theme_css' => '/css/bootstrap-theme.min.css',
         'html5shim_js' => 'http://html5shim.googlecode.com/svn/trunk/html5.js',
         'batman_hand_js' => '/js/batman_hand.min.js',
@@ -54,6 +55,8 @@ return array(
         'jquery_mobile_theme_css' => 'http://yandex.st/jquery/mobile/1.1.0/jquery.mobile.theme.min.css',
         'jquery_fancybox_js' => 'http://yandex.st/jquery/fancybox/2.0.5/jquery.fancybox.min.js',
         'jquery_fancybox_css' => 'http://yandex.st/jquery/fancybox/2.0.5/jquery.fancybox.min.css',
+        'jquery_tags_input_js' => '/js/jquery.tagsinput.min.js',
+        'jquery_tags_input_css' => '/css/jquery.tagsinput.css',
 
         /**
          * http://softwaremaniacs.org/media/soft/highlight/test.html
@@ -134,5 +137,10 @@ return array(
         ),
         'email_confirm' => false,
         'visitors' => false,
+        'social_auth' => array(
+            'vk_app_id' => '3841422',
+            'vk_app_secure_key' => 'YasRsbBDkJ2fccsX66XI',
+            'vk_user_role' => 6,
+        ),
     ),
 );

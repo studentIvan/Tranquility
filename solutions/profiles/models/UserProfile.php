@@ -9,6 +9,9 @@ class UserProfile
         $gender = null, $birthday = null, $non_indexed_data = null;
     protected $login_or_password_or_role_changed = false, $login_is_email = false;
 
+    const GENDER_MAN = 'm';
+    const GENDER_WOMAN = 'w';
+
     public static $exceptions = array(
         'email' => 'Email должен быть правильным, быть больше восьми и меньше 51 символа в длину',
         'login' => 'Логин может состоять только из символа "подчеркивание", латинских букв и цифр,
@@ -183,7 +186,7 @@ class UserProfile
     {
         $roleId = abs($roleId);
         $maxRoleId = abs(Database::getSingleResult("SELECT MAX(id) FROM roles"));
-        if ($roleId > 0 and $roleId < $maxRoleId) {
+        if ($roleId > 0 and $roleId <= $maxRoleId) {
             $this->role = $roleId;
             $this->login_or_password_or_role_changed = true;
             return $this;
@@ -365,7 +368,7 @@ class UserProfile
         {
             return $returnTitle
                 ? Database::getSingleResult('SELECT title FROM roles WHERE id=' . $this->role)
-                : $this->role;
+                : intval($this->role);
         }
         else
         {

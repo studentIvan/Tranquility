@@ -1,37 +1,66 @@
 <ul class="list-group">
     <li class="list-group-item">
-        <form method="POST" id="comment-form">
+        <form method="POST" id="comment-form" role="form">
             <fieldset>
-                <legend>Комментарии</legend>
+                <div class="form-group">
+                    <legend>Оставить комментарий</legend>
+                </div>
                 {% if flash_error %}
-                <div class="alert alert-danger">
-                    <button type="button" class="close" data-dismiss="alert">&times;</button>
-                    {{ flash_error }}
-                </div>
+                    <div class="alert alert-warning">
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                        {{ flash_error }}
+                    </div>
                 {% endif %}
-                <div style="padding-bottom: 5px;">
-                    <label for="comment-form-message">Текст комментария:</label>
-                    <textarea name="asdjooqw8djsndasdasyo437trhs"
-                              class="form-control" id="comment-form-message" required="required"></textarea>
-                    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
-
-                    <div id="comment-preview" style="display: none; padding-bottom: 15px;"></div>
+                <div class="form-group">
+                    Вы будете представлены как
+                    <img src="{{ current_user.photo ? current_user.photo : "/img/anonymous.png" }}"
+                         id="current-user-comment-photo" alt="" height="60px" align="left">
+                    <span id="current-user-comment-nick">
+                        {{ current_user.display_name }}
+                    </span>
+                    {% if not current_user.id %}
+                        {% include 'widgets/news.comments.social.auth.html.twig' %}
+                        <div id="current-user-description"><i>подозрительное анонимное сообщение</i></div>
+                    {% else %}
+                        {% if current_user.role == vk_user_role %}
+                            <div id="current-user-description">
+                                <a target="_blank" href="http://vk.com/{{ vk_user_link }}">
+                                    <span class="icon-vk"></span> {{ vk_user_link }}
+                                </a>
+                            </div>
+                        {% else %}
+                            <div id="current-user-description"><i>авторизованный пользователь</i></div>
+                        {% endif %}
+                    {% endif %}
                 </div>
+                <div class="form-group" style="margin-top: 30px;">
+                    <div>
+                        <label class="control-label" for="comment-form-message">Текст комментария:</label>
+                        <textarea name="asdjooqw8djsndasdasyo437trhs"
+                                class="form-control" id="comment-form-message" required="required"
+                                placeholder="Выражайте мысли грамотно, без ошибок">{% if last_comment_deep %}{{ last_comment_deep }}{% endif %}</textarea>
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
 
-                <div>
-                    <label for="comment-form-captcha"><span id="captcha-image">Код с картинки:</span></label>
+                        <div id="comment-preview" style="display: none; padding-bottom: 15px;"></div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="comment-form-captcha">
+                        <span id="captcha-image">Если вы не робот кликните по полю ниже:</span>
+                    </label>
                     <input id="comment-form-captcha" name="captcha" onclick="showCaptcha()"
                            class="form-control" placeholder="Кликните по полю, чтобы показать изображение">
                 </div>
-
-                <div class="btn-group" style="padding-top: 8px;">
-                    <button type="submit" role="submit" class="btn btn-default">
-                        <span class="glyphicon glyphicon-share"></span>&nbsp;Публикация
-                    </button>
-                    <button type="button" onclick="previewCommentToggle(this)" data-state="form" role="button"
-                            class="btn btn-default">
-                        <span class="glyphicon glyphicon-eye-open"></span>&nbsp;Предпросмотр
-                    </button>
+                <div class="form-group">
+                    <div class="btn-group">
+                        <button type="submit" role="submit" class="btn btn-default">
+                            <span class="icon-share"></span>&nbsp;Публикация
+                        </button>
+                        <button type="button" onclick="previewCommentToggle(this)" data-state="form" role="button"
+                                class="btn btn-default">
+                            <span class="icon-eye-open"></span>&nbsp;Предпросмотр
+                        </button>
+                    </div>
                 </div>
             </fieldset>
         </form>
@@ -39,12 +68,15 @@
     {% for comment in comments %}
         <li class="list-group-item">
             <p class="list-group-item-text" style="padding-bottom: 4px; font-weight: bold;">
+                {% set anonymous_avatar =
+                    '<img src="/img/anonymous.png" alt="" height="60px" align="left" style="padding-right: 5px;">' %}
                 {% if comment.poster_login %}
                     <a href="/profile/{{ comment.poster_id }}.html">
                         {% if comment.poster_photo %}
-                            <img src="{{ comment.poster_photo }}" alt="" height="18px">
+                            <img src="{{ comment.poster_photo }}" alt=""
+                                 height="60px" align="left" style="padding-right: 5px;">
                         {% else %}
-                            <img src="/img/anonymous.png" alt="" height="18px">
+                            {{ anonymous_avatar|raw }}
                         {% endif %}
                         {% if comment.poster_nick %}
                             {% set commenter = comment.poster_nick %}
@@ -57,16 +89,18 @@
                     </a>
                 {% else %}
                     {% set commenter = 'Гость' %}
-                    <img src="/img/anonymous.png" alt="" height="18px">
+                        {{ anonymous_avatar|raw }}
                     {{ commenter }}
                 {% endif %}
                 {% if is_cool_boy %}
                     &nbsp;<span style="font-size: 11px; color: lightgray;">{{ comment.poster_ip }}</span>
                 {% endif %}
             </p>
+
             <p class="list-group-item-text" style="font-size: 12px;">
                 {{ comment.message|raw }}
             </p>
+
             <p class="list-group-item-text" style="padding-top: 5px; font-size: 12px;">
                 <span style="color: #808080;">
                     <span class="dtl10n">{{ comment.posted_at }}</span>&nbsp;|
@@ -78,13 +112,14 @@
 </ul>
 <script type="text/javascript">
     function showCaptcha() {
-        $('#captcha-image').html('<img src="/captcha/{{ csrf_token }}.png" alt="Загрузка изображения...">');
-        $('#comment-form-captcha').attr('placeholder', 'Введите защитный код');
+        $('#captcha-image').html('<img src="/captcha/{{ csrf_token }}.png" alt="Загрузка изображения..." style="opacity: 0.7">');
+        $('#comment-form-captcha').attr('placeholder', 'Введите защитный код').click(function() {});
     }
 
     function answer(to) {
         var commentFormMessage = $('#comment-form-message');
-        commentFormMessage.val('@' + to + ', ');
+        commentFormMessage.val('@' + to + ', ').focus();
+        return false;
     }
 
     function previewCommentToggle(previewBtn) {
@@ -96,18 +131,18 @@
         if ($(previewBtn).data('state') == 'preview') {
             commentFormMessage.css('display', 'block');
             commentPreview.css('display', 'none');
-            $(previewBtn).html('<span class="glyphicon glyphicon-eye-open"></span>&nbsp;Предпросмотр');
+            $(previewBtn).html('<span class="icon-eye-open"></span>&nbsp;Предпросмотр');
             $(previewBtn).data('state', 'form');
         } else {
             commentPreview.css('display', 'block');
             commentFormMessage.css('display', 'none');
-            $(previewBtn).html('<span class="glyphicon glyphicon-edit"></span>&nbsp;Вернуться к редактированию');
+            $(previewBtn).html('<span class="icon-edit"></span>&nbsp;Вернуться к редактированию');
             $(previewBtn).data('state', 'preview');
         }
     }
 
     function buildMessage(message) {
-        return message.replace(/(@.+?),/, '<span style="font-weight: bold; font-style: italic; color: rgb(42, 100, 150);">$1</span>,');
+        return message.replace(/(@.+?),/, '<span class="comment-nick">$1</span>,');
     }
 
     function escapeHtml(text) {

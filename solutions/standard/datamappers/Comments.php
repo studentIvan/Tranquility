@@ -80,7 +80,7 @@ class Comments
 
         foreach ($comments as $key => $value) {
             $comments[$key]['message'] = preg_replace('/(@.+?),/u',
-                '<span style="font-weight: bold; font-style: italic; color: rgb(42, 100, 150);">$1</span>,', $value['message']);
+                '<span class="comment-nick">$1</span>,', $value['message']);
         }
 
         return $comments;

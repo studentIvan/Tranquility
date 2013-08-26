@@ -15,6 +15,7 @@ class ProfilesController
         Process::$context['user']['id'] = $user->getId();
         Process::$context['user']['login'] = $user->getLogin();
         Process::$context['user']['role'] = $user->getRole(true);
+        Process::$context['user']['role_id'] = $user->getRole();
         Process::$context['user']['nickname'] = $user->getNickname();
         Process::$context['user']['full_name'] = $user->getFullName();
         Process::$context['user']['email'] = $user->getEmail();
@@ -33,6 +34,10 @@ class ProfilesController
 
         Process::$context['user']['display_name'] = $displayName;
         Process::$context['page_title'] .= ',  ' . $displayName;
+
+        if (Process::$context['user']['role_id'] === Process::$context['vk_user_role']) {
+            Process::$context['vk_user_link'] = substr(Process::$context['user']['login'], 3);
+        }
 
         if ($data = $user->getNonIndexedData()) {
             foreach ($data as $key => $value) {

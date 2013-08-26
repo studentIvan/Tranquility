@@ -82,7 +82,7 @@ CREATE TABLE `news_comments` (
   `ip` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `news_id` (`news_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,6 +91,7 @@ CREATE TABLE `news_comments` (
 
 LOCK TABLES `news_comments` WRITE;
 /*!40000 ALTER TABLE `news_comments` DISABLE KEYS */;
+INSERT INTO `news_comments` VALUES (1,6,'Hello world',1,'2013-08-25 14:05:26',2130706433),(2,6,'Ололоэ',NULL,'2013-08-25 18:14:15',2130706433),(3,6,'Шатал труба',6,'2013-08-26 04:17:33',2130706433),(4,6,'@Ivan Maslov, ага',6,'2013-08-26 04:33:32',2130706433);
 /*!40000 ALTER TABLE `news_comments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -132,7 +133,7 @@ CREATE TABLE `roles` (
   `id` tinyint(3) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(20) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -141,7 +142,7 @@ CREATE TABLE `roles` (
 
 LOCK TABLES `roles` WRITE;
 /*!40000 ALTER TABLE `roles` DISABLE KEYS */;
-INSERT INTO `roles` VALUES (1,'Администратор'),(2,'Модератор'),(3,'Пользователь'),(4,'Гость'),(5,'Бот');
+INSERT INTO `roles` VALUES (1,'Администратор'),(2,'Модератор'),(3,'Пользователь'),(4,'Гость'),(5,'Бот'),(6,'Пользователь VK');
 /*!40000 ALTER TABLE `roles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -244,7 +245,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `login` (`login`),
   KEY `password` (`password`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -253,7 +254,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Admin','48fa05e2e7c221665db8c9d8f6980919',1,'2012-04-16 00:00:00');
+INSERT INTO `users` VALUES (1,'Admin','48fa05e2e7c221665db8c9d8f6980919',1,'2012-04-16 00:00:00'),(2,'fish1','23dab5b321f4fb3d30e073c8d3adabb4',3,'2013-08-25 12:54:05'),(3,'fish2','588c0e89d85566ef65e459bd6ab53209',3,'2013-08-25 12:54:29'),(4,'fish3','89352150bab73433c12a707b234d0d7f',3,'2013-08-25 12:54:40'),(5,'fish4','872aeffe719e4628dc4dd816d4ec5d67',3,'2013-08-25 13:06:36'),(6,'vk_fuck631848','9a704f157571a28b5462f7c85c3503cc',6,'2013-08-26 04:15:22');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -289,7 +290,7 @@ CREATE TABLE `users_data` (
 
 LOCK TABLES `users_data` WRITE;
 /*!40000 ALTER TABLE `users_data` DISABLE KEYS */;
-INSERT INTO `users_data` VALUES (1,'','','','','m',NULL,NULL);
+INSERT INTO `users_data` VALUES (1,'','',NULL,NULL,'m',NULL,NULL),(2,'','Thomas Taylor','thomastaylor15@example.com','/img/fish/010.jpg','m','1985-09-03',NULL),(3,'sexyJune','June Mitchelle','junemitchelle75@example.com','/img/fish/006.jpg','w',NULL,NULL),(4,'','James Smith','jamessmith65@example.com','/img/fish/017.jpg','m',NULL,NULL),(5,'','Sandra Miller','sandramiller78@example.com','/img/fish/035.jpg','w',NULL,NULL),(6,'','Ivan Maslov',NULL,'http://cs403329.vk.me/v403329181/8b9b/Z8lW6JCeEmU.jpg','m',NULL,NULL);
 /*!40000 ALTER TABLE `users_data` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -326,4 +327,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-08-25  4:35:52
+-- Dump completed on 2013-08-26  4:55:24

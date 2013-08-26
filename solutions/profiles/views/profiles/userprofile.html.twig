@@ -1,10 +1,11 @@
 {% extends 'skeleton.html.twig' %}
 {% block body %}
     <div class="page-header">
-        <h1>@{{ user.nickname ? user.nickname : user.login }}
+        <h1>{% if vk_user_link %}<span class="icon-vk"></span> {{ user.full_name }}
+            {% else %}@{{ user.nickname ? user.nickname : user.login }}
             {% if user.full_name %}
                 <small>{{ user.full_name }}</small>
-            {% endif %}
+            {% endif %}{% endif %}
         </h1>
     </div>
     <div class="row">
@@ -14,6 +15,11 @@
         </div>
         <div class="col-lg-8">
             <ul class="list-group">
+                {% if vk_user_link %}
+                    <li class="list-group-item">
+                        <strong>VK.com</strong>: <a href="http://vk.com/{{ vk_user_link }}" target="_blank">@{{ vk_user_link }}</a>
+                    </li>
+                {% endif %}
                 {% if user.nickname %}
                     <li class="list-group-item">
                         <strong>Ник</strong>: {{ user.nickname }}

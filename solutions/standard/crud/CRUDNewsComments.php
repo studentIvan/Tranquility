@@ -9,7 +9,7 @@ class CRUDNewsComments extends CRUDObjectInterface
         $config->setMenuCreate('добавить комментарий');
         $config->setTableName('news_comments');
         $config->setOrderByField('posted_at');
-        $config->setMenuIcon('comment');
+        $config->setMenuIcon('comments');
 
         $config->setFields(array(
             'id' => array(
@@ -53,6 +53,7 @@ class CRUDNewsComments extends CRUDObjectInterface
                 CRUDField::PARAM_DISPLAY => true,
             ),
             'ip' => array(
+                CRUDField::PARAM_DESCRIPTION => 'ip',
                 CRUDField::PARAM_TYPE => CRUDField::TYPE_INTEGER,
                 CRUDField::PARAM_DISPLAY_FUNCTION => 'long2ip',
                 CRUDField::PARAM_MODIFY => '<a href="http://ip-whois.net/ip_geo.php?ip=$1" target="_blank">$1</a>',

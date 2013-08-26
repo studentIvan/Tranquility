@@ -10,7 +10,7 @@ class CRUDReferrers extends CRUDObjectInterface
         $config->setTableName('referrers');
         $config->setDiffField('url_hash');
         $config->setOrderByField('rating');
-        $config->setMenuIcon('send');
+        $config->setMenuIcon('fighter-jet');
 
         $config->setFields(array(
             'flag' => array(

@@ -61,13 +61,13 @@ class CRUDSessions extends CRUDObjectInterface
     public function statusField($key)
     {
         if (Session::getToken() == $key['token']) {
-            return '<span class="glyphicon glyphicon-flash"></span>
+            return '<span class="icon-coffee"></span>
             <div style="position: absolute; top: 25px;
              color: lightgray; white-space: nowrap">
             * это ваша текущая сессия
             </div>';
         } else {
-            return '<span class="glyphicon glyphicon-flash"></span>';
+            return '<span class="icon-coffee"></span>';
         }
     }
 }

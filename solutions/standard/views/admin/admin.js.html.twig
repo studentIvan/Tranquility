@@ -77,7 +77,7 @@
 				$("#modalViewBody").html(data);
 			});
 		}).on('hidden.bs.modal', function () {
-			$("#modalViewBody").html('<div class="progress progress-striped active"><div class="progress-bar" style="width: 100%"></div></div>');
+			$("#modalViewBody").html('<span class="icon-spinner icon-spin"></span> Кручусь-верчусь - контент гружусь...');
 		});
 		
 		$('#modalEdit').on('shown.bs.modal', function () {
@@ -100,7 +100,7 @@
                         $('.tooltipped').tooltip();
                     });
 		}).on('hidden.bs.modal', function () {
-			$("#modalEditBody").html('<div class="progress progress-striped active"><div class="progress-bar" style="width: 100%"></div></div>');
+			$("#modalEditBody").html('<span class="icon-spinner icon-spin"></span> Кручусь-верчусь - контент гружусь...');
 		});
 
         //$('.editor-attach').wysihtml5();
@@ -186,6 +186,14 @@
             }
         });
     });
+
+    function pageUpdate()
+    {
+        $('#updt-icon').addClass('icon-spin');
+        $('#updt').html('обновление...');
+        $('button').addClass('disabled');
+        window.location.reload();
+    }
 
     {% include 'admin/form.textarea.html.editor.twig.js' %}
 </script>

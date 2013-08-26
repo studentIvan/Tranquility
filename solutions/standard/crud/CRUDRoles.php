@@ -8,7 +8,8 @@ class CRUDRoles extends CRUDObjectInterface
         $config->setMenuName('Роли');
         $config->setMenuCreate('новая роль');
         $config->setTableName('roles');
-        $config->setMenuIcon('tower');
+        $config->setMenuIcon('group');
+        $config->setElementsPerPage(8);
 
         $config->setFields(array(
             'id' => array(

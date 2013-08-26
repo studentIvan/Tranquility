@@ -23,6 +23,54 @@ class Site
         echo '<h1>Coming soon</h1>';
     }
 
+    public static function socialDispatcher()
+    {
+        list($provider, $session, $profile) = Data::inputsList('provider', 'session', 'profile');
+        if ($provider and $session and $profile) {
+            switch ($provider) {
+                case 'vk':
+                    $sigCalculated = 'expire=' . $session['expire'];
+                    $sigCalculated .= 'mid=' . $session['mid'];
+                    $sigCalculated .= 'secret=' . $session['secret'];
+                    $sigCalculated .= 'sid=' . $session['sid'];
+                    $sigCalculated .= Process::$context['vk_app_secure_key'];
+                    $sigCalculated = md5($sigCalculated);
+                    if ($session['sig'] === $sigCalculated) {
+                        try {
+                            $user = new UserProfile();
+                            $login = 'vk_' . $profile['screen_name'];
+                            try {
+                                $user->setLogin($login);
+                            } catch (InvalidArgumentException $e) {
+                                Session::authorize($login, false, false, false);
+                                echo 'ok';
+                                exit;
+                            }
+                            $user->setPassword(rand(1000, 9000));
+                            $user->setRole(Process::$context['vk_user_role']);
+                            $user->setPhoto($profile['photo_100']);
+                            $user->setFullName($profile['first_name'] . ' ' . $profile['last_name']);
+                            $user->setGender((intval($profile['sex']) === 2) ?
+                                    UserProfile::GENDER_MAN : UserProfile::GENDER_WOMAN);
+                            $user->save();
+                            Session::authorize($login, false, false, false);
+                            echo 'ok';
+                            exit;
+                        } catch (Exception $e) {
+                            header('Content-Type: application/json');
+                            echo json_encode($e->getMessage());
+                            exit;
+                        }
+                    } else {
+                        throw new ForbiddenException('attack');
+                    }
+                    break;
+                default:
+                    throw new ForbiddenException('unsupported provider');
+            }
+        }
+    }
+
     public static function showPost($matches)
     {
         $newsId = isset($matches[1]) ? abs($matches[1]) : false;
@@ -38,13 +86,17 @@ class Site
 
         if ($commentWhichWasPosted and $CSRFToken === Process::$context['csrf_token']) {
             try {
-                $captcha = Data::input('captcha');
-                if (!$captcha) throw new InvalidArgumentException('Не введён код с картинки');
+                if (mb_strlen($commentWhichWasPosted, 'utf8') < 2)
+                    throw new InvalidArgumentException('Слишком мало текста, попробуйте больше!');
+                Process::$context['last_comment_deep'] = $commentWhichWasPosted;
+                if (!$captcha = Data::input('captcha'))
+                    throw new InvalidArgumentException('Не введён код с картинки');
                 Process::load('GDCaptcha');
                 if (!GDCaptcha::checkCorrect($captcha)) {
                     throw new InvalidArgumentException("Неверно введён код с картинки");
                 }
                 Comments::create($newsId, $commentWhichWasPosted);
+                Process::$context['last_comment_deep'] = null;
             } catch (InvalidArgumentException $e) {
                 Process::$context['flash_error'] = $e->getMessage();
             }
@@ -54,13 +106,34 @@ class Site
         Process::$context['news_content'] = $post->content;
         Process::$context['news_created_at'] = $post->created_at;
         Process::$context['comments'] = Comments::listingForNewsId($newsId);
+
+        if (!isset(Process::$context['current_user']))
+            Process::$context['current_user'] = array(
+                'id' => false, 'login' => false, 'nickname' => false, 'full_name' => false, 'role' => false,
+            );
+
+        if (!empty(Process::$context['current_user']['nickname'])) {
+            $displayName = Process::$context['current_user']['nickname'];
+        } elseif (!empty(Process::$context['current_user']['full_name'])) {
+            $displayName = Process::$context['current_user']['full_name'];
+        } else {
+            $displayName = Process::$context['current_user']['login'];
+        }
+
+        Process::$context['current_user']['display_name'] =
+            $displayName ? $displayName : 'Гость';
+
+        if (Process::$context['current_user']['role'] === Process::$context['vk_user_role']) {
+            Process::$context['vk_user_link'] = substr(Process::$context['current_user']['login'], 3);
+        }
     }
 
     public static function logout()
     {
         if (Process::$context['csrf_token'] === Data::uriVar('csrf_token'))
             Session::stop();
-        Process::redirect('/');
+        $rPath = Data::uriVar('rpath');
+        Process::redirect($rPath ? $rPath : '/');
     }
 
     public static function login()

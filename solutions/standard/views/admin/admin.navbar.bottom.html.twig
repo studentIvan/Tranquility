@@ -13,19 +13,18 @@
             <button {% if not mobile %}data-toggle="modal" data-target="#modalCreate"{% else %}
                 onclick="window.location.href='{{ panel_base_uri }}/{{ admin_part }}/create'"
                     {% endif %} class="btn btn-default navbar-btn">
-                <span class="glyphicon glyphicon-plus"></span>&nbsp;<span
+                <span class="icon-plus"></span>&nbsp;<span
                         id="addmsg">{{ container.create_new_message }}</span>
             </button>
         {% endif %}
         {% if not mobile %}
-            <button class="btn btn-default navbar-btn"
-                    onclick="$('#updt').html('обновление...');$(this).addClass('disabled');window.location.reload();">
-                <span class="glyphicon glyphicon-refresh"></span>&nbsp;<span id="updt">обновить страницу</span>
+            <button class="btn btn-default navbar-btn" onclick="pageUpdate()">
+                <span class="icon-refresh" id="updt-icon"></span>&nbsp;<span id="updt">обновить страницу</span>
             </button>
         {% endif %}
         {% if container.count > 0 %}
             <button class="btn btn-default navbar-btn" id="truncate-button">
-                <span class="glyphicon glyphicon-exclamation-sign"></span>&nbsp;<span id="truncate">очистить таблицу</span>
+                <span class="icon-exclamation-sign"></span>&nbsp;<span id="truncate">очистить таблицу</span>
             </button>
         {% endif %}
     </div>
