@@ -129,16 +129,19 @@
         </ul>
         {% if mobile %}
             <ul class="nav navbar-nav pull-right">
-                <li><a href="{{ panel_base_uri }}/logout?csrf_token={{ csrf_token }}">Выход ({{ current_user.login }}
-                        )</a></li>
+                <li>
+                    <a href="{{ panel_base_uri }}/logout?csrf_token={{ csrf_token }}">
+                        Выход ({{ current_user.login }})
+                    </a>
+                </li>
             </ul>
         {% else %}
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown" id="menu1">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
                         {% if current_user.photo %}
-                            <img src="{{ current_user.photo }}" alt="" width="22" height="22"/>&nbsp;
-                        {% endif %}{% if current_user.full_name %}&nbsp;&nbsp;{{ current_user.full_name }}
+                            <img src="{{ current_user.photo }}" alt="" width="22" height="22"/>&nbsp;&nbsp;
+                        {% endif %}{% if current_user.full_name %}{{ current_user.full_name }}
                         {% else %}{{ current_user.login }}
                         {% endif %}
                         <b class="caret"></b>

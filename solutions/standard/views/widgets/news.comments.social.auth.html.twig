@@ -50,6 +50,7 @@
         if (response !== 'ok') {
             alert(response);
         } else {
+            $('#captcha-display').fadeOut();
             var photo = data.profile.photo_100;
             $("#top-menu").html(
                     '<ul class="nav navbar-nav pull-right"><li class="dropdown" id="menu1">' +

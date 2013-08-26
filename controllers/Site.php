@@ -1,4 +1,8 @@
 <?php
+/**
+ * Class Site
+ * @TODO EDIT COMMENTS
+ */
 class Site
 {
     public static function news($matches)
@@ -20,7 +24,9 @@ class Site
 
     public static function tag($matches)
     {
-        echo '<h1>Coming soon</h1>';
+        /**
+         * @TODO DO TAGS
+         */
     }
 
     public static function socialDispatcher()
@@ -54,6 +60,10 @@ class Site
                                     UserProfile::GENDER_MAN : UserProfile::GENDER_WOMAN);
                             $user->save();
                             Session::authorize($login, false, false, false);
+                            try {
+                                $token = Session::getToken();
+                                Database::getInstance()->query("DELETE FROM captcha WHERE token='$token'");
+                            } catch (Exception $e) {}
                             echo 'ok';
                             exit;
                         } catch (Exception $e) {
@@ -89,11 +99,13 @@ class Site
                 if (mb_strlen($commentWhichWasPosted, 'utf8') < 2)
                     throw new InvalidArgumentException('Слишком мало текста, попробуйте больше!');
                 Process::$context['last_comment_deep'] = $commentWhichWasPosted;
-                if (!$captcha = Data::input('captcha'))
-                    throw new InvalidArgumentException('Не введён код с картинки');
-                Process::load('GDCaptcha');
-                if (!GDCaptcha::checkCorrect($captcha)) {
-                    throw new InvalidArgumentException("Неверно введён код с картинки");
+                if (!Session::getUid()) {
+                    if (!$captcha = Data::input('captcha'))
+                        throw new InvalidArgumentException('Не введён код с картинки');
+                    Process::load('GDCaptcha');
+                    if (!GDCaptcha::checkCorrect($captcha)) {
+                        throw new InvalidArgumentException("Неверно введён код с картинки");
+                    }
                 }
                 Comments::create($newsId, $commentWhichWasPosted);
                 Process::$context['last_comment_deep'] = null;
@@ -104,7 +116,15 @@ class Site
 
         Process::$context['page_title'] = $post->title;
         Process::$context['news_content'] = $post->content;
+        if (isset($post->tags) and $post->tags) {
+            Process::$context['news_tags'] = preg_replace('/([^,]+),?/us',
+                '<a href="/tag/$1" class="tag-link">
+                    <span class="label label-default">$1</span>
+                </a>', $post->tags);
+        }
         Process::$context['news_created_at'] = $post->created_at;
+        Process::$context['news_poster_id'] = $post->poster_id;
+        Process::$context['news_poster_login'] = $post->poster_login;
         Process::$context['comments'] = Comments::listingForNewsId($newsId);
 
         if (!isset(Process::$context['current_user']))
@@ -131,9 +151,13 @@ class Site
     public static function logout()
     {
         if (Process::$context['csrf_token'] === Data::uriVar('csrf_token'))
+        {
             Session::stop();
-        $rPath = Data::uriVar('rpath');
-        Process::redirect($rPath ? $rPath : '/');
+            $rPath = Data::uriVar('rpath');
+            Process::redirect($rPath ? $rPath : '/');
+        } else {
+            throw new ForbiddenException();
+        }
     }
 
     public static function login()

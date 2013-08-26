@@ -48,6 +48,8 @@ class ProfilesController
 
     public static function activate($matches)
     {
+        if (!Process::$context['turn_on_registration'])
+            throw new NotFoundException();
         if (!(isset(Process::$context['cms']['email_confirm']) and
             Process::$context['cms']['email_confirm'])) {
             throw new NotFoundException();
@@ -79,6 +81,8 @@ class ProfilesController
 
     public static function register()
     {
+        if (!Process::$context['turn_on_registration'])
+            throw new NotFoundException();
         Process::$context['page_title'] = 'Регистрация';
         $formCode = substr(Process::$context['csrf_token'], 0, 3);
         Process::$context['form_code'] = $formCode;

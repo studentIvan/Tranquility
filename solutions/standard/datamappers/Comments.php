@@ -3,6 +3,10 @@ class Comments
 {
     public static function create($newsId, $message)
     {
+        /**
+         * @TODO 1 message per 10 seconds
+         * @TODO message compare
+         */
         $sql = "INSERT INTO news_comments (news_id, message, author_id, posted_at, ip)
           VALUES (:news_id, :message, :author_id, NOW(), INET_ATON(:ip))";
         $authorId = Session::getUid();

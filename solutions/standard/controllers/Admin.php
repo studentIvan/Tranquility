@@ -50,6 +50,7 @@ class Admin
             if ($login and $password) {
                 $temporary = $remember ? false : true;
                 try {
+                    Session::stop(); Session::start();
                     Session::authorize($login, $password, $temporary);
                     $role = Session::getRole();
                     if (!in_array($role, $zoolRolesList, true)) {

@@ -136,6 +136,7 @@ return array(
             'feed_max_length' => 750,
         ),
         'email_confirm' => false,
+        'turn_on_registration' => false,
         'visitors' => false,
         'social_auth' => array(
             'vk_app_id' => '3841422',

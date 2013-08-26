@@ -41,6 +41,9 @@
                     <strong>Дата регистрации</strong>: <span class="dtl10n">{{ user.registered_at }}</span>
                 </li>
                 <li class="list-group-item">
+                    <strong>Роль</strong>: {{ user.role }}
+                </li>
+                <li class="list-group-item">
                     <strong>Пол</strong>: {% if user.gender == 'm' %}парень{% else %}девушка{% endif %}
                 </li>
                 {% if user.about_me %}

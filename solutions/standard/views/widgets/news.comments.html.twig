@@ -44,13 +44,15 @@
                         <div id="comment-preview" style="display: none; padding-bottom: 15px;"></div>
                     </div>
                 </div>
-                <div class="form-group">
+                {% if not current_user.id %}
+                <div class="form-group" id="captcha-display">
                     <label class="control-label" for="comment-form-captcha">
                         <span id="captcha-image">Если вы не робот кликните по полю ниже:</span>
                     </label>
                     <input id="comment-form-captcha" name="captcha" onclick="showCaptcha()"
                            class="form-control" placeholder="Кликните по полю, чтобы показать изображение">
                 </div>
+                {% endif %}
                 <div class="form-group">
                     <div class="btn-group">
                         <button type="submit" role="submit" class="btn btn-default">
