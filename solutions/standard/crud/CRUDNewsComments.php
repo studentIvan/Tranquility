@@ -76,7 +76,7 @@ class CRUDNewsComments extends CRUDObjectInterface
 
     public function messageField($message)
     {
-        return preg_replace('/(@.+?),/u', '<span class="comment-nick">$1</span>,', $message);
+        return Comments::prepare($message);
     }
 
     public function avatarField($data)

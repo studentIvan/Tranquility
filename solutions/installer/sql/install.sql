@@ -82,7 +82,7 @@ CREATE TABLE `news_comments` (
   `ip` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `news_id` (`news_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -327,4 +327,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-08-27 20:23:32
+-- Dump completed on 2013-08-27 22:05:29

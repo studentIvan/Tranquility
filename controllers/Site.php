@@ -107,8 +107,11 @@ class Site
                         throw new InvalidArgumentException("Неверно введён код с картинки");
                     }
                 }
-                Comments::create($newsId, $commentWhichWasPosted);
-                Process::$context['last_comment_deep'] = null;
+                if (Comments::create($newsId, $commentWhichWasPosted)) {
+                    Process::$context['last_comment_deep'] = null;
+                } else {
+                    throw new InvalidArgumentException('Разрешено оставлять не более 1 комментария за 10 секунд');
+                }
             } catch (InvalidArgumentException $e) {
                 Process::$context['flash_error'] = $e->getMessage();
             }
