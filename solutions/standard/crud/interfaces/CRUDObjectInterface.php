@@ -158,7 +158,7 @@ abstract class CRUDObjectInterface
     }
 
     /**
-     * @param $tableName
+     * @param string $tableName
      */
     public function setTableName($tableName)
     {
@@ -337,6 +337,7 @@ abstract class CRUDObjectInterface
      */
     public function setFilter($filter)
     {
+        $filter['text'] = trim($filter['text']);
         if (empty($filter['text']))
             $filter['text'] = false;
         if ($filter['lm'] and !$filter['text'])

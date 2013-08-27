@@ -17,9 +17,16 @@ class CRUDNewsComments extends CRUDObjectInterface
                 CRUDField::PARAM_DESCRIPTION => 'ID комментария',
                 CRUDField::PARAM_TYPE => CRUDField::TYPE_INTEGER,
             ),
+            'avatar' => array(
+                CRUDField::PARAM_TYPE => CRUDField::TYPE_CALCULATED,
+                CRUDField::PARAM_MODIFY => '<img src="$1" height="50" alt="">',
+                CRUDField::PARAM_DISPLAY_FUNCTION => 'avatarField',
+                CRUDField::PARAM_DISPLAY => true,
+            ),
             'message' => array(
                 CRUDField::PARAM_TYPE => CRUDField::TYPE_TEXT,
                 CRUDField::PARAM_DESCRIPTION => 'Текст',
+                CRUDField::PARAM_DISPLAY_FUNCTION => 'messageField',
                 CRUDField::PARAM_DISPLAY => true,
             ),
             'author_id' => array(
@@ -38,7 +45,9 @@ class CRUDNewsComments extends CRUDObjectInterface
             'news_id' => array(
                 CRUDField::PARAM_DESCRIPTION => 'ID новости',
                 CRUDField::PARAM_TYPE => CRUDField::TYPE_INTEGER,
-                CRUDField::PARAM_MODIFY => 'К записи &quot;$1&quot;',
+                CRUDField::PARAM_MODIFY => '<div title="$1"
+                    style="max-width: 150px; overflow:hidden; border-bottom: 1px dotted gray; cursor: help; ' .
+                    'white-space: nowrap; text-overflow: ellipsis;">$1</div>',
                 CRUDField::PARAM_MANY_TO_ONE_SETTINGS => array(
                     CRUDField::MANY_TO_ONE_JOIN_TABLE => 'news',
                     CRUDField::MANY_TO_ONE_JOIN_CONDITION_JOIN_TABLE_FIELD => 'id',
@@ -63,5 +72,29 @@ class CRUDNewsComments extends CRUDObjectInterface
 
         $config->addFilter(CRUDConfig::FILTER_STRING);
         $config->addFilter(CRUDConfig::FILTER_DATE);
+    }
+
+    public function messageField($message)
+    {
+        return preg_replace('/(@.+?),/u', '<span class="comment-nick">$1</span>,', $message);
+    }
+
+    public function avatarField($data)
+    {
+        $author = $data['author_id'];
+        if ($author !== 'Гость') {
+            $sql = "SELECT p.photo FROM users AS u
+            LEFT JOIN users_data AS p ON p.user_id=u.id WHERE u.login=:login LIMIT 1";
+            $statement = Database::getInstance()->prepare($sql);
+            $statement->bindParam(':login', $author);
+            if ($statement->execute()) {
+                $avatar = $statement->fetchColumn();
+                return empty($avatar) ? '/img/anonymous.png' : $avatar;
+            } else {
+                return '/img/anonymous.png';
+            }
+        } else {
+            return '/img/anonymous.png';
+        }
     }
 } 

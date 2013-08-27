@@ -95,6 +95,12 @@
         .editor-attach {
             min-height: 200px;
         }
+
+        .comment-nick {
+            font-weight: bold;
+            font-style: italic;
+            color: rgb(42, 100, 150);
+        }
     </style>
 </head>
 <body>
@@ -153,19 +159,19 @@
                             </li>
                             <li role="presentation">
                                 <a role="menuitem" href="{{ panel_base_uri }}/crudusers/edit?e={{ current_user.id }}">
-                                    Изменить пароль
+                                    <span class="icon-key"></span> Изменить пароль
                                 </a>
                             </li>
                             <li role="presentation">
                                 <a role="menuitem" href="{{ panel_base_uri }}/crudusersdata/edit?e={{ current_user.id }}">
-                                    Изменить профиль
+                                    <span class="icon-edit"></span> Редактировать профиль
                                 </a>
                             </li>
                             <li role="presentation" class="divider"></li>
                         {% endif %}
                         <li role="presentation">
                             <a role="menuitem" href="{{ panel_base_uri }}/logout?csrf_token={{ csrf_token }}">
-                                Выход
+                                <span class="icon-share-alt"></span> Выход
                             </a>
                         </li>
                     </ul>

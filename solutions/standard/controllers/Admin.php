@@ -321,6 +321,7 @@ class Admin
                                     try {
                                         if (!$m->update($unique, $postedData))
                                             throw new Exception('edit error');
+
                                         if ($returnPage = Data::input('return-page'))
                                             Process::redirect($returnPage);
                                     } catch (Exception $e) {
@@ -475,21 +476,29 @@ class Admin
                         $container['filter_options'] = $m->getFilterOptions();
 
                         foreach ($container['fields'] as $f => $d) {
-                            if ($d['function']) {
+                            if ($d[CRUDField::PARAM_DISPLAY_FUNCTION]) {
                                 foreach ($container['data'] as &$e) {
-                                    $function = $d['function'];
+                                    $function = $d[CRUDField::PARAM_DISPLAY_FUNCTION];
                                     if (function_exists($function) and isset($e[$f]) and $e[$f]) {
                                         try {
                                             $e[$f] = $function($e[$f]);
                                         } catch (Exception $e) {
                                             Process::$context['flash_warning'] = $e->getMessage();
                                         }
+                                    } elseif ($d['type'] !== CRUDField::TYPE_CALCULATED and
+                                        method_exists($m, $function) and isset($e[$f]) and $e[$f]) {
+                                        try {
+                                            $e[$f] = $m->$function($e[$f]);
+                                        } catch (Exception $e) {
+                                            Process::$context['flash_warning'] = $e->getMessage();
+                                        }
                                     }
                                 }
                             }
-                            if ($d['modify']) {
+                            if ($d[CRUDField::PARAM_MODIFY]) {
                                 foreach ($container['data'] as &$e) {
-                                    $e[$f] = !empty($e[$f]) ? str_replace('$1', $e[$f], $d['modify']) : '';
+                                    $e[$f] = !empty($e[$f]) ?
+                                        str_replace('$1', $e[$f], $d[CRUDField::PARAM_MODIFY]) : '';
                                 }
                             }
                         }

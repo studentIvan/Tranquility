@@ -82,7 +82,7 @@ CREATE TABLE `news_comments` (
   `ip` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `news_id` (`news_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,7 +91,7 @@ CREATE TABLE `news_comments` (
 
 LOCK TABLES `news_comments` WRITE;
 /*!40000 ALTER TABLE `news_comments` DISABLE KEYS */;
-INSERT INTO `news_comments` VALUES (1,6,'Hello world',1,'2013-08-25 14:05:26',2130706433),(2,6,'Ололоэ',NULL,'2013-08-25 18:14:15',2130706433),(3,6,'Шатал труба',6,'2013-08-26 04:17:33',2130706433),(4,6,'@Ivan Maslov, ага',6,'2013-08-26 04:33:32',2130706433),(5,6,'@Ivan Maslov, не флудите уважаемый',1,'2013-08-26 17:21:22',2130706433);
+INSERT INTO `news_comments` VALUES (1,6,'Привет мир',1,'2013-08-27 19:56:56',2130706433),(2,6,'@Administrator, и тебе не хворать',NULL,'2013-08-27 19:57:34',2130706433),(3,6,'@Administrator, я твой дом труба шатал',9,'2013-08-27 19:58:48',2130706433);
 /*!40000 ALTER TABLE `news_comments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -245,7 +245,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `login` (`login`),
   KEY `password` (`password`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -254,7 +254,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Admin','48fa05e2e7c221665db8c9d8f6980919',1,'2012-04-16 00:00:00'),(6,'vk_fuck631848','9a704f157571a28b5462f7c85c3503cc',6,'2013-08-26 04:15:22');
+INSERT INTO `users` VALUES (1,'Admin','48fa05e2e7c221665db8c9d8f6980919',1,'2012-04-16 00:00:00'),(9,'vk_fuck631848','b6c517af62e66e085f14415a1a39a30d',6,'2013-08-27 19:55:32');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -275,11 +275,11 @@ CREATE TABLE `users_data` (
   `birthday` date DEFAULT NULL,
   `non_indexed_data` text,
   PRIMARY KEY (`user_id`),
-  UNIQUE KEY `email` (`email`),
   KEY `birthday` (`birthday`),
   KEY `nickname` (`nickname`),
   KEY `gender` (`gender`),
   KEY `full_name` (`full_name`),
+  KEY `email` (`email`),
   CONSTRAINT `users_data_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -290,7 +290,7 @@ CREATE TABLE `users_data` (
 
 LOCK TABLES `users_data` WRITE;
 /*!40000 ALTER TABLE `users_data` DISABLE KEYS */;
-INSERT INTO `users_data` VALUES (1,'Administrator','Administrator','','/img/admin.png','m',NULL,NULL),(6,'','Ivan Maslov',NULL,'http://cs403329.vk.me/v403329181/8b9b/Z8lW6JCeEmU.jpg','m',NULL,NULL);
+INSERT INTO `users_data` VALUES (1,'Administrator','Administrator',NULL,'/img/admin.png','m',NULL,NULL),(9,'','Ivan Maslov',NULL,'http://cs403329.vk.me/v403329181/8b9b/Z8lW6JCeEmU.jpg','m',NULL,NULL);
 /*!40000 ALTER TABLE `users_data` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -327,4 +327,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-08-26 19:30:26
+-- Dump completed on 2013-08-27 20:23:32

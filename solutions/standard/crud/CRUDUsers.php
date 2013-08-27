@@ -9,7 +9,7 @@ class CRUDUsers extends CRUDObjectInterface
         $config->setMenuCreate('добавить пользователя');
         $config->setTableName('users');
         $config->setOrderByField('registered_at');
-        $config->setMenuIcon('user');
+        $config->setMenuIcon('key');
 
         $config->setFields(array(
             'id' => array(

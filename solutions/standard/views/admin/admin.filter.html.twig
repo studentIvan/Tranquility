@@ -1,7 +1,7 @@
 {% if (container.filter_options.filter_string
 or container.filter_options.filter_date
 or container.filter_options.filter_less_or_more)
-and container.count > 0 %}
+and (container.count > 0 or container.filter.text or container.filter.lm or container.filter.date) %}
     <form>
         <table style="width: 100%; margin-bottom: 8px;">
             <tr>

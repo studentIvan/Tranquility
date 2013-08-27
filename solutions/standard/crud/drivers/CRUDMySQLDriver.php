@@ -40,12 +40,13 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                         case 'string':
                         case 'text':
                         case 'visual':
+                        case 'email':
                         case 'path':
                         case 'tags':
                             if ($d['from'] or $d['from_many']) {
 
                             } else {
-                                $filterContain = preg_replace('![^a-zа-яё0-9\040]!iu', '', $filter['text']);
+                                $filterContain = preg_replace('![^a-zа-яё0-9\040\.]!iu', '', $filter['text']);
                                 $filterString = ($filterString) ? "$filterString OR " : " WHERE ";
                                 $filterString .= "$f LIKE '%$filterContain%' ";
                             }
@@ -210,7 +211,7 @@ class CRUDMySQLDriver extends CRUDDriverInterface
 
         $statement->bindParam(':unique', $unique, PDO::PARAM_STR);
         if ($this->getCRUDObject()->getSQLDebugState())
-            Process::$context['flash_console'] = 'SQL Query Debug:' . preg_replace('/\s+/s', ' ', $statement->queryString);
+            Process::$context['flash_console'][] = 'SQL Query Debug:' . preg_replace('/\s+/s', ' ', $statement->queryString);
         $statement->execute();
 
         $returns = $statement->fetch(PDO::FETCH_ASSOC);
@@ -367,6 +368,7 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                         case 'string':
                         case 'text':
                         case 'visual':
+                        case 'email':
                         case 'path':
                         case 'tags':
                             if ($d['from'] or $d['from_many']) {
@@ -444,7 +446,18 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                             $groupByString .= "$foreignDataIndex.{$d['from_many']['field_many_data']}";*/
                         }
                     }
-                } elseif ($d['type'] !== 'calculated' and !$d['count_of']) {
+                }
+                elseif ($d['type'] !== 'calculated' and !$d['count_of'])
+                {
+                    if ($d['coalesce'])
+                    {
+                        foreach ($tmpFields as &$ff)
+                        {
+                            if ($ff == $f) {
+                                $ff = "COALESCE(a.$f, null, '{$d['coalesce']}') AS $f";
+                            }
+                        }
+                    }
                     $groupByString = (!empty($groupByString)) ? "$groupByString, " : "GROUP BY ";
                     $groupByString .= "a.$f";
                 }
@@ -461,7 +474,7 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                 }
 
                 if ($filter and $d['use_in_text_filter']) {
-                    $filterContain = preg_replace('![^a-zа-яё0-9\040]!iu', '', $filter['text']);
+                    $filterContain = preg_replace('![^a-zа-яё0-9\040\.]!iu', '', $filter['text']);
                     $filterString = ($filterString) ? "$filterString OR " : " WHERE ";
                     $index = (!$d['from']) ? 'a.' : '';
                     $filterString .= "{$index}{$f} LIKE '%$filterContain%' ";
@@ -579,7 +592,7 @@ class CRUDMySQLDriver extends CRUDDriverInterface
         ");
 
         if ($this->getCRUDObject()->getSQLDebugState())
-            Process::$context['flash_console'] =
+            Process::$context['flash_console'][] =
                 'SQL Query Debug:' . preg_replace('/\s+/s', ' ', $statement->queryString);
 
         $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
@@ -591,8 +604,12 @@ class CRUDMySQLDriver extends CRUDDriverInterface
         foreach ($allFields as $f => $d) {
             if ($d['type'] == 'calculated' and $d['display']) {
                 foreach ($result as &$key) {
-                    $calc = $d['function'];
-                    $key[$f] = $this->getCRUDObject()->$calc($key);
+                    if ($calc = $d['function']) {
+                        $key[$f] = $this->getCRUDObject()->$calc($key);
+                    } else {
+                        Process::$context['flash_warning'] =
+                            "Не удалось вычислить $f - PARAM_DISPLAY_FUNCTION не указан";
+                    }
                 }
             }
             if ($d['from_many'] !== false and $d['display']) {
@@ -636,6 +653,7 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                             case 'string':
                             case 'text':
                             case 'visual':
+                            case 'email':
                             case 'path':
                                 $insertedFieldsStatic[$key] = "'{$fields[$key]['default']}'";
                                 break;
@@ -684,6 +702,9 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                 Database::getInstance()->lastInsertId()
             );
         }
+        if ($this->getCRUDObject()->getSQLDebugState())
+            Process::$context['flash_console'][] =
+                'SQL Query Debug:' . preg_replace('/\s+/s', ' ', $statement->queryString);
         return $result;
     }
 
@@ -737,6 +758,9 @@ class CRUDMySQLDriver extends CRUDDriverInterface
             in_array($fields[$diffField]['type'], array('integer', 'number')) ? PDO::PARAM_INT : PDO::PARAM_STR);
         foreach ($updatedValues as $valueKey => $valueData)
             $statement->bindParam($valueKey, $valueData[0], $valueData[1]);
+        if ($this->getCRUDObject()->getSQLDebugState())
+            Process::$context['flash_console'][] =
+                'SQL Query Debug:' . preg_replace('/\s+/s', ' ', $statement->queryString);
         return $statement->execute();
     }
 

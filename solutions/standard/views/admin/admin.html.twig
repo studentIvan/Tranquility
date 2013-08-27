@@ -17,7 +17,9 @@
         {% endif %}
         {% if flash_console %}
             <script type="text/javascript">
-                console.info({{ flash_console|json_encode|raw }});
+                {% for flash in flash_console %}
+                console.info({{ flash|json_encode|raw }});
+                {% endfor %}
             </script>
         {% endif %}
     </span>
