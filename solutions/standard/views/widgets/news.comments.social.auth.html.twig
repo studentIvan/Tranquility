@@ -1,7 +1,7 @@
 {% if vk_app_id %}
 <div class="pull-right">
-    <button id="vk-button" class="btn btn-primary disabled" onclick="goVKLogin();">
-        <span class="icon-spinner icon-spin"></span> подключение к социальной сети...
+    <button id="vk-button" class="btn btn-primary" onclick="goVKLogin();">
+        <span class="icon-vk"></span> | Авторизоваться через VK.com
     </button>
 </div>
 <div id="vk_api_transport" style="display: inline"></div>
@@ -12,7 +12,7 @@
             VK.init({
                 apiId: {{ vk_app_id }}
             });
-            VK.Auth.getLoginStatus(authInfo);
+            //VK.Auth.getLoginStatus(authInfo); //vk permament auth
         };
 
         setTimeout(function() {
@@ -24,8 +24,16 @@
         }, 0);
     };
 
-    function goVKLogin() {
-        VK.Auth.login(authInfo);
+    function goVKLogin()
+    {
+        $('#vk-button').html('<span class="icon-spinner icon-spin"></span> | соединение с VK.com...').addClass('disabled');
+        VK.Auth.getLoginStatus(function(response) {
+            if (response.session) {
+                authInfo(response);
+            } else {
+                VK.Auth.login(authInfo);
+            }
+        });
     }
 
     function dispatchSocialSession(data, displayNick)
@@ -89,7 +97,7 @@
             });
         } else {
             $('#vk-button')
-                    .html('<span class="icon-vk"></span> | Рекомендуем вам использовать ваш профиль ВКонтакте')
+                    .html('<span class="icon-vk"></span> | Авторизоваться через VK.com')
                     .removeClass('disabled');
         }
     }
