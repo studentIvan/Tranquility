@@ -22,10 +22,16 @@
                         {% include 'widgets/news.comments.social.auth.html.twig' %}
                         <div id="current-user-description"><i>подозрительное анонимное сообщение</i></div>
                     {% else %}
-                        {% if current_user.role == vk_user_role %}
+                        {% if current_user.role == vk.user_role %}
                             <div id="current-user-description">
-                                <a target="_blank" href="http://vk.com/{{ vk_user_link }}">
-                                    <span class="icon-vk"></span> {{ vk_user_link }}
+                                <a target="_blank" href="http://vk.com/{{ vk.user_link }}">
+                                    <span class="icon-vk"></span> {{ vk.user_link }}
+                                </a>
+                            </div>
+                        {% elseif current_user.role == fb.user_role %}
+                            <div id="current-user-description">
+                                <a target="_blank" href="http://facebook.com/{{ fb.user_link }}/">
+                                    <span class="icon-facebook-sign"></span> {{ fb.user_link }}
                                 </a>
                             </div>
                         {% else %}

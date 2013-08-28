@@ -3,9 +3,6 @@ class Comments
 {
     public static function create($newsId, $message)
     {
-        /**
-         * @TODO message compare
-         */
         $authorId = Session::getUid();
         $ip = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : '127.0.0.1';
         $sql = "SELECT MAX(posted_at) FROM news_comments WHERE ip=INET_ATON(:ip)";

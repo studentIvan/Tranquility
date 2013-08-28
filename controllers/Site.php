@@ -31,15 +31,63 @@ class Site
 
     public static function socialDispatcher()
     {
+        if (Data::uriVar('csrf_token') !== Process::$context['csrf_token'])
+            throw new ForbiddenException('attack');
         list($provider, $session, $profile) = Data::inputsList('provider', 'session', 'profile');
         if ($provider and $session and $profile) {
             switch ($provider) {
+                case 'facebook':
+                    try {
+                        $accessToken = $session['accessToken'];
+                        $userId = $session['userID'];
+                        $result = file_get_contents("http://graph.facebook.com/$userId/?accessToken=$accessToken");
+                        if ($result) {
+                            $result = json_decode($result);
+                            if (isset($result->error)) {
+                                throw new Exception('Facebook API error');
+                            } else {
+                                if (strval($userId) !== strval($result->id) and
+                                    strval($userId) !== strval($profile['id']))
+                                    throw new ForbiddenException('attack!');
+                                $user = new UserProfile();
+                                $login = 'fb_' . $result->username;
+                                try {
+                                    $user->setLogin($login);
+                                } catch (InvalidArgumentException $e) {
+                                    Session::authorize($login, false, false, false);
+                                    echo 'ok';
+                                    exit;
+                                }
+                                $user->setPassword(rand(1000, 9000));
+                                $user->setRole(Process::$context['fb']['user_role']);
+                                $user->setPhoto($profile['photo_100']);
+                                $user->setFullName($result->first_name . ' ' . $result->last_name);
+                                $user->setGender(($result->gender === 'male') ?
+                                    UserProfile::GENDER_MAN : UserProfile::GENDER_WOMAN);
+                                $user->save();
+                                Session::authorize($login, false, false, false);
+                                try {
+                                    $token = Session::getToken();
+                                    Database::getInstance()->query("DELETE FROM captcha WHERE token='$token'");
+                                } catch (Exception $e) {}
+                                echo 'ok';
+                                exit;
+                            }
+                        } else {
+                            throw new Exception('Connect to facebook.com fail!');
+                        }
+                    } catch (Exception $e) {
+                        header('Content-Type: application/json');
+                        echo json_encode($e->getMessage());
+                        exit;
+                    }
+                    break;
                 case 'vk':
                     $sigCalculated = 'expire=' . $session['expire'];
                     $sigCalculated .= 'mid=' . $session['mid'];
                     $sigCalculated .= 'secret=' . $session['secret'];
                     $sigCalculated .= 'sid=' . $session['sid'];
-                    $sigCalculated .= Process::$context['vk_app_secure_key'];
+                    $sigCalculated .= Process::$context['vk']['app_secure_key'];
                     $sigCalculated = md5($sigCalculated);
                     if ($session['sig'] === $sigCalculated) {
                         try {
@@ -53,7 +101,7 @@ class Site
                                 exit;
                             }
                             $user->setPassword(rand(1000, 9000));
-                            $user->setRole(Process::$context['vk_user_role']);
+                            $user->setRole(Process::$context['vk']['user_role']);
                             $user->setPhoto($profile['photo_100']);
                             $user->setFullName($profile['first_name'] . ' ' . $profile['last_name']);
                             $user->setGender((intval($profile['sex']) === 2) ?
@@ -146,8 +194,10 @@ class Site
         Process::$context['current_user']['display_name'] =
             $displayName ? $displayName : 'Гость';
 
-        if (Process::$context['current_user']['role'] === Process::$context['vk_user_role']) {
-            Process::$context['vk_user_link'] = substr(Process::$context['current_user']['login'], 3);
+        if (Process::$context['current_user']['role'] === Process::$context['vk']['user_role']) {
+            Process::$context['vk']['user_link'] = substr(Process::$context['current_user']['login'], 3);
+        } elseif (Process::$context['current_user']['role'] === Process::$context['fb']['user_role']) {
+            Process::$context['fb']['user_link'] = substr(Process::$context['current_user']['login'], 3);
         }
     }
 

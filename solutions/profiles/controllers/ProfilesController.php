@@ -35,8 +35,10 @@ class ProfilesController
         Process::$context['user']['display_name'] = $displayName;
         Process::$context['page_title'] .= ',  ' . $displayName;
 
-        if (Process::$context['user']['role_id'] === Process::$context['vk_user_role']) {
-            Process::$context['vk_user_link'] = substr(Process::$context['user']['login'], 3);
+        if (Process::$context['user']['role_id'] === Process::$context['vk']['user_role']) {
+            Process::$context['vk']['user_link'] = substr(Process::$context['user']['login'], 3);
+        } elseif (Process::$context['user']['role_id'] === Process::$context['fb']['user_role']) {
+            Process::$context['fb']['user_link'] = substr(Process::$context['user']['login'], 3);
         }
 
         if ($data = $user->getNonIndexedData()) {

@@ -1,19 +1,41 @@
-{% if vk_app_id %}
-<div class="pull-right">
-    <button id="vk-button" class="btn btn-primary" onclick="goVKLogin();">
-        <span class="icon-vk"></span> | Авторизоваться через VK.com
-    </button>
+{% if vk.app_id or fb.app_id %}
+<div class="pull-right" style="position: relative;" id="social-auth-block">
+    <div style="margin-bottom: 5px; color: gray;">Используйте ваш профиль из социальной сети в 1 клик!</div>
+    {% if vk.app_id %}
+    <button id="vk-button" class="btn btn-vk" onclick="goVKLogin();">
+        <span class="icon-vk"></span> | Использовать VK
+    </button>&nbsp;{% endif %}{% if fb.app_id %}
+    <button id="fb-button" class="btn btn-facebook" onclick="goFBLogin();">
+        <span class="icon-facebook"></span> | Использовать Facebook
+    </button>{% endif %}
 </div>
 <div id="vk_api_transport" style="display: inline"></div>
+<div id="fb-root" style="display: inline"></div>
 <script type="text/javascript">
     initCallback = function()
     {
         window.vkAsyncInit = function() {
             VK.init({
-                apiId: {{ vk_app_id }}
+                apiId: '{{ vk.app_id }}'
             });
-            //VK.Auth.getLoginStatus(authInfo); //vk permament auth
         };
+
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '{{ fb.app_id }}',
+                channelUrl : '{{ http_host ? "//"~http_host : "" }}/facebook/channel.html',
+                status     : false,
+                xfbml      : false
+            });
+        };
+
+        (function(d, s, id){
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement(s); js.id = id;
+            js.src = "//connect.facebook.net/ru_RU/all.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
 
         setTimeout(function() {
             var el = document.createElement("script");
@@ -24,14 +46,56 @@
         }, 0);
     };
 
+    function goFBLogin()
+    {
+        $('#fb-button').html('<span class="icon-spinner icon-spin"></span> | соединение с Facebook.com...').addClass('disabled');
+        $('#vk-button').addClass('disabled');
+        FB.getLoginStatus(function(response) {
+            if (response.status === 'connected') {
+                authFB(response);
+            } else {
+                FB.login(authFB);
+            }
+        });
+    }
+
+    function authFB(response)
+    {
+        fb_session = response.authResponse;
+        if (fb_session) {
+            $('#social-auth-block').fadeOut();
+            FB.api('/me', function(profile) {
+                var photoLink = 'http://graph.facebook.com/' + profile.username +
+                        '/picture?width=100&height=100&redirect=false';
+                $.getJSON(photoLink, function(data) {
+                    var photo = (data.data.url) ? data.data.url : '/img/anonymous.png';
+                    var displayNick = profile.first_name + ' ' + profile.last_name;
+                    $('#current-user-comment-photo').attr('src', photo);
+                    $('#current-user-comment-nick').html(displayNick);
+                    $('#current-user-description').html(
+                            '<a target="_blank" href="' + profile.link + '">' +
+                                    '<span class="icon-facebook-sign"></span> ' + profile.username +
+                                    '</a>'
+                    );
+
+                    profile.photo_100 = photo;
+                    dispatchSocialSession({provider: 'facebook', session: fb_session, profile: profile}, displayNick);
+                });
+            });
+        } else {
+            refreshSocialButtons();
+        }
+    }
+
     function goVKLogin()
     {
         $('#vk-button').html('<span class="icon-spinner icon-spin"></span> | соединение с VK.com...').addClass('disabled');
+        $('#fb-button').addClass('disabled');
         VK.Auth.getLoginStatus(function(response) {
             if (response.session) {
-                authInfo(response);
+                authVK(response);
             } else {
-                VK.Auth.login(authInfo);
+                VK.Auth.login(authVK);
             }
         });
     }
@@ -39,12 +103,11 @@
     function dispatchSocialSession(data, displayNick)
     {
         $("#top-menu").html(
-                '<ul class="nav navbar-nav pull-right">' +
-                        '<li><span class="icon-spinner icon-spin"></span>&nbsp;Авторизация...</li></ul>'
+            '<p class="navbar-text pull-right"><span class="icon-spinner icon-spin"></span>&nbsp;Авторизация...</p>'
         );
         $.ajax({
             type: "POST",
-            url: "/ajax_social_session_dispatcher",
+            url: "/ajax_social_session_dispatcher?csrf_token={{ csrf_token }}",
             data: data,
             success: function(response) {
                 authRightNow(response, data, displayNick);
@@ -65,23 +128,21 @@
                             '<a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">' +
                             '<img src="' + photo + '" alt="" width="22" height="22"/>&nbsp;&nbsp;' +
                             displayNick + '<b class="caret"></b></a><ul class="dropdown-menu">' +
-                            '<li><a href="http://vk.com/' + data.profile.screen_name + '">Мой профиль</a></li><li class="divider"></li>' +
                             '<li><a href="/logout?csrf_token={{ csrf_token }}&amp;rpath={{ uri }}">Выход</a>' +
                             '</li></ul></li></ul>');
         }
     }
 
-    function authInfo(response)
+    function authVK(response)
     {
         if (response.session) {
-            $('#vk-button').fadeOut();
+            $('#social-auth-block').fadeOut();
             vk_session = response.session;
             VK.Api.call('users.get', {
                 uids: vk_session.mid,
                 fields: 'nickname, screen_name, sex, photo_100'
             }, function(r) {
                 if(r.response) {
-                    $('#vk-button').fadeOut();
                     var vk_profile = r.response[0];
                     var displayNick = vk_profile.first_name + ' ' + vk_profile.last_name;
                     $('#current-user-comment-photo').attr('src', vk_profile.photo_100);
@@ -93,13 +154,24 @@
                     );
 
                     dispatchSocialSession({provider: 'vk', session: vk_session, profile: vk_profile}, displayNick);
+                } else {
+                    refreshSocialButtons();
                 }
             });
         } else {
-            $('#vk-button')
-                    .html('<span class="icon-vk"></span> | Авторизоваться через VK.com')
-                    .removeClass('disabled');
+            refreshSocialButtons();
         }
+    }
+
+    function refreshSocialButtons()
+    {
+        $('#social-auth-block').fadeIn(0);
+        $('#vk-button')
+                .html('<span class="icon-vk"></span> | Использовать VK')
+                .removeClass('disabled');
+        $('#fb-button')
+                .html('<span class="icon-facebook"></span> | Использовать Facebook')
+                .removeClass('disabled');
     }
 </script>
 {% endif %}

@@ -139,9 +139,16 @@ return array(
         'turn_on_registration' => false,
         'visitors' => false,
         'social_auth' => array(
-            'vk_app_id' => '3841422',
-            'vk_app_secure_key' => 'YasRsbBDkJ2fccsX66XI',
-            'vk_user_role' => 6,
+            'vk' => array(
+                'app_id' => '3841422',
+                'app_secure_key' => 'YasRsbBDkJ2fccsX66XI',
+                'user_role' => 6,
+            ),
+            'fb' => array(
+                'app_id' => '557845057616177',
+                'app_secret' => 'ee90216bc374a170a922425f9fb185b7',
+                'user_role' => 7,
+            ),
         ),
     ),
 );

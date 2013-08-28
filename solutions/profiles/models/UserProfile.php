@@ -14,7 +14,7 @@ class UserProfile
 
     public static $exceptions = array(
         'email' => 'Email должен быть правильным, быть больше восьми и меньше 51 символа в длину',
-        'login' => 'Логин может состоять только из символа "подчеркивание", латинских букв и цифр,
+        'login' => 'Логин может состоять только из символов "подчеркивание", "точка", латинских букв и цифр,
                 быть больше 3х и меньше 21 символа в длину, и начинаться с буквы',
         'login_exists' => 'Такой логин уже зарегистрирован',
         'password' => 'Пароль не должен равняться логину',
@@ -125,7 +125,7 @@ class UserProfile
             }
         } else {
             $length = mb_strlen($login, 'UTF-8');
-            if (preg_match('/^[a-z][a-z0-9_]+$/i', $login) and $length > 3 and $length < 21) {
+            if (preg_match('/^[a-z][a-z0-9_\.]+$/i', $login) and $length > 3 and $length < 21) {
                 $sql = "SELECT COUNT(*) FROM users WHERE LOWER(login) LIKE LOWER(:login)";
                 $statement = Database::getInstance()->prepare($sql);
                 $statement->bindParam(':login', $login);
@@ -227,7 +227,7 @@ class UserProfile
         $length = mb_strlen($fullName, 'UTF-8');
         if (preg_match('/^[a-zA-Zа-яА-ЯёЁ][a-zA-Zа-яА-ЯёЁ ’\'\-]+$/u', $fullName) and
             $length > 1 and $length < 101) {
-            $this->full_name = $fullName;
+            $this->full_name = trim($fullName);
             return $this;
         } else {
             throw new InvalidArgumentException(

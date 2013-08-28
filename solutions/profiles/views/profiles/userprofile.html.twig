@@ -1,7 +1,8 @@
 {% extends 'skeleton.html.twig' %}
 {% block body %}
     <div class="page-header">
-        <h1>{% if vk_user_link %}<span class="icon-vk"></span> {{ user.full_name }}
+        <h1>{% if vk.user_link %}<span class="icon-vk"></span> {{ user.full_name }}
+            {% elseif fb.user_link %}<span class="icon-facebook-sign"></span> {{ user.full_name }}
             {% else %}@{{ user.nickname ? user.nickname : user.login }}
             {% if user.full_name %}
                 <small>{{ user.full_name }}</small>
@@ -15,9 +16,15 @@
         </div>
         <div class="col-lg-8">
             <ul class="list-group">
-                {% if vk_user_link %}
+                {% if vk.user_link %}
                     <li class="list-group-item">
-                        <strong>VK.com</strong>: <a href="http://vk.com/{{ vk_user_link }}" target="_blank">@{{ vk_user_link }}</a>
+                        <strong>VK.com</strong>: <a href="http://vk.com/{{ vk.user_link }}"
+                                                    target="_blank">@{{ vk.user_link }}</a>
+                    </li>
+                {% elseif fb.user_link %}
+                    <li class="list-group-item">
+                        <strong>Facebook</strong>: <a href="http://facebook.com/{{ fb.user_link }}"
+                                                    target="_blank">@{{ fb.user_link }}</a>
                     </li>
                 {% endif %}
                 {% if user.nickname %}
@@ -38,7 +45,8 @@
                     </li>
                 {% endif %}
                 <li class="list-group-item">
-                    <strong>Дата регистрации</strong>: <span class="dtl10n">{{ user.registered_at }}</span>
+                    <strong>Дата {% if vk.user_link %}синхронизации с VK{% elseif fb.user_link %}синхронизации с Facebook{% else %}регистрации{% endif %}</strong>:
+                    <span class="dtl10n">{{ user.registered_at }}</span>
                 </li>
                 <li class="list-group-item">
                     <strong>Роль</strong>: {{ user.role }}
