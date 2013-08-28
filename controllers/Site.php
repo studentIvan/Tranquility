@@ -8,25 +8,34 @@ class Site
     public static function news($matches)
     {
         $page = isset($matches[1]) ? abs($matches[1]) : 1;
-        $perPage = Process::$context['cms']['news']['limit_per_page'];
-        $pagination = Data::paginate(Database::count('news'), $perPage, $page);
-        Process::$context['news_list'] = News::listing($pagination['offset'], $perPage);
+        $breakPagination = isset($matches[2]) ? $matches[2] : false;
+
+        if (!$breakPagination) {
+            $perPage = Process::$context['cms']['news']['limit_per_page'];
+            $pagination = Data::paginate(Database::count('news'), $perPage, $page);
+            Process::$context['news_list'] = News::listing($pagination['offset'], $perPage);
+        } else {
+            Process::$context['news_list'] = News::listing(0, 30);
+        }
+
         foreach (Process::$context['news_list'] as &$news) {
             if (isset($news['tags']) and $news['tags']) {
                 $news['tags'] = preg_replace('/([^,]+),?/us',
-                    '<a href="/tag/$1" class="tag-link">
+                    '<a href="/look/$1" class="tag-link">
                         <span class="label label-default">$1</span>
                     </a>', $news['tags']);
             }
         }
-        Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
+
+        if (!$breakPagination) {
+            Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
+        }
     }
 
-    public static function tag($matches)
+    public static function search($matches)
     {
-        /**
-         * @TODO DO TAGS
-         */
+        News::setFilter($matches[1]);
+        self::news(array('', isset($matches[2]) ? $matches[2] : null, true));
     }
 
     public static function socialDispatcher()
@@ -169,7 +178,7 @@ class Site
         Process::$context['news_content'] = $post->content;
         if (isset($post->tags) and $post->tags) {
             Process::$context['news_tags'] = preg_replace('/([^,]+),?/us',
-                '<a href="/tag/$1" class="tag-link">
+                '<a href="/look/$1" class="tag-link">
                     <span class="label label-default">$1</span>
                 </a>', $post->tags);
         }

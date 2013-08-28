@@ -1,6 +1,24 @@
 <?php
 class News
 {
+    protected static $filter = false, $count = 0;
+
+    /**
+     * @param $filter
+     */
+    public static function setFilter($filter)
+    {
+        self::$filter = preg_replace('/[^a-zа-яё0-9\040\.\,\-_]/ui', '', trim(urldecode($filter)));
+    }
+
+    /**
+     * @return int
+     */
+    public static function getCount()
+    {
+        return self::$count;
+    }
+
     /**
      * @static
      * @param int $offset
@@ -10,6 +28,9 @@ class News
     public static function listing($offset = 0, $limit = false)
     {
         if (!$limit) $limit = Process::$context['cms']['news']['limit_per_page'];
+
+        $whereString = ($filter = self::$filter) ? "WHERE n.title LIKE '%$filter%'
+            OR n.content LIKE '%$filter%' OR t.name LIKE '%$filter%'" : "";
 
         $statement = Database::getInstance()->prepare("
             SELECT n.id AS id, n.title AS title,
@@ -26,6 +47,7 @@ class News
             ON t.id=tr.tag_id
             LEFT JOIN news_comments AS c
             ON c.news_id=n.id
+            $whereString
             GROUP BY n.id, n.title, n.content, n.created_at, n.posted_by, u.login, c.news_id
             ORDER BY n.created_at DESC
             LIMIT :limit OFFSET :offset
@@ -34,6 +56,8 @@ class News
         $statement->bindParam(':limit', $limit, PDO::PARAM_INT);
         $statement->bindParam(':offset', $offset, PDO::PARAM_INT);
         $statement->execute();
+
+        self::$count = $statement->rowCount();
 
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }

@@ -15,12 +15,12 @@
                     {% if item.tags %}
                         <span class="pull-right">{{ item.tags|raw }}</span>
                     {% endif %}
-                    <span class="icon-user"></span>
+                    <span class="icon-user"></span> автор
                     <a href="/profile/{{ item.poster_id }}.html">
                         {{ item.poster_login }}
                     </a>
                     <span>&nbsp;|&nbsp;&nbsp;</span>
-                    <span class="icon-calendar" style="padding-right: 2px;"></span>
+                    <span class="icon-calendar" style="padding-right: 2px;"></span> написано
                     <span class="dtl10n">{{ item.created_at }}</span>
                     <span>&nbsp;|&nbsp;&nbsp;</span>
                     <span class="icon-comments"></span>
@@ -34,7 +34,7 @@
                 </div>
             </div>
         </div>
-        <hr>
+        {% if news_list|length > 1 %}<hr>{% endif %}
     {% endfor %}
 
     {% if pagination %}
