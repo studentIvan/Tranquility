@@ -58,7 +58,6 @@
         <div class="page-header">
             <h1>{{ page_title }}</h1>
         </div>
-        <div class="form-group">{{ news_content|raw }}</div>
         <div class="form-group panel-tags">
             {% if news_tags %}
                 <span class="pull-right">{{ news_tags|raw }}</span>
@@ -70,6 +69,26 @@
             <span>&nbsp;|&nbsp;&nbsp;</span>
             <span class="icon-calendar" style="padding-right: 2px;"></span> написано
             <span class="dtl10n">{{ news_created_at }}</span>
+        </div>
+        <div class="form-group">{{ news_content|raw }}</div>
+        <hr>
+        <div class="btn-group">
+            <a class="btn btn-default"
+               href="http://twitter.com/intent/tweet?text={{ page_title|url_encode }}+http://{{ http_host }}{{ uri }}" target="_blank">
+                <span class="icon-twitter-sign"></span> поделиться в twitter
+            </a>
+            <a id="btn-share-vk" class="btn {% if current_user.role == vk.user_role %}btn-vk{% else %}btn-default{% endif %}"
+               href="http://vk.com/share.php?url=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}" onclick="window.open(this.href, 'Опубликовать ссылку во Вконтакте', 'width=800,height=300'); return false">
+                <span class="icon-vk"></span> поделиться вконтакте
+            </a>
+            <a id="btn-share-facebook" class="btn {% if current_user.role == fb.user_role %}btn-facebook{% else %}btn-default{% endif %}"
+               href="https://www.facebook.com/sharer/sharer.php?u=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}" onclick="window.open(this.href, 'Опубликовать ссылку в Facebook', 'width=640,height=436,toolbar=0,status=0'); return false">
+                <span class="icon-facebook-sign"></span> поделиться в facebook
+            </a>
+            <a class="btn btn-default"
+               href="https://plus.google.com/share?url=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}" onclick="window.open(this.href, 'Опубликовать ссылку в Google Plus', 'width=800,height=300'); return false">
+                <span class="icon-google-plus-sign"></span> поделиться в google+
+            </a>
         </div>
         <hr>
         {% include 'widgets/news.comments.html.twig' %}

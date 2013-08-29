@@ -34,6 +34,7 @@ return array(
      * http://api.yandex.ru/jslibs/?ncrnd=7105
      */
     'resources' => array(
+        'main_css' => '/css/main.css',
         'ldt_js' => '/js/ldt.min.js',
         'bootstrap_js' => '/js/bootstrap.min.js',
         'bootstrap_css' => '/css/bootstrap.no-icons.min.css',

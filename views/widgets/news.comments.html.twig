@@ -120,7 +120,11 @@
 </ul>
 <script type="text/javascript">
     function showCaptcha() {
-        $('#captcha-image').html('<img src="/captcha/{{ csrf_token }}.png" alt="Загрузка изображения..." style="opacity: 0.7">');
+        $('#captcha-image').html(
+                '<img src="/captcha/{{ csrf_token }}.png" alt="Загрузка изображения..." style="opacity: 0.7">' +
+                        '{% if not mobile %}<div style="font-size: 12px;">Лень вводить код? ' +
+                        'Авторизуйтесь через VK или Facebook в 1 клик и без перезагрузки страницы!</div>{% endif %}'
+        );
         $('#comment-form-captcha').attr('placeholder', 'Введите защитный код').click(function() {});
     }
 

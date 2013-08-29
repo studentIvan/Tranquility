@@ -1,6 +1,8 @@
 {% if vk.app_id or fb.app_id %}
 <div class="pull-right" style="position: relative;" id="social-auth-block">
-    <div style="margin-bottom: 5px; color: gray;">Используйте ваш профиль из социальной сети в 1 клик!</div>
+    <div style="margin-bottom: 5px; color: gray; font-style: italic">
+        Используйте ваш профиль из социальной сети в 1 клик
+    </div>
     {% if vk.app_id %}
     <button id="vk-button" class="btn btn-vk" onclick="goVKLogin();">
         <span class="icon-vk"></span> | Использовать VK
@@ -79,6 +81,7 @@
                     );
 
                     profile.photo_100 = photo;
+                    $('#btn-share-facebook').removeClass('btn-default').addClass('btn-facebook');
                     dispatchSocialSession({provider: 'facebook', session: fb_session, profile: profile}, displayNick);
                 });
             });
@@ -152,7 +155,7 @@
                                 '<span class="icon-vk"></span> ' + vk_profile.screen_name +
                             '</a>'
                     );
-
+                    $('#btn-share-vk').removeClass('btn-default').addClass('btn-vk');
                     dispatchSocialSession({provider: 'vk', session: vk_session, profile: vk_profile}, displayNick);
                 } else {
                     refreshSocialButtons();
