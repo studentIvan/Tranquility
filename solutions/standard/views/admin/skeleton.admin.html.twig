@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
 
-    <link href="{{ resource.bootstrap_css }}" rel="stylesheet" media="screen">
-    <link href="{{ resource.bootstrap_theme_css }}" rel="stylesheet" media="screen">
-    <link href="{{ resource.font_awesome_css }}" rel="stylesheet" media="screen">
-    <link href="{{ resource.jquery_tags_input_css }}" rel="stylesheet" media="screen">
+    <link href="/css/bootstrap.no-icons.min.css" rel="stylesheet" media="screen">
+    <link href="/css/bootstrap-theme.min.css" rel="stylesheet" media="screen">
+    <link href="/css/font-awesome.min.css" rel="stylesheet" media="screen">
+    <link href="/css/jquery.tagsinput.css" rel="stylesheet" media="screen">
 
     <link href="/img/admin/favicon.ico" rel="icon" type="image/x-icon">
     <link rel="apple-touch-icon" href="/img/admin/favicon.png">
@@ -145,11 +145,7 @@
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown" id="menu1">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
-                        {% if current_user.photo %}
-                            <img src="{{ current_user.photo }}" alt="" width="22" height="22"/>&nbsp;&nbsp;
-                        {% endif %}{% if current_user.full_name %}{{ current_user.full_name }}
-                        {% else %}{{ current_user.login }}
-                        {% endif %}
+                        {% if current_user.photo %}<img src="{{ current_user.photo }}" alt="" width="22" height="22"/>&nbsp;&nbsp;{% endif %}{% if current_user.full_name %}{{ current_user.full_name }}{% else %}{{ current_user.login }}{% endif %}
                         <b class="caret"></b>
                     </a>
                     <ul class="dropdown-menu" role="menu">
@@ -202,12 +198,12 @@
 
 {% block modal %}{% endblock %}
 
-<script src="{{ resource.jquery_js }}"></script>
-<script src="{{ resource.ldt_js }}"></script>
-<script src="{{ resource.bootstrap_js }}"></script>
-<script src="{{ resource.jquery_tags_input_js }}"></script>
+<script src="/js/jquery.min.js"></script>
+<script src="/js/ldt.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/jquery.tagsinput.min.js"></script>
 {% if not mobile %}
-    <script src="{{ resource.batman_hand_js }}"></script>
+    <script src="/js/batman_hand.min.js"></script>
 {% endif %}
 {% include "admin/admin.js.html.twig" with container %}
 </body>

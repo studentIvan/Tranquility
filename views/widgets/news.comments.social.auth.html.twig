@@ -4,12 +4,12 @@
         Используйте ваш профиль из социальной сети в 1 клик
     </div>
     {% if vk.app_id %}
-    <button id="vk-button" class="btn btn-vk" onclick="goVKLogin();">
+    <a id="vk-button" class="btn btn-vk" onclick="goVKLogin();">
         <span class="icon-vk"></span> | Использовать VK
-    </button>&nbsp;{% endif %}{% if fb.app_id %}
-    <button id="fb-button" class="btn btn-facebook" onclick="goFBLogin();">
+    </a>&nbsp;{% endif %}{% if fb.app_id %}
+    <a id="fb-button" class="btn btn-facebook" onclick="goFBLogin();">
         <span class="icon-facebook"></span> | Использовать Facebook
-    </button>{% endif %}
+    </a>{% endif %}
 </div>
 <div id="vk_api_transport" style="display: inline"></div>
 <div id="fb-root" style="display: inline"></div>
@@ -59,6 +59,7 @@
                 FB.login(authFB);
             }
         });
+        return false;
     }
 
     function authFB(response)
@@ -101,18 +102,20 @@
                 VK.Auth.login(authVK);
             }
         });
+        return false;
     }
 
     function dispatchSocialSession(data, displayNick)
     {
-        $("#top-menu").html(
-            '<p class="navbar-text pull-right"><span class="icon-spinner icon-spin"></span>&nbsp;Авторизация...</p>'
+        $("#menu-all").before(
+            '<p class="navbar-text pull-right" id="auth-informer"><span class="icon-spinner icon-spin"></span>&nbsp;Авторизация...</p>'
         );
         $.ajax({
             type: "POST",
             url: "/ajax_social_session_dispatcher?csrf_token={{ csrf_token }}",
             data: data,
             success: function(response) {
+                $('#auth-informer').remove();
                 authRightNow(response, data, displayNick);
             },
             async: true
@@ -126,13 +129,13 @@
         } else {
             $('#captcha-display').fadeOut();
             var photo = data.profile.photo_100;
-            $("#top-menu").html(
-                    '<ul class="nav navbar-nav pull-right"><li class="dropdown" id="menu1">' +
+            $("#menu-nav").after(
+                    '<li class="dropdown" id="menu1">' +
                             '<a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">' +
                             '<img src="' + photo + '" alt="" width="22" height="22"/>&nbsp;&nbsp;' +
                             displayNick + '<b class="caret"></b></a><ul class="dropdown-menu">' +
                             '<li><a href="/logout?csrf_token={{ csrf_token }}&amp;rpath={{ uri }}">Выход</a>' +
-                            '</li></ul></li></ul>');
+                            '</li></ul></li>');
         }
     }
 

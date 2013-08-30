@@ -74,11 +74,11 @@
         <hr>
         <div class="btn-group">
             <a class="btn btn-default"
-               href="http://twitter.com/intent/tweet?text={{ page_title|url_encode }}+http://{{ http_host }}{{ uri }}" target="_blank">
+               href="https://twitter.com/intent/tweet?text={{ page_title|url_encode }}+http://{{ http_host }}{{ uri }}" target="_blank">
                 <span class="icon-twitter-sign"></span> поделиться в twitter
             </a>
             <a id="btn-share-vk" class="btn {% if current_user.role == vk.user_role %}btn-vk{% else %}btn-default{% endif %}"
-               href="http://vk.com/share.php?url=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}" onclick="window.open(this.href, 'Опубликовать ссылку во Вконтакте', 'width=800,height=300'); return false">
+               href="https://vk.com/share.php?url=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}" onclick="window.open(this.href, 'Опубликовать ссылку во Вконтакте', 'width=800,height=300'); return false">
                 <span class="icon-vk"></span> поделиться вконтакте
             </a>
             <a id="btn-share-facebook" class="btn {% if current_user.role == fb.user_role %}btn-facebook{% else %}btn-default{% endif %}"

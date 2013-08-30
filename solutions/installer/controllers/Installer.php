@@ -16,8 +16,13 @@ class Installer
 
             Process::$context['setup'] = true;
 
-            if (!is_writable('../config/config.php')) {
-                Process::$context['errs'] = array('Файл /config/config.php не доступен для записи');
+            if (!is_writable('../config/base.json')) {
+                Process::$context['errs'] = array('Файл /config/base.json не доступен для записи');
+                return;
+            }
+
+            if (!is_writable('../config/dynamical.json')) {
+                Process::$context['errs'] = array('Файл /config/dynamical.json не доступен для записи');
                 return;
             }
 
@@ -60,10 +65,34 @@ class Installer
                 "'No description'" => "'$siteDescription'",
             );
 
-            $cfg = file_get_contents('../config/config.php');
-            $cfg = str_replace(array_keys($replacement), array_values($replacement), $cfg);
-            file_put_contents('../config/config.php', $cfg);
-            Process::$context['ress'][] = 'Изменение ../config/config.php';
+            $cfgBase = json_decode(file_get_contents('../config/base.json'), true);
+            $cfgDynamical = json_decode(file_get_contents('../config/dynamical.json'), true);
+
+            file_put_contents('../config/base.json.default', json_encode($cfgBase));
+            Process::$context['ress'][] = 'Создание бекапа ../config/base.json.default';
+            file_put_contents('../config/dynamical.json.default', json_encode($cfgDynamical));
+            Process::$context['ress'][] = 'Создание бекапа ../config/dynamical.json.default';
+
+            $cfgBase['solutions'] = array("standard", "profiles");
+            $cfgBase['security_token'] = $secretToken;
+
+            $cfgBase['pdo_developer_mode']['dsn'] = "mysql:host=$mysqlHost;dbname=$dbName";
+            $cfgBase['pdo_developer_mode']['username'] = $mysqlLogin;
+            $cfgBase['pdo_developer_mode']['password'] = $mysqlPassword;
+
+            $cfgBase['pdo_production_mode']['dsn'] = "mysql:host=$mysqlHost;dbname=$dbName";
+            $cfgBase['pdo_production_mode']['username'] = $mysqlLogin;
+            $cfgBase['pdo_production_mode']['password'] = $mysqlPassword;
+
+            $cfgDynamical['default_site_title'] = $siteName;
+            $cfgDynamical['cms']['visitors'] = true;
+            $cfgDynamical['cms']['news']['feed_title'] = "$siteName feed channel";
+            $cfgDynamical['cms']['news']['feed_description'] = $siteDescription;
+
+            file_put_contents('../config/base.json', json_encode($cfgBase));
+            Process::$context['ress'][] = 'Изменение ../config/base.json';
+            file_put_contents('../config/dynamical.json', json_encode($cfgDynamical));
+            Process::$context['ress'][] = 'Изменение ../config/dynamical.json';
 
             Process::$context['ress'][] = 'Установка завершена';
         }

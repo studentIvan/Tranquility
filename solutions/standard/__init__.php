@@ -27,7 +27,7 @@ if (isset($config['cms'])) {
     }
 
 
-    $config['cms']['admin_cfg'] = require_once $__DIRADM__ . '/../../config/admin.config.php';
+    $config['cms']['admin_cfg'] = json_decode(file_get_contents($__DIRADM__ . '/../../config/admin.json'), true);
 
     Process::$context['cool_roles'] = is_array($config['cms']['admin_cfg']['access_roles'])
         ? $config['cms']['admin_cfg']['access_roles'] : array();

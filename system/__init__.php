@@ -8,7 +8,9 @@
 
 #region Loading configuration
 $__DIR__ = dirname(__FILE__);
-$config = require $__DIR__ . '/../config/config.php';
+$base = json_decode(file_get_contents($__DIR__ . '/../config/base.json'), true);
+$additional = json_decode(file_get_contents($__DIR__ . '/../config/dynamical.json'), true);
+$config = array_merge($base, $additional);
 date_default_timezone_set($config['server_timezone']);
 
 define('STARTED_AT', microtime(true));
@@ -65,7 +67,7 @@ try {
     Session::setConfiguration($config['session']);
     $config['pdo'] = $config['security_token'] = null;
 } catch (Exception $e) {
-    echo 'Fatal error';
+    echo DEVELOPER_MODE ? $e->getMessage() : 'Fatal error';
     exit;
 }
 #endregion
@@ -192,6 +194,7 @@ class Process
 
 #region Initial routes
 Process::$routes = require $__DIR__ . '/../config/routes.php';
+Process::$context['menu_navigation'] = json_decode(file_get_contents($__DIR__ . '/../config/navigation.json'), true);
 #endregion
 
 #region Solutions
@@ -220,7 +223,6 @@ if (isset($_SERVER['REQUEST_URI'])) {
                 true : require $__DIR__ . '/ismobile.php';
     }
 
-    Process::$context['resource'] = isset($config['resources']) ? $config['resources'] : array();
     Process::$context['uri'] = htmlspecialchars($_SERVER['REQUEST_URI']);
     Process::$context['cms'] = isset($config['cms']) ? $config['cms'] : array();
     Process::$context['page_title'] = isset(Process::$context['page_title']) ?
