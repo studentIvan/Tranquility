@@ -10,7 +10,7 @@ class Mailer
             $__DIR____ = dirname(__FILE__);
             include_once $__DIR____ . '/../vendor/SwiftMailer/swift_required.php';
             self::$registered = true;
-            self::$config = require $__DIR____ . '/../config/mailer.config.php';
+            self::$config = json_decode(file_get_contents($__DIR____ . '/../config/mailer.json'), true);
         }
     }
 

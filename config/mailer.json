@@ -1,0 +1,20 @@
+{
+    "used_transport": "smtp",
+    "smtp": {
+        "host": "example.com:25",
+        "username": "admin@example.com",
+        "password": "example",
+        "encryption": null
+    },
+    "sendmail": {
+        "command_string": "/usr/sbin/sendmail -bs"
+    },
+    "native": {
+        "extra_params": "-f%s"
+    },
+    "v_card": {
+        "email": "admin@example.com",
+        "first_name": "Admin",
+        "last_name": "Example"
+    }
+}
