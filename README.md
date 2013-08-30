@@ -24,7 +24,7 @@
 * mb_ (optional)
 
 ### Production install
-* Turn off developer mode in config/config.php
+* Turn off developer mode in config/base.json
 
 ### Example apache configuration
 ```apache
