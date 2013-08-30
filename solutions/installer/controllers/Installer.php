@@ -100,9 +100,15 @@ class Installer
         {
             Process::$context['setup'] = false;
 
-            if (!is_writable('../config/config.php')) {
+            if (!is_writable('../config/base.json')) {
                 Process::$context['setup'] = true;
-                Process::$context['errs'] = array('Файл /config/config.php не доступен для записи');
+                Process::$context['errs'] = array('Файл /config/base.json не доступен для записи');
+                return;
+            }
+
+            if (!is_writable('../config/dynamical.json')) {
+                Process::$context['setup'] = true;
+                Process::$context['errs'] = array('Файл /config/dynamical.json не доступен для записи');
                 return;
             }
 

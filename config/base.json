@@ -1,17 +1,1 @@
-{
-    "developer_mode": true,
-    "solutions": ["standard", "profiles", "installer"],
-    "always_mobile": false,
-
-    "pdo_developer_mode": {
-        "dsn": "mysql:host=localhost;dbname=tranquility",
-        "username": "root",
-        "password": "123456"
-    },
-    "pdo_production_mode": {
-        "dsn": "mysql:host=localhost;dbname=tranquility",
-        "username": "root",
-        "password": "123456"
-    },
-    "security_token": "ololo"
-}
+{"developer_mode":true,"solutions":["standard","profiles","installer"],"always_mobile":false,"pdo_developer_mode":{"dsn":"mysql:host=localhost;dbname=tranquility","username":"root","password":"123456"},"pdo_production_mode":{"dsn":"mysql:host=localhost;dbname=tranquility","username":"root","password":"123456"},"security_token":"ololo"}
