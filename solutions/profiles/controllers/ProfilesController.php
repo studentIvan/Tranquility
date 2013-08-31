@@ -3,13 +3,18 @@ class ProfilesController
 {
     public static function viewProfile($matches)
     {
-        if (intval($matches[1]) > 0) {
-            $userId = intval($matches[1]);
-            $user = UserProfile::loadFromId($userId);
-        } else {
-            $login = $matches[1];
-            $user = UserProfile::loadFromLogin($login);
+        try {
+            if (intval($matches[1]) > 0) {
+                $userId = intval($matches[1]);
+                $user = UserProfile::loadFromId($userId);
+            } else {
+                $login = $matches[1];
+                $user = UserProfile::loadFromLogin($login);
+            }
+        } catch (Exception $e) {
+            throw new NotFoundException();
         }
+
 
         Process::$context['user'] = array();
         Process::$context['user']['id'] = $user->getId();

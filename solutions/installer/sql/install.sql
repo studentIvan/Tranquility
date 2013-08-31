@@ -82,7 +82,7 @@ CREATE TABLE `news_comments` (
   `ip` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `news_id` (`news_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,7 +91,6 @@ CREATE TABLE `news_comments` (
 
 LOCK TABLES `news_comments` WRITE;
 /*!40000 ALTER TABLE `news_comments` DISABLE KEYS */;
-INSERT INTO `news_comments` VALUES (1,6,'Привет мир',1,'2013-08-27 19:56:56',2130706433),(2,6,'@Administrator, и тебе не хворать',NULL,'2013-08-27 19:57:34',2130706433),(3,6,'@Administrator, я твой дом труба шатал',9,'2013-08-27 19:58:48',2130706433),(4,6,'Test',10,'2013-08-28 17:52:18',2130706433);
 /*!40000 ALTER TABLE `news_comments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -254,7 +253,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Admin','48fa05e2e7c221665db8c9d8f6980919',1,'2012-04-16 00:00:00'),(9,'vk_fuck631848','b6c517af62e66e085f14415a1a39a30d',6,'2013-08-27 19:55:32'),(10,'fb_ivan.tranquility','0f0d0f316a1f60245d0ca81f28a80f52',7,'2013-08-28 17:51:31');
+INSERT INTO `users` VALUES (1,'Admin','48fa05e2e7c221665db8c9d8f6980919',1,'2012-04-16 00:00:00');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -290,7 +289,7 @@ CREATE TABLE `users_data` (
 
 LOCK TABLES `users_data` WRITE;
 /*!40000 ALTER TABLE `users_data` DISABLE KEYS */;
-INSERT INTO `users_data` VALUES (1,'Administrator','Administrator',NULL,'/img/admin.png','m',NULL,NULL),(9,'','Ivan Maslov',NULL,'http://cs403329.vk.me/v403329181/8b9b/Z8lW6JCeEmU.jpg','m',NULL,NULL),(10,'','Ivan Tranquility',NULL,'http://profile.ak.fbcdn.net/hprofile-ak-frc3/c28.10.125.125/s100x100/1239464_1387534991475212_148297301_a.jpg','m',NULL,NULL);
+INSERT INTO `users_data` VALUES (1,'Administrator','Administrator',NULL,'/img/admin.png','m',NULL,NULL);
 /*!40000 ALTER TABLE `users_data` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -327,4 +326,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-08-31 17:34:25
+-- Dump completed on 2013-08-31 21:41:22
