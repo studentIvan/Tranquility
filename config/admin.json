@@ -2,5 +2,6 @@
     "base_uri": "/admin",
     "access_roles": [1, 2],
     "registered_crud": ["CRUDNews", "CRUDNewsComments", "CRUDUsers",
-        "CRUDUsersData", "CRUDRoles", "CRUDReferrers", "CRUDSessions"]
+        "CRUDUsersData", "CRUDRoles", "CRUDReferrers", "CRUDSessions"],
+    "registered_parts": ["PartCron", "PartSettings"]
 }

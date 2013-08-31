@@ -1,8 +1,8 @@
 <?php
-require_once dirname(__FILE__) . '/../crud/factoring/CRUDConfig.php';
-require_once dirname(__FILE__) . '/../crud/factoring/CRUDField.php';
-require_once dirname(__FILE__) . '/../crud/interfaces/CRUDDriverInterface.php';
-require_once dirname(__FILE__) . '/../crud/interfaces/CRUDObjectInterface.php';
+require_once dirname(__FILE__) . '/../admin.crud/factoring/CRUDConfig.php';
+require_once dirname(__FILE__) . '/../admin.crud/factoring/CRUDField.php';
+require_once dirname(__FILE__) . '/../admin.crud/interfaces/CRUDDriverInterface.php';
+require_once dirname(__FILE__) . '/../admin.crud/interfaces/CRUDObjectInterface.php';
 require_once dirname(__FILE__) . '/../controllers/Admin.php';
 require_once dirname(__FILE__) . '/../controllers/Feeder.php';
 

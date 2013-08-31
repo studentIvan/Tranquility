@@ -1,4 +1,7 @@
 {% if not news_content %}
+    {% if news_list|length == 0 %}
+        <h2>Нет результатов для отображения</h2>
+    {% endif %}
     {% for item in news_list %}
         <div class="panel panel-default">
             <div class="panel-body">
@@ -34,7 +37,8 @@
                 </div>
             </div>
         </div>
-        {% if news_list|length > 1 %}<hr>{% endif %}
+        {% if news_list|length > 1 %}
+            <hr>{% endif %}
     {% endfor %}
 
     {% if pagination %}
@@ -74,19 +78,25 @@
         <hr>
         <div class="btn-group">
             <a class="btn btn-default"
-               href="https://twitter.com/intent/tweet?text={{ page_title|url_encode }}+http://{{ http_host }}{{ uri }}" target="_blank">
+               href="https://twitter.com/intent/tweet?text={{ page_title|url_encode }}+http://{{ http_host }}{{ uri }}"
+               target="_blank">
                 <span class="icon-twitter-sign"></span> поделиться в twitter
             </a>
-            <a id="btn-share-vk" class="btn {% if current_user.role == vk.user_role %}btn-vk{% else %}btn-default{% endif %}"
-               href="https://vk.com/share.php?url=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}" onclick="window.open(this.href, 'Опубликовать ссылку во Вконтакте', 'width=800,height=300'); return false">
+            <a id="btn-share-vk"
+               class="btn {% if current_user.role == vk.user_role %}btn-vk{% else %}btn-default{% endif %}"
+               href="https://vk.com/share.php?url=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}"
+               onclick="window.open(this.href, 'Опубликовать ссылку во Вконтакте', 'width=800,height=300'); return false">
                 <span class="icon-vk"></span> поделиться вконтакте
             </a>
-            <a id="btn-share-facebook" class="btn {% if current_user.role == fb.user_role %}btn-facebook{% else %}btn-default{% endif %}"
-               href="https://www.facebook.com/sharer/sharer.php?u=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}" onclick="window.open(this.href, 'Опубликовать ссылку в Facebook', 'width=640,height=436,toolbar=0,status=0'); return false">
+            <a id="btn-share-facebook"
+               class="btn {% if current_user.role == fb.user_role %}btn-facebook{% else %}btn-default{% endif %}"
+               href="https://www.facebook.com/sharer/sharer.php?u=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}"
+               onclick="window.open(this.href, 'Опубликовать ссылку в Facebook', 'width=640,height=436,toolbar=0,status=0'); return false">
                 <span class="icon-facebook-sign"></span> поделиться в facebook
             </a>
             <a class="btn btn-default"
-               href="https://plus.google.com/share?url=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}" onclick="window.open(this.href, 'Опубликовать ссылку в Google Plus', 'width=800,height=300'); return false">
+               href="https://plus.google.com/share?url=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}"
+               onclick="window.open(this.href, 'Опубликовать ссылку в Google Plus', 'width=800,height=300'); return false">
                 <span class="icon-google-plus-sign"></span> поделиться в google+
             </a>
         </div>

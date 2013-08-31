@@ -5,10 +5,17 @@ class News
 
     /**
      * @param $filter
+     * @return bool
      */
     public static function setFilter($filter)
     {
         self::$filter = preg_replace('/[^a-zа-яё0-9\040\.\,\-_]/ui', '', trim(urldecode($filter)));
+        if (mb_strlen(self::$filter) < 3) {
+            self::$filter = false;
+            return false;
+        } else {
+            return true;
+        }
     }
 
     /**

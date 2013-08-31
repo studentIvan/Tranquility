@@ -7,7 +7,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="{{ cms.news.feed_description }}">
         <link rel="alternate" type="application/rss+xml" title="{{ cms.news.feed_title }} - RSS" href="/feed/rss.xml">
-        <link rel="alternate" type="application/atom+xml" title="{{ cms.news.feed_title }} - Atom" href="/feed/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="{{ cms.news.feed_title }} - Atom"
+              href="/feed/atom.xml">
         <link href="/favicon.ico" rel="icon" type="image/x-icon">
         <link rel="apple-touch-icon" href="/favicon.png">
 
@@ -16,7 +17,8 @@
         <link href="/css/main.css" rel="stylesheet" media="screen">
 
         <script type="text/javascript">
-            initCallback = function() {}
+            initCallback = function () {
+            }
         </script>
     </head>
 
@@ -30,54 +32,76 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">{{ page_title }}</a>
+            <a style="overflow:hidden; max-width: 350px; white-space: nowrap; text-overflow: ellipsis;" class="navbar-brand" href="/">{{ page_title }}</a>
         </div>
 
         {% spaceless %}
             <div class="collapse navbar-collapse navbar-ex1-collapse" id="top-menu">
-            <ul class="nav navbar-nav pull-right" id="menu-all">
-                <li class="dropdown" id="menu-nav">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#menu-nav">
-                        <span class="icon-sitemap"></span>&nbsp;&nbsp;Навигация
-                        <b class="caret"></b>
-                    </a>
-                    <ul class="dropdown-menu">
-                        {% for menu_name, menu_data in menu_navigation %}
-                            <li>
-                                <a href="{{ menu_data.href }}">
-                                    {% if menu_data.icon %}<span class="icon-{{ menu_data.icon }}"></span>&nbsp;&nbsp;{% endif %}{{ menu_name }}
-                                </a>
-                            </li>
-                        {% endfor %}
-                    </ul>
-                </li>
-                {% if current_user.id %}
-                    <li class="dropdown" id="menu1">
-                        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
-                            {% if current_user.photo %}<img src="{{ current_user.photo }}" alt="" width="22" height="22"/>&nbsp;&nbsp;{% endif %}{% if current_user.full_name %}{{ current_user.full_name }}{% else %}{{ current_user.login }}{% endif %}
+                <form class="navbar-form navbar-left" role="search"
+                      onsubmit="window.location.href = '/look/' + encodeURI(document.getElementById('query').value); return false;">
+                    <div class="form-group">
+                        <input type="search" size="50" id="query" class="form-control"
+                               placeholder="Поиск по сайту"{% if filter_string %} value="{{ filter_string }}"{% endif %}>
+                    </div>
+                    <button type="submit" class="btn btn-default">Искать</button>
+                </form>
+                <ul class="nav navbar-nav navbar-right" id="menu-all">
+                    <li class="dropdown" id="menu-nav">
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#menu-nav">
+                            <span class="icon-sitemap"></span>&nbsp;&nbsp;Навигация
                             <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li>
-                                <a href="/profile/{{ current_user.id }}.html">
-                                    <span class="icon-user"></span>&nbsp;&nbsp;Мой профиль
-                                </a>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <a href="/logout?csrf_token={{ csrf_token }}&amp;rpath={{ uri }}">
-                                    <span class="icon-off"></span>&nbsp;&nbsp;Выход
-                                </a>
-                            </li>
+                            {% for menu_name, menu_data in menu_navigation %}
+                                <li>
+                                    <a href="{{ menu_data.href }}">
+                                        {% if menu_data.icon %}<span
+                                            class="icon-{{ menu_data.icon }}"></span>&nbsp;&nbsp;{% endif %}{{ menu_name }}
+                                    </a>
+                                </li>
+                            {% endfor %}
                         </ul>
                     </li>
-                {% endif %}
-            </ul>
+                    {% if current_user.id %}
+                        <li class="dropdown" id="menu1">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#menu1">
+                                {% if current_user.photo %}<img src="{{ current_user.photo }}" alt="" width="22"
+                                                                height="22"/>&nbsp;&nbsp;{% endif %}{% if current_user.full_name %}{{ current_user.full_name }}{% else %}{{ current_user.login }}{% endif %}
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="/profile/{{ current_user.id }}.html">
+                                        <span class="icon-user"></span>&nbsp;&nbsp;Мой профиль
+                                    </a>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <a href="/logout?csrf_token={{ csrf_token }}&amp;rpath={{ uri }}">
+                                        <span class="icon-off"></span>&nbsp;&nbsp;Выход
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    {% endif %}
+                </ul>
             </div>
         {% endspaceless %}
     </nav>
 
     <div class="container">
+        {% if filter_string %}
+            <div class="alert alert-info">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                Показаны наиболее релевантные результаты поиска по запросу <strong><i>{{ filter_string }}</i></strong>
+            </div>
+        {% endif %}
+        {% if flash_warning %}
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ flash_warning }}
+            </div>
+        {% endif %}
         {% block body %}{% endblock %}
     </div>
     <!-- /container -->

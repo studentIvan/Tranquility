@@ -8,14 +8,15 @@ class Site
     public static function news($matches)
     {
         $page = isset($matches[1]) ? abs($matches[1]) : 1;
-        $breakPagination = isset($matches[2]) ? $matches[2] : false;
+        $filter = isset($matches[2]) ? $matches[2] : false;
 
-        if (!$breakPagination) {
+        if (!$filter) {
             $perPage = Process::$context['cms']['news']['limit_per_page'];
             $pagination = Data::paginate(Database::count('news'), $perPage, $page);
             Process::$context['news_list'] = News::listing($pagination['offset'], $perPage);
         } else {
-            Process::$context['news_list'] = News::listing(0, 30);
+            Process::$context['filter_string'] = urldecode($filter);
+            Process::$context['news_list'] = News::listing(0, 10);
         }
 
         foreach (Process::$context['news_list'] as &$news) {
@@ -27,15 +28,23 @@ class Site
             }
         }
 
-        if (!$breakPagination) {
+        if (!$filter) {
             Process::$context['pagination'] = ($pagination['total_pages'] > 1) ? $pagination : false;
         }
     }
 
     public static function search($matches)
     {
-        News::setFilter($matches[1]);
-        self::news(array('', isset($matches[2]) ? $matches[2] : null, true));
+        if (isset($matches[1])) {
+            if (News::setFilter($matches[1])) {
+                self::news(array('', isset($matches[2]) ? $matches[2] : null, $matches[1]));
+            } else {
+                Process::$context['flash_warning'] = 'Слишком короткий поисковый запрос';
+                self::news(array());
+            }
+        } else {
+            throw new NotFoundException();
+        }
     }
 
     public static function socialDispatcher()

@@ -2,8 +2,7 @@
 class Admin
 {
     protected static $checkCSRFToken = false;
-    protected static $configuration = array();
-    protected static $models = array();
+    protected static $configuration, $models, $parts = array();
 
     /**
      * @param $matches
@@ -205,17 +204,17 @@ class Admin
             'name' => 'Главная', 'uri' => '', 'icon' => 'home',
         ));
 
-        include_once $thisDir . '/../crud/factoring/CRUDField.php';
-        include_once $thisDir . '/../crud/factoring/CRUDConfig.php';
-        include_once $thisDir . '/../crud/interfaces/CRUDDriverInterface.php';
-        include_once $thisDir . '/../crud/interfaces/CRUDObjectInterface.php';
+        include_once $thisDir . '/../admin.crud/factoring/CRUDField.php';
+        include_once $thisDir . '/../admin.crud/factoring/CRUDConfig.php';
+        include_once $thisDir . '/../admin.crud/interfaces/CRUDDriverInterface.php';
+        include_once $thisDir . '/../admin.crud/interfaces/CRUDObjectInterface.php';
 
         if (isset(self::$configuration['registered_crud'])
             and is_array(self::$configuration['registered_crud'])) {
             foreach (self::$configuration['registered_crud'] as $crud) {
                 if (!class_exists($crud)) {
-                    $targetUser = $thisDir . '/../../../crud/' . $crud . '.php';
-                    $targetStandard = $thisDir . '/../crud/' . $crud . '.php';
+                    $targetUser = $thisDir . '/../../../admin.crud/' . $crud . '.php';
+                    $targetStandard = $thisDir . '/../admin.crud/' . $crud . '.php';
                     if (file_exists($targetUser)) {
                         include_once $targetUser;
                     } elseif (file_exists($targetStandard)) {
@@ -244,6 +243,42 @@ class Admin
             }
         }
 
+        include_once $thisDir . '/../admin.partitions/interfaces/PartObjectInterface.php';
+
+        if (isset(self::$configuration['registered_parts'])
+            and is_array(self::$configuration['registered_parts'])) {
+            foreach (self::$configuration['registered_parts'] as $part) {
+                if (!class_exists($part)) {
+                    $targetUser = $thisDir . '/../../../admin.partitions/' . $part . '.php';
+                    $targetStandard = $thisDir . '/../admin.partitions/' . $part . '.php';
+                    if (file_exists($targetUser)) {
+                        include_once $targetUser;
+                    } elseif (file_exists($targetStandard)) {
+                        include_once $targetStandard;
+                    } else {
+                        throw new Exception("Part $part not exists");
+                    }
+                }
+
+                try {
+                    /**
+                     * @var $p PartObjectInterface
+                     */
+                    $p = new $part();
+                } catch (Exception $e) {
+                    continue;
+                }
+
+                if (($p instanceof PartObjectInterface) === false)
+                    throw new Exception("Part $p is not instance of PartObjectInterface");
+
+                self::$parts[] = $p;
+                $menuInfo = $p->getInfo();
+                if ($menuInfo !== false)
+                    Process::$context['admin_menu_elements'][] = $menuInfo;
+            }
+        }
+
         if ($partition === 'ajax') {
             self::ajax();
         }
@@ -266,7 +301,11 @@ class Admin
         }
 
         try {
-            Process::$context['container'] = self::getContainer($partition, $action);
+            if (strtolower(substr($partition, 0, 4)) !== 'part') {
+                Process::$context['container'] = self::getContainer($partition, $action);
+            } else {
+                Process::$context['container'] = self::getApplicationContainer($partition, $action);
+            }
         } catch (PDOException $e) {
             Process::$context['flash_error'] = $e->getMessage();
             Process::$context['container'] = false;
@@ -276,6 +315,26 @@ class Admin
         $template = (Process::$context['container']['type'] == 'form')
             ? 'admin/form.html.twig' : 'admin/admin.html.twig';
         Process::getTwigInstance()->display($template, Process::$context);
+    }
+
+    public static function getApplicationContainer($partition, $action, $partsList = null)
+    {
+        $partsList = (!$partsList) ? self::$parts : $partsList;
+
+        foreach ($partsList as $p) {
+            /**
+             * @var $p PartObjectInterface
+             */
+            if ($p->getMenuURI() === $partition) {
+                Process::$context['page_title'] = $p->getMenuName();
+                if (empty($action)) $action = 'main';
+                if (method_exists($p, $action)) {
+                    return array('type' => 'text', 'text' => $p->$action());
+                } else {
+                    throw new NotFoundException();
+                }
+            }
+        }
     }
 
     /**
@@ -383,6 +442,7 @@ class Admin
                         } else {
                             throw new ForbiddenException('selected partition read-only');
                         }
+                        break;
                     }
                 }
                 if (!$partWasFinded) {
