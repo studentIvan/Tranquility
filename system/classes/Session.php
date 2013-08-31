@@ -140,9 +140,9 @@ class Session
         /**
          * Referer register
          */
-        if (isset(self::$options['referrers']) and self::$options['referrers']
+        if (isset(self::$options['referrers']) and (self::$options['referrers'] > 0)
             and isset($_SERVER['HTTP_REFERER']) and !empty($_SERVER['HTTP_REFERER'])
-            and filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL)
+            and (filter_var($_SERVER['HTTP_REFERER'], FILTER_VALIDATE_URL) == true)
             and (parse_url($_SERVER['HTTP_REFERER'], PHP_URL_HOST) != $_SERVER['HTTP_HOST'])
         ) {
             $ref = substr(str_replace(array('<', '>'), '', $_SERVER['HTTP_REFERER']), 0, 200);
