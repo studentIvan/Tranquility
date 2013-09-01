@@ -24,7 +24,7 @@
         {% endif %}
     </span>
     {% if container.type == 'text' %}
-        {{ container.text }}
+        {{ container.text|raw }}
     {% elseif container.type == 'page' %}
         {% include 'admin/'~container.page~'.html.twig' %}
     {% elseif container.type == 'listing' %}

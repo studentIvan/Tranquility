@@ -7,7 +7,7 @@
         "bot_role": 5,
         "guest_role": 4,
         "lifetime_hours": 1,
-        "referrers": 4,
+        "referrers": "1 MONTH",
         "garbage_auto_dump": true
     },
     "cms": {

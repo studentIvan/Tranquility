@@ -12,15 +12,15 @@
                     </div>
                 {% endif %}
                 <div class="form-group">
-                    Вы будете представлены как
+                    <span>Вы будете представлены как</span>
                     <img src="{{ current_user.photo ? current_user.photo : "/img/anonymous.png" }}"
-                         id="current-user-comment-photo" alt="" height="60px" align="left">
+                         id="current-user-comment-photo" alt="" height="60px" align="left" class="hidden-xs">
                     <span id="current-user-comment-nick">
                         {{ current_user.display_name }}
                     </span>
                     {% if not current_user.id %}
                         {% include 'widgets/news.comments.social.auth.html.twig' %}
-                        <div id="current-user-description"><i>подозрительное анонимное сообщение</i></div>
+                        <div id="current-user-description" class="hidden-xs"><i>подозрительное анонимное сообщение</i></div>
                     {% else %}
                         {% if current_user.role == vk.user_role %}
                             <div id="current-user-description">
@@ -60,15 +60,22 @@
                 </div>
                 {% endif %}
                 <div class="form-group">
-                    <div class="btn-group">
+                    <span class="hidden-xs">
+                        <div class="btn-group">
+                            <button type="submit" role="submit" class="btn btn-default">
+                                <span class="icon-share"></span>&nbsp;Публикация
+                            </button>
+                            <button type="button" onclick="previewCommentToggle(this)" data-state="form" role="button"
+                                    class="btn btn-default">
+                                <span class="icon-eye-open"></span>&nbsp;Предпросмотр
+                            </button>
+                        </div>
+                    </span>
+                    <span class="visible-xs">
                         <button type="submit" role="submit" class="btn btn-default">
                             <span class="icon-share"></span>&nbsp;Публикация
                         </button>
-                        <button type="button" onclick="previewCommentToggle(this)" data-state="form" role="button"
-                                class="btn btn-default">
-                            <span class="icon-eye-open"></span>&nbsp;Предпросмотр
-                        </button>
-                    </div>
+                    </span>
                 </div>
             </fieldset>
         </form>

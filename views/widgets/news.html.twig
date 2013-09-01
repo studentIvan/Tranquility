@@ -14,7 +14,27 @@
                 <div class="panel-body">
                     {{ item.content|raw }}
                 </div>
-                <div class="panel-body panel-tags">
+                <div class="panel-body panel-tags visible-xs">
+                    {% if item.tags %}
+                        <span>{{ item.tags|raw }}</span><br><br>
+                    {% endif %}
+                    <span class="icon-user"></span>
+                    <a href="/profile/{{ item.poster_id }}.html">
+                        {{ item.poster_login }}
+                    </a>
+
+                    <span class="dtl10n" style="padding-right: 2px;">{{ item.created_at }}</span>
+                    <br>
+                    <a href="{{ news_link }}#comment-form">
+                        <span class="icon-comments"></span>
+                        {% if item.comments_total %}
+                            {{ (item.comments_total ~ " комментари")|plural("й", "я", "ев") }}
+                        {% else %}
+                            0 комментариев
+                        {% endif %}
+                    </a>
+                </div>
+                <div class="panel-body panel-tags hidden-xs">
                     {% if item.tags %}
                         <span class="pull-right">{{ item.tags|raw }}</span>
                     {% endif %}
@@ -62,7 +82,14 @@
         <div class="page-header">
             <h1>{{ page_title }}</h1>
         </div>
-        <div class="form-group panel-tags">
+        <div class="form-group panel-tags visible-xs">
+            <span class="icon-user"></span>
+            <a href="/profile/{{ news_poster_id }}.html">
+                {{ news_poster_login }}
+            </a>
+            <span class="dtl10n">{{ news_created_at }}</span>
+        </div>
+        <div class="form-group panel-tags hidden-xs">
             {% if news_tags %}
                 <span class="pull-right">{{ news_tags|raw }}</span>
             {% endif %}
@@ -75,32 +102,62 @@
             <span class="dtl10n">{{ news_created_at }}</span>
         </div>
         <div class="form-group">{{ news_content|raw }}</div>
-        <hr>
-        <div class="btn-group">
-            <a class="btn btn-default"
-               href="https://twitter.com/intent/tweet?text={{ page_title|url_encode }}+http://{{ http_host }}{{ uri }}"
-               target="_blank">
-                <span class="icon-twitter-sign"></span> поделиться в twitter
-            </a>
-            <a id="btn-share-vk"
-               class="btn {% if current_user.role == vk.user_role %}btn-vk{% else %}btn-default{% endif %}"
-               href="https://vk.com/share.php?url=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}"
-               onclick="window.open(this.href, 'Опубликовать ссылку во Вконтакте', 'width=800,height=300'); return false">
-                <span class="icon-vk"></span> поделиться вконтакте
-            </a>
-            <a id="btn-share-facebook"
-               class="btn {% if current_user.role == fb.user_role %}btn-facebook{% else %}btn-default{% endif %}"
-               href="https://www.facebook.com/sharer/sharer.php?u=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}"
-               onclick="window.open(this.href, 'Опубликовать ссылку в Facebook', 'width=640,height=436,toolbar=0,status=0'); return false">
-                <span class="icon-facebook-sign"></span> поделиться в facebook
-            </a>
-            <a class="btn btn-default"
-               href="https://plus.google.com/share?url=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}"
-               onclick="window.open(this.href, 'Опубликовать ссылку в Google Plus', 'width=800,height=300'); return false">
-                <span class="icon-google-plus-sign"></span> поделиться в google+
-            </a>
-        </div>
-        <hr>
+        {% if news_tags %}
+            <span class="visible-xs">{{ news_tags|raw }}<br><br></span>
+        {% endif %}
+        <span class="hidden-xs">
+            <hr>
+            <div class="btn-group">
+                <a class="btn btn-default"
+                   href="https://twitter.com/intent/tweet?text={{ page_title|url_encode }}+http://{{ http_host }}{{ uri }}"
+                   target="_blank">
+                    <span class="icon-twitter-sign"></span> поделиться в twitter
+                </a>
+                <a id="btn-share-vk"
+                   class="btn {% if current_user.role == vk.user_role %}btn-vk{% else %}btn-default{% endif %}"
+                   href="https://vk.com/share.php?url=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}"
+                   onclick="window.open(this.href, 'Опубликовать ссылку во Вконтакте', 'width=800,height=300'); return false">
+                    <span class="icon-vk"></span> поделиться вконтакте
+                </a>
+                <a id="btn-share-facebook"
+                   class="btn {% if current_user.role == fb.user_role %}btn-facebook{% else %}btn-default{% endif %}"
+                   href="https://www.facebook.com/sharer/sharer.php?u=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}"
+                   onclick="window.open(this.href, 'Опубликовать ссылку в Facebook', 'width=640,height=436,toolbar=0,status=0'); return false">
+                    <span class="icon-facebook-sign"></span> поделиться в facebook
+                </a>
+                <a class="btn btn-default"
+                   href="https://plus.google.com/share?url=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}"
+                   onclick="window.open(this.href, 'Опубликовать ссылку в Google Plus', 'width=800,height=300'); return false">
+                    <span class="icon-google-plus-sign"></span> поделиться в google+
+                </a>
+            </div>
+            <hr>
+        </span>
+        <span class="visible-xs">
+            <div class="btn-group">
+                <a class="btn btn-default"
+                   href="https://twitter.com/intent/tweet?text={{ page_title|url_encode }}+http://{{ http_host }}{{ uri }}"
+                   target="_blank">
+                    <span class="icon-twitter-sign"></span>
+                </a>
+                <a class="btn {% if current_user.role == vk.user_role %}btn-vk{% else %}btn-default{% endif %}"
+                   href="https://vk.com/share.php?url=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}"
+                   onclick="window.open(this.href, 'Опубликовать ссылку во Вконтакте', 'width=800,height=300'); return false">
+                    <span class="icon-vk"></span>
+                </a>
+                <a class="btn {% if current_user.role == fb.user_role %}btn-facebook{% else %}btn-default{% endif %}"
+                   href="https://www.facebook.com/sharer/sharer.php?u=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}"
+                   onclick="window.open(this.href, 'Опубликовать ссылку в Facebook', 'width=640,height=436,toolbar=0,status=0'); return false">
+                    <span class="icon-facebook-sign"></span>
+                </a>
+                <a class="btn btn-default"
+                   href="https://plus.google.com/share?url=http://{{ http_host }}{{ uri }}&amp;title={{ page_title|url_encode }}"
+                   onclick="window.open(this.href, 'Опубликовать ссылку в Google Plus', 'width=800,height=300'); return false">
+                    <span class="icon-google-plus-sign"></span>
+                </a>
+            </div>
+            <br><br>
+        </span>
         {% include 'widgets/news.comments.html.twig' %}
     </div>
     <div>&nbsp;</div>

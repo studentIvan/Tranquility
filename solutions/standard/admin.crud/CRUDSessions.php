@@ -10,7 +10,7 @@ class CRUDSessions extends CRUDObjectInterface
         $config->setTableName('sessions');
         $config->setDiffField('token');
         $config->setOrderByField('uptime');
-        $config->setMenuIcon('dashboard');
+        $config->setMenuIcon('coffee');
         $config->setOnlyDisplay(true);
 
         $config->setFields(array(

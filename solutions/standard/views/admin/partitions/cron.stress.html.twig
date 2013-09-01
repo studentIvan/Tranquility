@@ -1,0 +1,31 @@
+<div class="form-group">
+    <h4>Задания CRON находятся в файле <strong>production/cronjob.php</strong></h4>
+    <p>Файл добавляется в задачи <a href="http://www.google.com/search?q=cron" target="_blank">CRON</a> вручную и
+        запускается автоматически, по указанному вами расписанию.
+    Вы можете запустить его вручную при помощи данного интерфейса. Также вы можете ознакомиться непосредственно
+    с содержимым данного файла.</p>
+
+    <button class="btn btn-danger" onclick="cronStress(this)">
+        <span class="icon-terminal"></span> Выполнить задания CRON сейчас
+    </button>
+
+    <button type="button" class="btn btn-info collapse" data-toggle="collapse" data-target="#demo">
+        <span class="icon-fire-extinguisher"></span> Показать код <strong>production/cronjob.php</strong>
+    </button>
+
+    <div id="demo" class="collapse in">
+        <code><pre>{{ cron_data|escape }}</pre></code>
+    </div>
+</div>
+<script type="text/javascript">
+    function cronStress(holdBtn) {
+        if (window.confirm("Вы уверены?")) {
+            $(holdBtn).addClass('disabled');
+            $.get("{{ panel_base_uri }}/{{ admin_part }}/stress?csrf_token={{ csrf_token }}")
+                    .done(function (data) {
+                        $("#top-of-container").html(data);
+                        $(holdBtn).removeClass('disabled');
+                    });
+        }
+    }
+</script>

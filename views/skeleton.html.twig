@@ -7,8 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="description" content="{{ cms.news.feed_description }}">
         <link rel="alternate" type="application/rss+xml" title="{{ cms.news.feed_title }} - RSS" href="/feed/rss.xml">
-        <link rel="alternate" type="application/atom+xml" title="{{ cms.news.feed_title }} - Atom"
-              href="/feed/atom.xml">
+        <link rel="alternate" type="application/atom+xml" title="{{ cms.news.feed_title }} - Atom" href="/feed/atom.xml">
         <link href="/favicon.ico" rel="icon" type="image/x-icon">
         <link rel="apple-touch-icon" href="/favicon.png">
 
@@ -37,13 +36,19 @@
 
         {% spaceless %}
             <div class="collapse navbar-collapse navbar-ex1-collapse" id="top-menu">
-                <form class="navbar-form navbar-left" role="search"
-                      onsubmit="window.location.href = '/look/' + encodeURI(document.getElementById('query').value); return false;">
+                <form class="hidden-xs navbar-form navbar-left" role="search" onsubmit="return searchFormSubmit('lg')">
                     <div class="form-group">
-                        <input type="search" size="50" id="query" class="form-control"
+                        <input type="search" id="query-lg" class="form-control" size="50"
                                placeholder="Поиск по сайту"{% if filter_string %} value="{{ filter_string }}"{% endif %}>
                     </div>
                     <button type="submit" class="btn btn-default">Искать</button>
+                </form>
+                <form class="visible-xs navbar-form navbar-left" role="search" onsubmit="return searchFormSubmit('xs')">
+                    <div class="form-group" style="display: inline-block;">
+                        <input type="search" id="query-xs" class="form-control" style="display: inline-block;"
+                               placeholder="Поиск по сайту"{% if filter_string %} value="{{ filter_string }}"{% endif %}>
+                    </div>
+                    <button type="submit" class="btn btn-default" style="display: inline-block;">Искать</button>
                 </form>
                 <ul class="nav navbar-nav navbar-right" id="menu-all">
                     <li class="dropdown" id="menu-nav">
@@ -116,7 +121,13 @@
             });
             $('.with-tooltip').tooltip();
             initCallback();
-        })
+        });
+
+        function searchFormSubmit(key) {
+            var query = document.getElementById('query-' + key).value;
+            window.location.href = '/look/' + encodeURI(query);
+            return false;
+        }
     </script>
     </body>
     </html>

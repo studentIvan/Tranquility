@@ -1,0 +1,41 @@
+<ul class="nav nav-tabs tabbed">
+    <li class="active">
+        <a href="#set-dynamical" onclick="tabClick(this)">
+            <span class="icon-cog"></span> Основные
+        </a>
+    </li>
+    <li>
+        <a href="#set-mailer" onclick="tabClick(this)">
+            <span class="icon-mail-forward"></span> Рассылка
+        </a>
+    </li>
+    <li>
+        <a href="#set-navigation" onclick="tabClick(this)">
+            <span class="icon-sitemap"></span> Навигация
+        </a>
+    </li>
+    <li>
+        <a href="#set-admin" onclick="tabClick(this)">
+            <span class="icon-dashboard"></span> Админ-панель
+        </a>
+    </li>
+    <li>
+        <a href="#set-base" onclick="tabClick(this)" style="color: darkred">
+            <span class="icon-exclamation-sign"></span> Системные
+        </a>
+    </li>
+</ul>
+
+<div class="tab-content">
+    <div class="tab-pane active" id="set-dynamical">...</div>
+    <div class="tab-pane" id="set-mailer">...</div>
+    <div class="tab-pane" id="set-navigation">...</div>
+    <div class="tab-pane" id="set-admin">...</div>
+    <div class="tab-pane" id="set-base">...</div>
+</div>
+
+<script type="text/javascript">
+    function tabClick(element) {
+        $(element).tab('show');
+    }
+</script>
