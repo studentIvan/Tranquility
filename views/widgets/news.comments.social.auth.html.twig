@@ -78,7 +78,7 @@
                         var photo = (data.data.url) ? data.data.url : '/img/anonymous.png';
                         var displayNick = profile.first_name + ' ' + profile.last_name;
                         $('#current-user-comment-photo').attr('src', photo);
-                        $('#current-user-comment-nick').html(displayNick);
+                        $('#current-user-comment-nick').html('&nbsp;' + displayNick);
                         $('#current-user-description').html(
                                 '<a target="_blank" href="' + profile.link + '">' +
                                         '<span class="icon-facebook-sign"></span> ' + profile.username +
@@ -152,7 +152,7 @@
                         var vk_profile = r.response[0];
                         var displayNick = vk_profile.first_name + ' ' + vk_profile.last_name;
                         $('#current-user-comment-photo').attr('src', vk_profile.photo_100);
-                        $('#current-user-comment-nick').html(displayNick);
+                        $('#current-user-comment-nick').html('&nbsp;' + displayNick);
                         $('#current-user-description').html(
                                 '<a target="_blank" href="http://vk.com/' + vk_profile.screen_name + '">' +
                                         '<span class="icon-vk"></span> ' + vk_profile.screen_name +

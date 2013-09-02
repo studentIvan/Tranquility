@@ -244,7 +244,7 @@ CREATE TABLE `users` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `login` (`login`),
   KEY `password` (`password`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -253,7 +253,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Admin','48fa05e2e7c221665db8c9d8f6980919',1,'2012-04-16 00:00:00');
+INSERT INTO `users` VALUES (1,'Admin','48fa05e2e7c221665db8c9d8f6980919',1,'2012-04-16 00:00:00'),(11,'fb_ivan.tranquility','312a05a301a0b0117744b4d3d898cead',7,'2013-09-02 23:50:48'),(12,'vk_dr.tranquility','c4f67c2920885fa9c314ff1dfc7c9c9b',6,'2013-09-02 23:51:07');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -289,7 +289,7 @@ CREATE TABLE `users_data` (
 
 LOCK TABLES `users_data` WRITE;
 /*!40000 ALTER TABLE `users_data` DISABLE KEYS */;
-INSERT INTO `users_data` VALUES (1,'Administrator','Administrator',NULL,'/img/admin.png','m',NULL,NULL);
+INSERT INTO `users_data` VALUES (1,'Administrator','Administrator',NULL,'/img/admin.png','m',NULL,NULL),(11,'','Ivan Tranquility',NULL,'http://profile.ak.fbcdn.net/hprofile-ak-frc3/c28.10.125.125/s100x100/1239464_1387534991475212_148297301_a.jpg','m',NULL,NULL),(12,'','Ivan Maslov',NULL,'http://cs403329.vk.me/v403329181/8b9b/Z8lW6JCeEmU.jpg','m',NULL,NULL);
 /*!40000 ALTER TABLE `users_data` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -326,4 +326,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-09-01 23:49:38
+-- Dump completed on 2013-09-02 23:59:35
