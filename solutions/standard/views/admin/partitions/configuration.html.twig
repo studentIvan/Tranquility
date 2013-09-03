@@ -29,7 +29,8 @@
 <div class="tab-content">
     <div class="tab-pane active" id="set-dynamical">
         <br>
-        <form class="form-horizontal" role="form" onsubmit="return false;">
+        <form class="form-horizontal" role="form" method="POST" action="{{ panel_base_uri }}/{{ admin_part }}/save?csrf_token={{ csrf_token }}">
+            <input type="hidden" name="f_config" value="dynamical">
             <div class="form-group">
                 <label for="input_server_timezone" class="col-lg-2 control-label">Серверная временная зона</label>
                 <div class="col-lg-10">
@@ -153,21 +154,24 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="input__cms____news____vk__app_id" class="col-lg-2 control-label">VK Application ID</label>
+                <label for="input__cms____social_auth____vk__app_id" class="col-lg-2 control-label">VK Application ID</label>
                 <div class="col-lg-10">
-                    <input type="text" class="form-control" id="input__cms____news____vk__app_id" name="input__cms____news____vk__app_id" value="{{ settings.cms.social_auth.vk.app_id }}">
+                    <input type="text" class="form-control" id="input__cms____social_auth____vk__app_id"
+                           name="input__cms____social_auth____vk__app_id" value="{{ settings.cms.social_auth.vk.app_id }}">
                 </div>
             </div>
             <div class="form-group">
-                <label for="input__cms____news____vk__app_secure_key" class="col-lg-2 control-label">VK Application Secret</label>
+                <label for="input__cms____social_auth____vk__app_secure_key" class="col-lg-2 control-label">VK Application Secret</label>
                 <div class="col-lg-10">
-                    <input type="text" class="form-control" id="input__cms____news____vk__app_secure_key" name="input__cms____news____vk__app_secure_key" value="{{ settings.cms.social_auth.vk.app_secure_key }}">
+                    <input type="text" class="form-control" id="input__cms____social_auth____vk__app_secure_key"
+                           name="input__cms____social_auth____vk__app_secure_key" value="{{ settings.cms.social_auth.vk.app_secure_key }}">
                 </div>
             </div>
             <div class="form-group">
-                <label for="input__cms____news____vk__user_role" class="col-lg-2 control-label">Роль пользователей VK</label>
+                <label for="input__cms____social_auth____vk__user_role" class="col-lg-2 control-label">Роль пользователей VK</label>
                 <div class="col-lg-10">
-                    <select class="form-control" id="input__cms____news____vk__user_role" name="input__cms____news____vk__user_role">
+                    <select class="form-control" id="input__cms____social_auth____vk__user_role"
+                            name="input__cms____social_auth____vk__user_role">
                         {% for role in roles_list %}
                             <option value="{{ role.id }}" {% if settings.cms.social_auth.vk.user_role == role.id %}selected="selected"{% endif %}>{{ role.title }}</option>
                         {% endfor %}
@@ -175,25 +179,35 @@
                 </div>
             </div>
             <div class="form-group">
-                <label for="input__cms____news____fb__app_id" class="col-lg-2 control-label">Facebook Application ID</label>
+                <label for="input__cms____social_auth____fb__app_id" class="col-lg-2 control-label">Facebook Application ID</label>
                 <div class="col-lg-10">
-                    <input type="text" class="form-control" id="input__cms____news____fb__app_id" name="input__cms____news____fb__app_id" value="{{ settings.cms.social_auth.fb.app_id }}">
+                    <input type="text" class="form-control" id="input__cms____social_auth____fb__app_id"
+                           name="input__cms____social_auth____fb__app_id" value="{{ settings.cms.social_auth.fb.app_id }}">
                 </div>
             </div>
             <div class="form-group">
-                <label for="input__cms____news____fb__app_secret" class="col-lg-2 control-label">Facebook Application Secret</label>
+                <label for="input__cms____social_auth____fb__app_secret" class="col-lg-2 control-label">Facebook Application Secret</label>
                 <div class="col-lg-10">
-                    <input type="text" class="form-control" id="input__cms____news____fb__app_secret" name="input__cms____news____fb__app_secret" value="{{ settings.cms.social_auth.fb.app_secret }}">
+                    <input type="text" class="form-control" id="input__cms____social_auth____fb__app_secret"
+                           name="input__cms____social_auth____fb__app_secret" value="{{ settings.cms.social_auth.fb.app_secret }}">
                 </div>
             </div>
             <div class="form-group">
-                <label for="input__cms____news____vk__user_role" class="col-lg-2 control-label">Роль пользователей Facebook</label>
+                <label for="input__cms____social_auth____fb__user_role" class="col-lg-2 control-label">Роль пользователей Facebook</label>
                 <div class="col-lg-10">
-                    <select class="form-control" id="input__cms____news____fb__user_role" name="input__cms____news____fb__user_role">
+                    <select class="form-control" id="input__cms____social_auth____fb__user_role"
+                            name="input__cms____social_auth____fb__user_role">
                         {% for role in roles_list %}
                             <option value="{{ role.id }}" {% if settings.cms.social_auth.fb.user_role == role.id %}selected="selected"{% endif %}>{{ role.title }}</option>
                         {% endfor %}
                     </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-offset-2 col-lg-10">
+                    <button type="submit" class="btn btn-primary">
+                        <span class="icon-save"></span> Сохранить изменения
+                    </button>
                 </div>
             </div>
             <br><br>

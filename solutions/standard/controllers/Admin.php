@@ -318,7 +318,14 @@ class Admin
         Process::getTwigInstance()->display($template, Process::$context);
     }
 
-    public static function getApplicationContainer($partition, $action, $partsList = null)
+    /**
+     * @param string $application
+     * @param string $action
+     * @param null|array $partsList
+     * @return array
+     * @throws NotFoundException
+     */
+    public static function getApplicationContainer($application, $action, $partsList = null)
     {
         $partsList = (!$partsList) ? self::$parts : $partsList;
 
@@ -326,7 +333,7 @@ class Admin
             /**
              * @var $p PartObjectInterface
              */
-            if ($p->getMenuURI() === $partition) {
+            if ($p->getMenuURI() === $application) {
                 Process::$context['page_title'] = $p->getMenuName();
                 if (empty($action)) $action = 'main';
                 if (method_exists($p, $action)) {
