@@ -53,7 +53,7 @@ CREATE TABLE `news` (
   `created_at` datetime NOT NULL,
   `posted_by` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -79,10 +79,10 @@ CREATE TABLE `news_comments` (
   `message` text NOT NULL,
   `author_id` int(10) unsigned DEFAULT NULL,
   `posted_at` datetime NOT NULL,
-  `ip` int(11) NOT NULL,
+  `ip` int(10) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `news_id` (`news_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -91,6 +91,7 @@ CREATE TABLE `news_comments` (
 
 LOCK TABLES `news_comments` WRITE;
 /*!40000 ALTER TABLE `news_comments` DISABLE KEYS */;
+INSERT INTO `news_comments` VALUES (1,1,'do it',1,'2013-09-06 13:09:17',2130706433);
 /*!40000 ALTER TABLE `news_comments` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -186,7 +187,7 @@ CREATE TABLE `tags` (
   `name` varchar(60) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -326,4 +327,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2013-09-03 13:48:20
+-- Dump completed on 2013-09-08  3:57:15

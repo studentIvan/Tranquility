@@ -12,7 +12,7 @@ class Comments
         if ($statement->rowCount() > 0) {
             $lastPosted = $statement->fetchColumn();
             $period = time() - strtotime($lastPosted);
-            if ($period < 10) {
+            if ($period < 30) {
                 return false;
             }
         }

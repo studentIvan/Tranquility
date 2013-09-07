@@ -175,8 +175,9 @@ class Site
                 }
                 if (Comments::create($newsId, $commentWhichWasPosted)) {
                     Process::$context['last_comment_deep'] = null;
+					Process::redirect(Process::$context['uri']);
                 } else {
-                    throw new InvalidArgumentException('Разрешено оставлять не более 1 комментария за 10 секунд');
+                    throw new InvalidArgumentException('Разрешено оставлять не более 1 комментария за 30 секунд');
                 }
             } catch (InvalidArgumentException $e) {
                 Process::$context['flash_error'] = $e->getMessage();
