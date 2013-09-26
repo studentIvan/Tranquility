@@ -730,9 +730,10 @@ class CRUDMySQLDriver extends CRUDDriverInterface
                 } else {
                     $fType = strtolower($fields[$key]['type']);
 
-                    if ($fType == 'password') {
-                        /*\***** !DO PASSWORD! *****\*/
+                    if ($fType == 'password' and !empty($value)) { // fix #22
                         $value = Security::getDigest($value);
+                    } elseif ($fType == 'password' and empty($value)) {
+                        continue;
                     }
 
                     if (($fType == 'date' or $fType == 'datetime'

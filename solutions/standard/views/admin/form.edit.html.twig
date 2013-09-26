@@ -39,9 +39,7 @@
                             </select>
                         {% elseif field_data.type == 'password' %}
                             <input type="password" name="pf-{{ field }}" class="form-control"
-                                   id="edit-field-{{ field }}"{% if field_data.placeholder %}
-                                placeholder="{{ field_data.placeholder }}"
-                                    {% endif %}>
+                                   id="edit-field-{{ field }}" placeholder="{{ field_data.placeholder ? field_data.placeholder : 'Не трогайте поле, чтобы оставить без изменений' }}">
                         {% elseif field_data.type == 'email' %}
                             <input type="email" name="pf-{{ field }}" class="form-control"
                                    id="edit-field-{{ field }}" placeholder="user@example.com" autocapitalize="off"
