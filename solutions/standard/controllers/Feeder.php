@@ -13,6 +13,10 @@ class Feeder
                 header("Content-Type: application/atom+xml; charset=utf-8");
                 echo self::getAtom();
                 break;
+            case 'sitemap':
+                header("Content-Type: application/xml; charset=utf-8");
+                echo self::getSiteMap();
+                break;
             default:
                 throw new NotFoundException();
         }
@@ -117,6 +121,31 @@ class Feeder
         $entry->appendChild( $document->createElement('updated', $newsElementPubDate) );
         $entry->appendChild( $document->createElement('summary', $newsElementContent) );
         $feed->appendChild($entry);
+
+        return $document->saveXML();
+    }
+
+    public static function getSiteMap($domain = false)
+    {
+        $domain = $domain ? $domain : $_SERVER['HTTP_HOST'];
+        $document = new DOMDocument('1.0', 'utf-8');
+        $document->formatOutput = true;
+        $urlSet = $document->createElement('urlset');
+        $urlSet->setAttribute('xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9');
+        $document->appendChild($urlSet);
+
+        $news = News::listing(0, 100);
+
+        foreach ($news as $newsElement)
+        {
+            $newsElementLink = 'http://' . $domain . '/' .
+                $newsElement['id'] . '-' . Data::titleToLink($newsElement['title']) . '.html';
+
+            $item = $document->createElement('url');
+            $item->appendChild( $document->createElement('loc', $newsElementLink) );
+            $item->appendChild( $document->createElement('priority', '0.9') );
+            $urlSet->appendChild($item);
+        }
 
         return $document->saveXML();
     }
