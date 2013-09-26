@@ -10,7 +10,19 @@
 $__DIR__ = dirname(__FILE__);
 $base = json_decode(file_get_contents($__DIR__ . '/../config/base.json'), true);
 $additional = json_decode(file_get_contents($__DIR__ . '/../config/dynamical.json'), true);
-$config = array_merge($base, $additional);
+
+/** костыль от 26.09.2013 */
+if (is_array($additional) and is_array($base)) {
+    $config = array_merge($base, $additional);
+} elseif (!is_array($additional) and is_array($base)) {
+    $config = $base;
+} elseif (is_array($additional) and !is_array($base)) {
+    $config = $additional;
+} else {
+    echo "Fatal error";
+    exit;
+}
+
 date_default_timezone_set($config['server_timezone']);
 
 define('STARTED_AT', microtime(true));

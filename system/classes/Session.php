@@ -33,7 +33,7 @@ class Session
 
         list($token, $uid, $pass, $signature) = Cookies::get(array('t', 'u', 'p', 's'));
 
-        if ($token and $signature == Security::getDigest(array($token, $uid, $pass))) {
+        if ($token and $signature === Security::getDigest(array($token, $uid, $pass))) {
             $pdo = Database::getInstance();
             $pdo->query("UPDATE sessions SET uptime=NOW() WHERE token='$token'");
             $result = $pdo->query("SELECT role FROM sessions WHERE token='$token'");
@@ -59,7 +59,7 @@ class Session
 
     public static function isAuth()
     {
-        return (self::$uid !== 0);
+        return (intval(self::$uid) !== 0); // fix #21
     }
 
     protected static function restore($token, $uid, $pass)
@@ -128,6 +128,13 @@ class Session
         $uid = (is_null($uid)) ? '0' : $uid;
         $pass = (is_null($pass)) ? '0' : $pass;
 
+        /** fix #21 */
+        if (!is_null($uid)) {
+            self::$uid = $uid;
+        } else {
+            $uid = '0';
+        }
+
         Cookies::set(array(
             't' => $token,
             'u' => $uid,
@@ -136,6 +143,10 @@ class Session
                 array($token, $uid, $pass)
             ),
         ));
+
+        if (class_exists('Process') and class_exists('Security') and isset($_SERVER['REMOTE_ADDR'])) { // fix #21
+            Process::$context['csrf_token'] = Security::getCsrfToken();
+        }
 
         /**
          * Referer register
@@ -178,17 +189,6 @@ class Session
         return false;
     }
 
-
-    public static function setStorageData($key, $value)
-    {
-
-    }
-
-    public static function getStorageData($key)
-    {
-
-    }
-
     /**
      * @static
      * @param string $key
@@ -211,11 +211,6 @@ class Session
             $decoded = base64_decode($cookie);
             $control = substr($decoded, -32, 32);
             $value = str_replace($control, '', $decoded);
-
-            echo $key . '<br>';
-            echo $control . '<br>';
-            echo Security::getDigest(array($key, $value));
-            echo '<hr>';
 
             return ($control !== Security::getDigest(
                     array($key, $value))) ? false : $value;

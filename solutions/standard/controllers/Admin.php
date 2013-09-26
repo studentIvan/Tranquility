@@ -56,7 +56,6 @@ class Admin
                         throw new AuthException('role error');
                     } else {
                         afterSessionStartedCallback();
-                        Process::redirect(Process::$context['uri'] . '?up=' . date('H_i_s'));
                         return true;
                     }
                 } catch (Exception $e) {
