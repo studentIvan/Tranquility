@@ -171,7 +171,7 @@ class Session
 
     protected static function isBot($agent)
     {
-        $bots = array('yandex', 'yadirect', 'google', 'rambler', 'yahoo', 'msn', 'alexa', 'archiver', 'dotnet');
+        $bots = array('yandex', 'yadirect', 'google', 'rambler', 'yahoo', 'msn', 'alexa', 'archiver', 'dotnet', 'hosttracker', 'screenshot');
         $block = array('xrumer', 'xpymep', 'xspider');
 
         foreach ($block as $b) {
