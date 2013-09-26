@@ -24,7 +24,7 @@ class CRUDReferrers extends CRUDObjectInterface
             ),
             'url' => array(
                 CRUDField::PARAM_TYPE => CRUDField::TYPE_STRING,
-                CRUDField::PARAM_MODIFY => '<div style="max-width: 150px; overflow:hidden; white-space: nowrap; ' . 
+                CRUDField::PARAM_MODIFY => '<div style="max-width: 300px; overflow:hidden; white-space: nowrap; ' . 
                     'text-overflow: ellipsis;">переходы по ссылке: <a href="http://anonym.to/?$1" target="_blank">$1</a></div>',
                 CRUDField::PARAM_DISPLAY => true,
             ),
