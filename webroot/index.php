@@ -6,5 +6,6 @@
 //error_reporting(E_ALL);
 require_once '../system/__init__.php';
 
-/*if (DEVELOPER_MODE)
-    echo "\n<!-- PAGE EXECUTION TIME: ", number_format((microtime(true) - STARTED_AT), 4), " -->";*/
+if (DEVELOPER_MODE)
+    echo "\n<script>var det = document.getElementById('debug_execution_time'); 
+    det.innerHTML = '", number_format((microtime(true) - STARTED_AT), 4), "ms (' + det.innerHTML + ')';</script>";

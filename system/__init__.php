@@ -65,6 +65,7 @@ set_error_handler("exception_error_handler");
 #endregion
 
 #region System classes - include and init
+require_once $__DIR__ . '/classes/PDODebug.php';
 require_once $__DIR__ . '/classes/Database.php';
 require_once $__DIR__ . '/classes/Security.php';
 require_once $__DIR__ . '/classes/Cookies.php';
@@ -160,6 +161,9 @@ class Process
             call_user_func(array($class, $method), $matches);
         } else {
             $twig = self::getTwigInstance();
+            if (function_exists('beforePageExecute')) {
+                beforePageExecute();
+            }
             echo $twig->render("$route.html.twig", self::$context);
         }
 

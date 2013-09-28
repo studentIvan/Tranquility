@@ -1,6 +1,6 @@
 {
     "developer_mode": true,
-    "solutions": ["standard", "profiles", "installer"],
+    "solutions": ["standard", "webdevtoolbar", "profiles", "installer"],
     "always_mobile": false,
     "pdo_developer_mode": {
         "dsn": "mysql:host=localhost;dbname=tranquility",

@@ -129,7 +129,9 @@
             return false;
         }
     </script>
-    
+    {% if debug_toolbar_body %}
+    {% include "debug/toolbar.html.twig" %}
+    {% endif %}
     </body>
     </html>
 {% endspaceless %}
