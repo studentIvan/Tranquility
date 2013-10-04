@@ -108,6 +108,11 @@
 		$('.tooltipped').tooltip();
         //$(".collapse").collapse();
 
+        var url = document.location.toString();
+        if (url.match('#')) {
+            $('.nav-tabs a[href=#'+url.split('#')[1]+']').tab('show') ;
+        }
+
         $('.stats-div').popover({placement: 'bottom', trigger: 'hover', html: true});
 		
 		$('.left-menu-element').click(function() {
