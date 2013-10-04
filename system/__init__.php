@@ -228,7 +228,7 @@ if (isset($config['solutions'])) {
 #endregion
 
 if (isset($_SERVER['REQUEST_URI'])) {
-    if (strlen($_SERVER['REQUEST_URI']) > 95) {
+    if (strlen($_SERVER['REQUEST_URI']) > 180) {
         $_GET['e'] = 403;
     }
     #region Application
