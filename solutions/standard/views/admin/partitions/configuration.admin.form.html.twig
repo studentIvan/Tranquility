@@ -1,0 +1,14 @@
+<form class="form-horizontal" role="form" method="POST" action="{{ panel_base_uri }}/{{ admin_part }}/save?csrf_token={{ csrf_token }}">
+    <input type="hidden" name="f_config" value="admin">
+    <div class="form-group">
+        <textarea class="form-control" style="height: 250px; width: 700px" id="admin_json_raw" name="admin_json_raw">{{ settings.a }}</textarea>
+    </div>
+    <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+            <button type="submit" class="btn btn-primary">
+                <span class="icon-save"></span> Сохранить изменения
+            </button>
+        </div>
+    </div>
+    <br><br>
+</form>

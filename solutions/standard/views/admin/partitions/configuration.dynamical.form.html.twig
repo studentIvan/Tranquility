@@ -1,0 +1,183 @@
+<form class="form-horizontal" role="form" method="POST" action="{{ panel_base_uri }}/{{ admin_part }}/save?csrf_token={{ csrf_token }}">
+    <input type="hidden" name="f_config" value="dynamical">
+    <div class="form-group">
+        <label for="input_server_timezone" class="col-lg-2 control-label">Серверная временная зона</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="input_server_timezone" name="input_server_timezone" value="{{ settings.d.server_timezone }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input_default_site_title" class="col-lg-2 control-label">Название сайта</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="input_default_site_title" name="input_default_site_title" value="{{ settings.d.default_site_title }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input_hosting_free_space_mb" class="col-lg-2 control-label">Доступное место на сервере, МБ</label>
+        <div class="col-lg-10">
+            <input type="number" class="form-control" id="input_hosting_free_space_mb" name="input_hosting_free_space_mb" value="{{ settings.d.hosting_free_space_mb }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input_save_visitors_for" class="col-lg-2 control-label">Хранить данные о посетителях</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="input_save_visitors_for" name="input_save_visitors_for" value="{{ settings.d.save_visitors_for }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input__session__bot_role" class="col-lg-2 control-label">Роль ботов</label>
+        <div class="col-lg-10">
+            <select class="form-control" id="input__session__bot_role" name="input__session__bot_role">
+                {% for role in roles_list %}
+                    <option value="{{ role.id }}" {% if settings.d.session.bot_role == role.id %}selected="selected"{% endif %}>{{ role.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input__session__guest_role" class="col-lg-2 control-label">Роль гостей</label>
+        <div class="col-lg-10">
+            <select class="form-control" id="input__session__guest_role" name="input__session__guest_role">
+                {% for role in roles_list %}
+                    <option value="{{ role.id }}" {% if settings.d.session.guest_role == role.id %}selected="selected"{% endif %}>{{ role.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input__session__lifetime_hours" class="col-lg-2 control-label">Время жизни сессии, часов</label>
+        <div class="col-lg-10">
+            <input type="number" class="form-control" id="input__session__lifetime_hours" name="input__session__lifetime_hours" value="{{ settings.d.session.lifetime_hours }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input__session__referrers" class="col-lg-2 control-label">Время хранения реферреров</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="input__session__referrers" name="input__session__referrers" value="{{ settings.d.session.referrers }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="input__session__garbage_auto_dump" {% if settings.d.session.garbage_auto_dump %}checked="checked"{% endif %}> Автоматическая чистка мусора
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input__cms____news__limit_per_page" class="col-lg-2 control-label">Максимальное кол-во новостей на странице</label>
+        <div class="col-lg-10">
+            <input type="number" class="form-control" id="input__cms____news__limit_per_page" name="input__cms____news__limit_per_page" value="{{ settings.d.cms.news.limit_per_page }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input__cms____news__feed_title" class="col-lg-2 control-label">Название ленты новостей</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="input__cms____news__feed_title" name="input__cms____news__feed_title" value="{{ settings.d.cms.news.feed_title }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input__cms____news__feed_description" class="col-lg-2 control-label">Описание сайта и ленты новостей</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="input__cms____news__feed_description" name="input__cms____news__feed_description" value="{{ settings.d.cms.news.feed_description }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input__cms____news__feed_language" class="col-lg-2 control-label">Язык ленты новостей</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="input__cms____news__feed_language" name="input__cms____news__feed_language" value="{{ settings.d.cms.news.feed_language }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input__cms____news__feed_max_length" class="col-lg-2 control-label">Максимальное кол-во символов на новость в ленте новостей</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="input__cms____news__feed_max_length" name="input__cms____news__feed_max_length" value="{{ settings.d.cms.news.feed_max_length }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="input__cms__email_confirm" {% if settings.d.cms.email_confirm %}checked="checked"{% endif %}> Подтверждение email при регистрации
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="input__cms__turn_on_registration" {% if settings.d.cms.turn_on_registration %}checked="checked"{% endif %}> Регистрация включена
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox" name="input__cms__visitors" {% if settings.d.cms.visitors %}checked="checked"{% endif %}> Счетчик посетителей включен
+                </label>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input__cms____social_auth____vk__app_id" class="col-lg-2 control-label">VK Application ID</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="input__cms____social_auth____vk__app_id"
+                   name="input__cms____social_auth____vk__app_id" value="{{ settings.d.cms.social_auth.vk.app_id }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input__cms____social_auth____vk__app_secure_key" class="col-lg-2 control-label">VK Application Secret</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="input__cms____social_auth____vk__app_secure_key"
+                   name="input__cms____social_auth____vk__app_secure_key" value="{{ settings.d.cms.social_auth.vk.app_secure_key }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input__cms____social_auth____vk__user_role" class="col-lg-2 control-label">Роль пользователей VK</label>
+        <div class="col-lg-10">
+            <select class="form-control" id="input__cms____social_auth____vk__user_role"
+                    name="input__cms____social_auth____vk__user_role">
+                {% for role in roles_list %}
+                    <option value="{{ role.id }}" {% if settings.d.cms.social_auth.vk.user_role == role.id %}selected="selected"{% endif %}>{{ role.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input__cms____social_auth____fb__app_id" class="col-lg-2 control-label">Facebook Application ID</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="input__cms____social_auth____fb__app_id"
+                   name="input__cms____social_auth____fb__app_id" value="{{ settings.d.cms.social_auth.fb.app_id }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input__cms____social_auth____fb__app_secret" class="col-lg-2 control-label">Facebook Application Secret</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="input__cms____social_auth____fb__app_secret"
+                   name="input__cms____social_auth____fb__app_secret" value="{{ settings.d.cms.social_auth.fb.app_secret }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input__cms____social_auth____fb__user_role" class="col-lg-2 control-label">Роль пользователей Facebook</label>
+        <div class="col-lg-10">
+            <select class="form-control" id="input__cms____social_auth____fb__user_role"
+                    name="input__cms____social_auth____fb__user_role">
+                {% for role in roles_list %}
+                    <option value="{{ role.id }}" {% if settings.d.cms.social_auth.fb.user_role == role.id %}selected="selected"{% endif %}>{{ role.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+            <button type="submit" class="btn btn-primary">
+                <span class="icon-save"></span> Сохранить изменения
+            </button>
+        </div>
+    </div>
+    <br><br>
+</form>

@@ -1,0 +1,60 @@
+<form class="form-horizontal" role="form" method="POST" action="{{ panel_base_uri }}/{{ admin_part }}/save?csrf_token={{ csrf_token }}">
+    <input type="hidden" name="f_config" value="mailer">
+    <div class="form-group">
+        <label for="input_used_transport" class="col-lg-2 control-label">Используемый транспорт</label>
+        <div class="col-lg-10">
+            <select class="form-control" id="input_used_transport" name="input_used_transport">
+                <option value="smtp" {% if settings.m.used_transport == "smtp" %}selected="selected"{% endif %}>SMTP</option>
+                <option value="sendmail" {% if settings.m.used_transport == "sendmail" %}selected="selected"{% endif %}>Sendmail</option>
+                <option value="native" {% if settings.m.used_transport == "native" %}selected="selected"{% endif %}>Native</option>
+            </select>
+        </div>
+    </div>
+    <hr>
+    <div class="form-group">
+        <label for="input__smtp__host" class="col-lg-2 control-label">SMTP Host</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="input__smtp__host" name="input__smtp__host" value="{{ settings.m.smtp.host }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input__smtp__username" class="col-lg-2 control-label">Username</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="input__smtp__username" name="input__smtp__username" value="{{ settings.m.smtp.username }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input__smtp__password" class="col-lg-2 control-label">Password</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="input__smtp__password" name="input__smtp__password" value="{{ settings.m.smtp.password }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="input__smtp__encryption" class="col-lg-2 control-label">Encryption</label>
+        <div class="col-lg-10">
+            <input type="text" placeholder="NULL" class="form-control" id="input__smtp__encryption" name="input__smtp__encryption" value="{{ settings.m.smtp.encryption }}">
+        </div>
+    </div>
+    <hr>
+    <div class="form-group">
+        <label for="input__sendmail__command_string" class="col-lg-2 control-label">Sendmail Command String</label>
+        <div class="col-lg-10">
+            <input type="text" class="form-control" id="input__sendmail__command_string" name="input__sendmail__command_string" value="{{ settings.m.sendmail.command_string }}">
+        </div>
+    </div>
+    <hr>
+    <div class="form-group">
+        <label for="input__native__extra_params" class="col-lg-2 control-label">Native Extra Params</label>
+        <div class="col-lg-10">
+            <input type="text" placeholder="NULL" class="form-control" id="input__native__extra_params" name="input__native__extra_params" value="{{ settings.m.native.extra_params }}">
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-lg-offset-2 col-lg-10">
+            <button type="submit" class="btn btn-primary">
+                <span class="icon-save"></span> Сохранить изменения
+            </button>
+        </div>
+    </div>
+    <br><br>
+</form>
