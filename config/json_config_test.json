@@ -1,0 +1,9 @@
+{
+	"test": [
+		1,
+		2,
+		4
+	],
+	"test2": false,
+	"test3": "okay"
+}

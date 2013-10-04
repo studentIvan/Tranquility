@@ -10,8 +10,8 @@ class Data
     {
         return isset($_POST[$postVariableName]) ?
             (is_array($_POST[$postVariableName]) ?
-                $_POST[$postVariableName] :
-                trim($_POST[$postVariableName])) : false;
+                $_POST[$postVariableName] : ($_POST[$postVariableName] ?
+                    trim($_POST[$postVariableName]) : false)) : false;
     }
 
     /**

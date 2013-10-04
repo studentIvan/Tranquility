@@ -65,15 +65,15 @@ class Installer
                 "'No description'" => "'$siteDescription'",
             );
 
-            $cfgBase = json_decode(file_get_contents('../config/base.json'), true);
-            $cfgDynamical = json_decode(file_get_contents('../config/dynamical.json'), true);
+            $cfgBase = JSONConfig::read('base.json');
+            $cfgDynamical = JSONConfig::read('dynamical.json');
 
-            file_put_contents('../config/base.json.default', json_encode($cfgBase));
+            JSONConfig::save('base.json.default', $cfgBase);
             Process::$context['ress'][] = 'Создание бекапа ../config/base.json.default';
-            file_put_contents('../config/dynamical.json.default', json_encode($cfgDynamical));
+            JSONConfig::save('dynamical.json.default', $cfgDynamical);
             Process::$context['ress'][] = 'Создание бекапа ../config/dynamical.json.default';
 
-            $cfgBase['solutions'] = array("standard", "profiles");
+            $cfgBase['solutions'] = array("standard", "webdevtoolbar", "profiles");
             $cfgBase['security_token'] = $secretToken;
 
             $cfgBase['pdo_developer_mode']['dsn'] = "mysql:host=$mysqlHost;dbname=$dbName";
@@ -89,9 +89,9 @@ class Installer
             $cfgDynamical['cms']['news']['feed_title'] = "$siteName feed channel";
             $cfgDynamical['cms']['news']['feed_description'] = $siteDescription;
 
-            file_put_contents('../config/base.json', json_encode($cfgBase));
+            JSONConfig::save('base.json', $cfgBase);
             Process::$context['ress'][] = 'Изменение ../config/base.json';
-            file_put_contents('../config/dynamical.json', json_encode($cfgDynamical));
+            JSONConfig::save('dynamical.json', $cfgDynamical);
             Process::$context['ress'][] = 'Изменение ../config/dynamical.json';
 
             Process::$context['ress'][] = 'Установка завершена';

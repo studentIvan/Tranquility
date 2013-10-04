@@ -364,6 +364,9 @@ class Admin
         if ($partition) {
             if ($action == 'create' || $action == 'edit' || $action == 'view' || $action == 'delete') {
                 $partWasFinded = false;
+                if (is_null($CRUDModelsList)) {
+                    throw new NotFoundException('selected partition does not exists');
+                }
                 foreach ($CRUDModelsList as $m) {
                     /**
                      * @var $m CRUDObjectInterface
@@ -457,6 +460,9 @@ class Admin
                 }
             } else {
                 $partWasFinded = false;
+                if (is_null($CRUDModelsList)) {
+                    throw new NotFoundException('selected partition does not exists');
+                }
                 foreach ($CRUDModelsList as $m) {
                     /**
                      * @var $m CRUDObjectInterface

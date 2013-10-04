@@ -4,7 +4,6 @@ require_once dirname(__FILE__) . '/../admin.crud/factoring/CRUDField.php';
 require_once dirname(__FILE__) . '/../admin.crud/interfaces/CRUDDriverInterface.php';
 require_once dirname(__FILE__) . '/../admin.crud/interfaces/CRUDObjectInterface.php';
 require_once dirname(__FILE__) . '/../controllers/Admin.php';
-require_once dirname(__FILE__) . '/../controllers/Feeder.php';
 
 class CRUDTestObject extends CRUDObjectInterface
 {

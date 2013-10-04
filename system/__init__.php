@@ -72,6 +72,7 @@ require_once $__DIR__ . '/classes/Cookies.php';
 require_once $__DIR__ . '/classes/Session.php';
 require_once $__DIR__ . '/classes/Services.php';
 require_once $__DIR__ . '/classes/Data.php';
+require_once $__DIR__ . '/classes/JSONConfig.php'; // since rc 24
 
 try {
     $pdoConfig = DEVELOPER_MODE ? $config['pdo_developer_mode'] : $config['pdo_production_mode'];
@@ -228,7 +229,7 @@ if (isset($config['solutions'])) {
 #endregion
 
 if (isset($_SERVER['REQUEST_URI'])) {
-    if (strlen($_SERVER['REQUEST_URI']) > 180) {
+    if (strlen($_SERVER['REQUEST_URI']) > 250) {
         $_GET['e'] = 403;
     }
     #region Application
